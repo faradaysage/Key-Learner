@@ -13,7 +13,7 @@ public sealed class LivingFields : IDisposable
     public ParticleFire Fire {get;}
     private const int BW=360,BH=225;
     private readonly float[] density=new float[BW*BH];
-    private readonly Vector3[] tint=new Vector3[BW*BH];
+    private readonly Vector3[] tint=new Vector3[BW*BH],edges=new Vector3[BW*BH];
     private readonly Color[] blobPixels=new Color[BW*BH];
     private readonly Texture2D blobTexture;
     private readonly Random random=new(421);
@@ -30,9 +30,13 @@ public sealed class LivingFields : IDisposable
     }
     public void Prepare(Color[] palette)
     {
-        Array.Clear(density);Array.Clear(tint);
+        Array.Clear(density);Array.Clear(tint);Array.Clear(edges);
         foreach(var drop in Blobs.Drops)
         {
+            var dropColor=new Vector3(drop.Tint.X,drop.Tint.Y,drop.Tint.Z);
+            var nearest=0;var distance=float.MaxValue;
+            for(var k=0;k<palette.Length;k++){var d=Vector3.DistanceSquared(dropColor,palette[k].ToVector3());if(d<distance){distance=d;nearest=k;}}
+            var edgeColor=palette[(nearest+1)%palette.Length].ToVector3();
             var p=drop.Position/4;var radius=drop.Radius/4*2.1f;
             var fade=Math.Clamp((drop.Life-drop.Age)/1.2f,0,1);
             for(var y=Math.Max(0,(int)(p.Y-radius));y<Math.Min(BH,(int)(p.Y+radius+1));y++)
@@ -41,7 +45,7 @@ public sealed class LivingFields : IDisposable
                     var d2=(new Vector2(x+.5f,y+.5f)-new Vector2(p.X,p.Y)).LengthSquared()/(radius*radius);
                     if(d2>=1)continue;
                     var contribution=(1-d2)*(1-d2)*fade;var index=y*BW+x;
-                    density[index]+=contribution;tint[index]+=new Vector3(drop.Tint.X,drop.Tint.Y,drop.Tint.Z)*contribution;
+                    edges[index]+=edgeColor*contribution;density[index]+=contribution;tint[index]+=new Vector3(drop.Tint.X,drop.Tint.Y,drop.Tint.Z)*contribution;
                 }
         }
         for(var i=0;i<density.Length;i++)
@@ -49,7 +53,7 @@ public sealed class LivingFields : IDisposable
             var d=density[i];
             if(d<.025f){blobPixels[i]=Color.Transparent;continue;}
             var color=tint[i]/d;
-            var edge=new Vector3(color.Z,color.X,color.Y);
+            var edge=edges[i]/d;
             var surface=MathHelper.SmoothStep(0,1,Math.Clamp((d-.12f)/.10f,0,1));
             var core=MathHelper.SmoothStep(0,1,Math.Clamp((d-.48f)/.16f,0,1));
             var rim=Vector3.Lerp(edge*.8f,Vector3.One,.18f);

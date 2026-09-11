@@ -1,6 +1,6 @@
 # Windows installer
 
-GitHub Actions: `.github/workflows/windows-installer.yml`. Runs on main, pull requests, version tags, and manual dispatch. Download the **KeyLearner-Windows-installer** artifact from a successful run, unzip, and copy the setup EXE to the laptop. The package targets Windows 10/11 x64 and bundles the .NET runtime, fonts, icons, and 70 offline speech clips. Other words use Windows speech unless a parent adds recordings or optional Piper.
+GitHub Actions: `.github/workflows/windows-installer.yml`. Runs on main, pull requests, version tags, and manual dispatch. Download the **KeyLearner-Windows-installer** artifact from a successful run, unzip, and copy the setup EXE to the laptop. The package targets Windows 10/11 x64 and bundles the latest .NET 8 runtime patch selected from Microsoft release metadata, fonts, icons, and 70 offline speech clips. Other words use Windows speech unless a parent adds recordings or optional Piper.
 
 Build locally:
 

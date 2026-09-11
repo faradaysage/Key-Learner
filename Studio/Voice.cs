@@ -91,7 +91,7 @@ public sealed class Voice : IDisposable
             var lane=lanes[i];if(lane.Request!=null)continue;
             var key=i<5;if(key?i>=keyChannels:i-5>=wordChannels)continue;
             var queue=key?keys:words;if(queue.Count==0)continue;
-            var r=queue.Dequeue();lane.Request=r;Interlocked.Exchange(ref lane.Busy,1);
+            var r=queue.Dequeue();lane.Prompt=null;lane.Request=r;Interlocked.Exchange(ref lane.Busy,1);
             try
             {
                 var wav=FindAudio(r);
@@ -142,7 +142,7 @@ public sealed class Voice : IDisposable
     public void Stop()
     {
         keys.Clear();words.Clear();
-        foreach(var lane in lanes){lane.Synth?.SpeakAsyncCancelAll();lane.Audio?.Stop();lane.Audio?.Dispose();lane.Clip?.Dispose();lane.Audio=null;lane.Clip=null;lane.Request=null;Interlocked.Exchange(ref lane.Busy,0);}
+        foreach(var lane in lanes){lane.Prompt=null;lane.Synth?.SpeakAsyncCancelAll();lane.Audio?.Stop();lane.Audio?.Dispose();lane.Clip?.Dispose();lane.Audio=null;lane.Clip=null;lane.Request=null;Interlocked.Exchange(ref lane.Busy,0);}
     }
     public void Dispose()
     {
