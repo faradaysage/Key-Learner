@@ -65,9 +65,15 @@ Playback priority: a word's WAV recording → cached offline Piper → bundled c
 
 For the most familiar voice at zero cost, attach a family recording to each favorite word in Dictionary. You can also customize the spoken phrase.
 
+## Balloons and starfields
+
+Consecutive presses inflate one balloon and lift it toward the ceiling. Reaching the configured pop size produces an expanding ring, glittering embers and confetti. The Balloons tab controls pop size (default 3 times normal) and deflation (default 3 seconds per inflation step). Steady toddler-paced taps can accumulate pressure. Changing keys retires the old balloon: it returns to normal size over the configured interval, and returning to its key creates a new glyph. Inflated glyphs finish shrinking before fading.
+
+Experience offers Starfield (forward flight), Rotating Stars (a slowly turning star cloud), Aurora, Plasma and Vortex. Developer controls star count and speed; Gentle Motion slows both starfields. Both use original procedural star artwork and projection code, inspired by the referenced demoscene examples.
+
 ## Parent studio and effects
 
-Experience controls modes, coordinated themes, fonts, gentle motion, scale and keyboard display. Primary Colors is the new-profile default. Black And White removes decorative background fields for a high-contrast monochrome scene. Fredoka and Baloo Bhai 2 from Google Fonts are bundled with their OFL licenses. Voice exposes installed voices, volume, Windows speech rate and Piper paths. Learning exposes typo handling, adaptive timing and calibration. Developer exposes physics/effect budgets and diagnostics.
+Experience controls modes, coordinated themes, fonts, gentle motion, scale and keyboard display. Primary Colors and the forward-flight Starfield are the defaults. Older Aurora/Plasma default profiles migrate once; later parent choices persist. Black And White removes decorative background fields for a high-contrast monochrome scene. Fredoka and Baloo Bhai 2 from Google Fonts are bundled with their OFL licenses. Voice exposes installed voices, volume, Windows speech rate and Piper paths. Learning exposes typo handling, adaptive timing and calibration. Developer exposes physics/effect budgets and diagnostics.
 
 Dictionary entries can be added, renamed, disabled, included in Word Adventure, and assigned a spoken phrase, WAV, image and celebration. Disabled entries replace destructive deletion. CSV dictionaries are imported on first profile creation; subsequent edits use the parent's saved JSON dictionary. Original CSV files are not modified. The legacy CSV importer supports simple unquoted word,imagePath,wavPath records; the in-game editor handles paths containing commas through JSON.
 
