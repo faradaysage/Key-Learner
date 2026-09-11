@@ -1,0 +1,5 @@
+These short offline speech clips were generated with Piper using en_US-ljspeech-high.
+Model card: https://huggingface.co/rhasspy/piper-voices/blob/main/en/en_US/ljspeech/high/MODEL_CARD
+Training dataset: LJ Speech (public domain), https://keithito.com/LJ-Speech-Dataset/
+Model repository: https://huggingface.co/rhasspy/piper-voices (MIT)
+The model and Piper executable are not bundled. Installed Windows speech handles other words unless parents configure an optional local Piper installation or recordings.

@@ -1,0 +1,63 @@
+name: Windows installer
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+      - name: Regression tests
+        shell: pwsh
+        run: |
+          dotnet run --project tests/KeyLearner.Tests.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Tests failed' }
+      - name: Install pinned installer compiler
+        shell: pwsh
+        run: |
+          $destination = Join-Path $env:RUNNER_TEMP 'inno-setup.exe'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-7_1_0/innosetup-7.1.0-x64.exe' -OutFile $destination
+          $expected = '0362A383ED217D4C4239B5933866DD96D3EB2102737DA92F80F6057A4B40DF2F'
+          if ((Get-FileHash $destination -Algorithm SHA256).Hash -ne $expected) { throw 'Compiler checksum mismatch' }
+          $compilerRoot = Join-Path $env:RUNNER_TEMP 'inno'
+          $setup = Start-Process $destination -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/CURRENTUSER','/NOICONS',"/DIR=$compilerRoot") -Wait -PassThru -WindowStyle Hidden
+          if ($setup.ExitCode -ne 0) { throw 'Compiler installation failed' }
+          "INNO_COMPILER=$compilerRoot\ISCC.exe" >> $env:GITHUB_ENV
+      - name: Build self-contained installer
+        shell: pwsh
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          $version = "2.0.$env:BUILD_NUMBER"
+          if ($env:REF_TYPE -eq 'tag') {
+            if ($env:REF_NAME -notmatch '^v(\d+\.\d+\.\d+)$') { throw 'Release tags must be vMAJOR.MINOR.PATCH' }
+            $version = $Matches[1]
+          }
+          ./scripts/build-installer.ps1 -Version $version -Compiler $env:INNO_COMPILER
+      - name: Verify install and reinstall identity
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem artifacts/installer/*.exe | Select-Object -First 1
+          ./scripts/test-installer.ps1 -Installer $installer.FullName
+      - name: Upload laptop installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyLearner-Windows-installer
+          path: |
+            artifacts/installer/*.exe
+            artifacts/installer/*.sha256
+          if-no-files-found: error
+          retention-days: 30

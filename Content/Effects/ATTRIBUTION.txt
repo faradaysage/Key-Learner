@@ -1,0 +1,4 @@
+Fire texture: https://github.com/yomotsu/three-particle-fire/blob/master/src/texture.js
+Copyright (c) 2017 Yomotsu. MIT license in three-particle-fire-LICENSE.txt.
+The original atlas is used by a new MonoGame particle renderer; the JavaScript runtime is not bundled.
+Demoscene inspiration: https://github.com/mkhj/Demoscene-effects (no code copied).

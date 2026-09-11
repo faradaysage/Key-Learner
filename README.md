@@ -1,125 +1,84 @@
-﻿
-# Key Learner
+# KeyLearner: a little world of discovery
 
-**Key Learner** is an educational app designed to make learning fun and interactive for toddlers and young children. Inspired by [Scott Hanselman's "Baby Smash"](https://www.babysmash.com/), it builds upon the original concept with improved graphics, modularity, and learning modes tailored to different developmental stages. The app includes features like vibrant particle effects, voice feedback for letters and words, and support for a customizable word dictionary.
+A Windows native, offline keyboard playground inspired by Scott Hanselman's Baby Smash. This revision replaces the active application shell with a MonoGame studio, gesture-aware learning, controlled speech, and a parent-only settings interface. The original source is retained for reference; only Studio/**/*.cs is compiled. No sibling Bepu checkout is required.
 
----
+## Install on a laptop
 
-## Features
+The Windows installer workflow produces a self-contained x64 setup EXE and SHA-256 checksum under its **KeyLearner-Windows-installer** artifact. Download, unzip, and run setup. Subsequent installers update the same per-user installation and retain the parent profile. No .NET installation is required. See [installer builds and upgrades](docs/installer.md).
 
-### 1. **Toddler Smash Mode**
-- Interactive mode for toddlers to press keys and see letters or words displayed on the screen with vibrant particle effects.
-- Sounds out letters and words to aid early language development.
-- Highlights matching words from a dictionary when spelled correctly.
+## Try it
 
-### 2. **Improved Word Dictionary**
-- Supports multiple CSV-based dictionaries, allowing for expanded vocabularies.
-- Tracks minimum and maximum word lengths for enhanced gameplay.
-- Easily customizable for parents to add new words or themes.
+Build with .NET 8 or newer:
 
-### 3. **Graphics and Effects**
-- Built with **MonoGame** for dynamic, hardware-accelerated graphics.
-- Integrated **BepuPhysics** for realistic particle effects and simulations.
-- Additive and alpha-blended sprite rendering for visually engaging animations.
-
-### 4. **Modularity**
-- Designed with modularity in mind to allow easy addition of new learning modes (e.g., word association games, math challenges).
-- Includes the first mode, "Toddler Smash," as a foundation.
-
-### 5. **Keyboard Lock**
-- Aims to restrict unintended key combinations, preventing toddlers from accidentally minimizing or closing the application.
-- Future plans to introduce a parent-only exit mechanism using a complex key combination.
-
----
-
-## Future Plans
-- **Enhanced Keyboard Lock:** Implement a foolproof lock to ensure the app remains active during use.
-- **New Modes and Games:** Add educational modes like math challenges, word association games, and visual puzzles.
-- **Parental Controls:** Include settings for customizing dictionary files, themes, and particle effects.
-- **Cross-Platform Support:** Expand beyond Windows to macOS and Linux.
-
----
-
-## Installation
-
-### Prerequisites
-- [.NET 8.0](https://dotnet.microsoft.com/)
-- **MonoGame Framework** (installed via NuGet)
-- **BepuPhysics** and **BepuUtilities**:
-  - Clone the BepuPhysics repository:
-    ```bash
-    git clone https://github.com/bepu/bepuphysics2.git
-    ```
-  - Build the project:
-    ```bash
-    cd bepuphysics2/BepuPhysics
     dotnet build -c Release
-    ```
-  - Ensure the compiled libraries are available at the expected paths:
-    - `../bepuphysics2/BepuPhysics/bin/Release/net8.0/BepuPhysics.dll`
-    - `../bepuphysics2/BepuPhysics/bin/Release/net8.0/BepuUtilities.dll`
+    dotnet run --project tests/KeyLearner.Tests.csproj -c Release
 
----
+Inspect without capturing the keyboard:
 
-### Running the App
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/key-learner.git
-   cd key-learner
-   ```
-2. Restore dependencies and build:
-   ```bash
-   dotnet restore
-   dotnet build
-   ```
-3. Run the app:
-   ```bash
-   dotnet run
-   ```
+    dotnet run -c Release -- --preview
+    dotnet run -c Release -- --preview --studio
 
----
+Normal play uses fullscreen and a session keyboard guard:
 
-## Project Structure
-```plaintext
-KeyLearner/
-├── Modes/                   # Modular game modes (e.g., Toddler Smash)
-├── Resources/               # Fonts, textures, and graphical assets
-├── data/                    # CSV dictionaries for customizable word lists
-├── Content/                 # MonoGame content files
-├── Core/                    # Core services and interfaces (e.g., voice, mode discovery)
-├── Program.cs               # Entry point
-├── Game1.cs                 # Main game logic
-├── KeyLearner.csproj        # Project file
-```
+    dotnet run -c Release
 
----
+Or launch bin/Release/net8.0-windows/KeyLearner.exe.
 
-## Technologies Used
+**The normal session guard is not an OS kiosk. Ctrl+Alt+Delete and other OS/hardware paths remain possible. Do not treat this build as an absolute desktop isolation boundary.** See [Protection](docs/protection.md) before a child uses it.
 
-### Game Framework
-- **MonoGame Framework**: Handles rendering, input, and game loop management.
+## Parent controls
 
-### Graphics and Physics
-- **BepuPhysics**: Simulates realistic particle effects and dynamics for a visually engaging experience.
+Hold exactly one Ctrl key, one Alt key, and:
+- **Esc** to close the game.
+- **O** to open or close the parent studio.
 
-### Text-to-Speech
-- **System.Speech**: Provides voice feedback for letters and words to assist in learning.
+Hold all three for at least **0.7 seconds**, then release every key. Left or right modifiers work. Extra Shift, a second Ctrl/Alt, Windows keys, or any other key invalidates the whole attempt, even if released before the chord. Release everything and start again. An extra key while releasing also invalidates it. Auto-repeat does not authorize actions.
 
----
+Escape alone shows a small reminder. It does not leave play. The studio supports mouse input, Tab to switch sections, arrows to select/adjust settings, and Enter to edit. The key-to-text mapping in text fields currently assumes US QWERTY. Chord timing is intentionally not a child-adjustable preference.
 
-## How to Contribute
-Contributions are welcome! Here are some ways you can help:
-- Suggest or implement new game modes.
-- Improve the word dictionary with additional languages or themes.
-- Optimize performance for low-end devices.
+See [streaming recognition and living effects](docs/streaming-and-effects.md) for the updated prefix-learning behavior, deterministic icons, fireplace and merging droplets.
 
----
+## Play and learning
 
-## Acknowledgments
-- [Scott Hanselman](https://www.babysmash.com/) for inspiring this project with "Baby Smash."
-- The developers of MonoGame and BepuPhysics for their excellent libraries.
+- **Smash Garden:** key geography becomes screen position. Gentle letters, color bursts, broad showers and directional swirls respond to the input context.
+- **Word Adventure:** a parent-selected set of dictionary words becomes a rotating letter-copying invitation. Enable “Adventure word” on dictionary entries to add family names or favorite objects.
+- **Counting:** recognizes an ascending sequence through 100, then loops. After 9, “1” remains pending until “0”; it does not say “one” early. Counting also works in Smash Garden.
+- **Spelling:** exact words start immediate; only learned continuation habits introduce a prefix wait. Typo recovery waits for a pause or space/Enter. “mom” can become “mommy.” An incompatible next letter resolves a completed word and starts the next. A unique one-edit correction can recover “miolk” → “milk” or “mlik” → “milk.” Ambiguous corrections are rejected.
+- Completed longer words increase per-prefix waiting; standalone uses decrease it. Observed typing cadence scales the wait. This is transparent statistical adaptation.
+- The gesture analyzer uses a bounded 1.4-second history: rate, concurrent keys, horizontal spread and path straightness. It estimates deliberate input, rapid typing, clusters, broad mashing and sweeps. It cannot prove which hands were used.
+- Optional parent calibration trains a tiny 6-input / 8-hidden / 5-output neural network locally. Give balanced examples of each pattern. Predictions are used only after 40 samples and sufficient confidence; physical overlap can override an implausible “deliberate” prediction. No raw keystroke history is written to disk.
 
----
+This is a working playground foundation, not a validated developmental assessment. Hardware rollover can hide keys; see the protection notes.
 
-## License
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+## Voice
+
+Speech uses reusable, capped overlapping channels: four for key feedback and two reserved for words by default. New input never cancels audio already playing. Parent Voice settings can adjust the caps. Short queues absorb bursts; sustained overload is bounded.
+
+This checkout also has a project-local **Piper 1.4.2** installation and **LJ Speech** neural model under .local/. Seventy common letters, numbers and words have been prepared as local clips. New profiles automatically discover this installation. Existing profiles can select the executable and model under Voice:
+
+- Executable: .local/piper/Scripts/piper.exe (use its absolute path)
+- Model: .local/voices/en_US-ljspeech-high.onnx (use its absolute path)
+
+See [voice setup and licensing](docs/voice.md) to reproduce the installation. The 70 common clips ship with the game. The optional full model/runtime stays local and is not included in the installer.
+
+Playback priority: a word's WAV recording → cached offline Piper → bundled common clips → Windows speech. Uncached neural speech is prepared in the background for later use; it never blocks the current announcement. All playback honors the app volume. Windows speech rate affects Windows synthesis; pre-recorded and neural clips retain their natural pace. The Sound option mutes all speech.
+
+For the most familiar voice at zero cost, attach a family recording to each favorite word in Dictionary. You can also customize the spoken phrase.
+
+## Parent studio and effects
+
+Experience controls modes, coordinated themes, fonts, gentle motion, scale and keyboard display. Primary Colors is the new-profile default. Black And White removes decorative background fields for a high-contrast monochrome scene. Fredoka and Baloo Bhai 2 from Google Fonts are bundled with their OFL licenses. Voice exposes installed voices, volume, Windows speech rate and Piper paths. Learning exposes typo handling, adaptive timing and calibration. Developer exposes physics/effect budgets and diagnostics.
+
+Dictionary entries can be added, renamed, disabled, included in Word Adventure, and assigned a spoken phrase, WAV, image and celebration. Disabled entries replace destructive deletion. CSV dictionaries are imported on first profile creation; subsequent edits use the parent's saved JSON dictionary. Original CSV files are not modified. The legacy CSV importer supports simple unquoted word,imagePath,wavPath records; the in-game editor handles paths containing commas through JSON.
+
+Effect plugins are bounded JSON recipes loaded from the profile's effects directory. See [effect recipes](docs/effects.md). The animation uses procedural light, harmonic curtains, curl forces, trails and bounces; it is not a full fluid solver or FFT simulation.
+
+## Local data and verification
+
+Settings, dictionary, learned word counts and neural weights live under %LOCALAPPDATA%/KeyLearner. Writes use temporary files, replacement and a .bak copy. A --data <directory> argument selects an isolated profile, useful for testing and separate children. Profile selection within the studio is not implemented.
+
+    .\scripts\verify.ps1
+
+Tests cover the chord state machine, typing mistakes and prefixes, count transitions, neural learning, persistence, and deterministic game replay. Preview scenarios never install the keyboard hook. Physical OS shortcut testing is a separate, unfinished acceptance step described in the protection document.
+
+Generated previews and test profiles go in artifacts/ and are ignored by Git. No publishing, system policy changes, or commits are performed by the build.

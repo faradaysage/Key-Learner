@@ -36,3 +36,6 @@ desktop.ini
 
 # Private data dictionaries (kid's names, street names, etc.)
 data/private_dictionary.csv
+# Local neural runtime, voice models, and generated QA profiles
+.local/
+artifacts/

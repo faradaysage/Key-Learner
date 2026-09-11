@@ -1,67 +1,35 @@
-
-#----------------------------- Global Properties ----------------------------#
-
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
 /platform:DesktopGL
-/config:
 /profile:Reach
 /compress:False
-
-#-------------------------------- References --------------------------------#
-
-
-#---------------------------------- Content ---------------------------------#
-
-#begin Fonts/DefaultFont.spritefont
+#begin Fonts/StudioUI.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/DefaultFont.spritefont
+/build:Fonts/StudioUI.spritefont
 
-#begin Fonts/MenuFont.spritefont
+#begin Fonts/StudioTitle.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/MenuFont.spritefont
+/build:Fonts/StudioTitle.spritefont
 
-#begin Fonts/SmashCharacterFont.spritefont
+#begin Fonts/StudioRounded.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/SmashCharacterFont.spritefont
+/build:Fonts/StudioRounded.spritefont
 
-#begin Fonts/SmashWordFont.spritefont
+#begin Fonts/StudioClassic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/SmashWordFont.spritefont
+/build:Fonts/StudioClassic.spritefont
 
-#begin Textures/particle.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/particle.png
+#begin Fonts/StudioBold.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/StudioBold.spritefont
 
-#begin Textures/plasma.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/plasma.png
 
+#begin Fonts/StudioIcons.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/StudioIcons.spritefont
