@@ -64,12 +64,12 @@ public sealed partial class StudioGame
     }
     void DrawDots(){
         batch.End();EnsureDotDisc();
-        GraphicsDevice.Clear(new Color(8,12,24));
-        var (scale,offset)=DotLayout.Fit(GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height);
+        GraphicsDevice.Clear(S.Theme==Mood.BlackAndWhite?Color.Black:new Color(8,12,24));
+        var (scale,offset)=DotLayout.RenderFit(GraphicsDevice.PresentationParameters.BackBufferWidth,GraphicsDevice.PresentationParameters.BackBufferHeight,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height);
         var shake=S.GentleMotion?Vector2.Zero:new Vector2(MathF.Sin((float)dots.PhaseTime*90)*3*(float)dots.WrongShake,0);
-        batch.Begin(samplerState:SamplerState.LinearClamp,transformMatrix:Matrix.CreateScale(scale,scale,1)*Matrix.CreateTranslation(offset.X+shake.X*scale,offset.Y,0));
+        batch.Begin(samplerState:SamplerState.LinearClamp,transformMatrix:Matrix.CreateScale(scale.X,scale.Y,1)*Matrix.CreateTranslation(offset.X+shake.X*scale.X,offset.Y,0));
         Color ink=S.Theme==Mood.BlackAndWhite?Color.White:new(255,221,62);
-        DotRounded(DotLayout.Mute,new(26,34,49));DotText(S.Sound?"MUTE":"UNMUTE",V(DotLayout.Mute.Center),.44f,Color.White,ui);
+        DotRounded(DotLayout.Mute,S.Theme==Mood.BlackAndWhite?new Color(35,35,35):new Color(26,34,49));DotText(S.Sound?"MUTE":"UNMUTE",V(DotLayout.Mute.Center),.44f,Color.White,ui);
         string stage=dots.Stage.ToString();DotText(stage,new(652-title.MeasureString(stage).X*.32f,63),.64f,Color.White);
         string cue=dots.Phase switch{DotPhase.Ready=>"READY",DotPhase.Set=>"SET",DotPhase.Go=>"GO",DotPhase.Answer=>"HOW MANY?",DotPhase.Reward=>dots.Quantity.ToString(),_=>""};
         float punch=dots.Phase==DotPhase.Reward?1+.16f*MathF.Exp(-(float)dots.PhaseTime*8):1;
@@ -91,7 +91,7 @@ public sealed partial class StudioGame
             if(time<.18f)DotRing(new(360,774),20+time*360,7*(1-time/.18f),ink*(1-time/.18f));
         }
         for(int n=0;n<=9;n++){
-            bool active=dots.CanAnswer;var r=DotLayout.Number(n);DotRounded(r,active?new Color(36,48,70):new Color(23,29,42));
+            bool active=dots.CanAnswer;var r=DotLayout.Number(n);DotRounded(r,S.Theme==Mood.BlackAndWhite?(active?new Color(48,48,48):new Color(26,26,26)):(active?new Color(36,48,70):new Color(23,29,42)));
             DotText(n.ToString(),V(r.Center),1.02f,Color.White*(active?1:.38f));
         }
         batch.End();RenderSpace.Begin(batch);

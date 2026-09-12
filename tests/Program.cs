@@ -296,3 +296,6 @@ foreach(int number in new[]{0,9}){SubitizingGame? rewardDots=null;for(int seed=0
 foreach(var size in new[]{(720f,1080f),(1920f,1080f),(1152f,720f),(1080f,1920f)}){var fit=DotLayout.Fit(size.Item1,size.Item2);bool hits=true;for(int n=0;n<10;n++){var p=DotLayout.Number(n).Center*fit.Scale+fit.Offset;hits&=DotLayout.HitNumber(DotLayout.Unproject(p,size.Item1,size.Item2))==n;}Check(hits,"all ten touch targets map correctly at "+size);Check(DotLayout.HitNumber(DotLayout.Unproject(new(-10,-10),size.Item1,size.Item2))==-1,"outside portrait area never answers at "+size);}
 Check(DotPatterns.Cells(0).Count()==0&&DotPatterns.Cells(511).Count()==9,"zero is genuinely empty; nine fills every grid cell");
 Console.WriteLine($"All {checks} checks passed including subitizing.");
+
+foreach(var size in new[]{(720f,1080f),(1920f,1080f),(1152f,720f),(1080f,1920f)}){float rw=Math.Max(576,size.Item1*.5f),rh=Math.Max(360,size.Item2*.5f);var render=DotLayout.RenderFit(size.Item1,size.Item2,rw,rh);bool valid=true;for(int n=0;n<10;n++){var p=(DotLayout.Number(n).Center*render.Scale+render.Offset)*new System.Numerics.Vector2(size.Item1/rw,size.Item2/rh);valid&=DotLayout.HitNumber(DotLayout.Unproject(p,size.Item1,size.Item2))==n;}Check(valid,"render-resolution clamping preserves portrait proportions and touch mapping at "+size);}
+Console.WriteLine($"All {checks} checks passed.");

@@ -104,6 +104,7 @@ public static class DotLayout
     public static DotRect Number(int n)=>new(48+n%5*128,816+n/5*120,112,104);
     public static DotRect Mute=>new(36,32,112,62);
     public static (float Scale,Vector2 Offset) Fit(float width,float height){float s=Math.Min(width/Width,height/Height);return(s,new((width-Width*s)/2,(height-Height*s)/2));}
+    public static (Vector2 Scale,Vector2 Offset) RenderFit(float width,float height,float renderWidth,float renderHeight){var(s,o)=Fit(width,height);var ratio=new Vector2(renderWidth/width,renderHeight/height);return(new Vector2(s)*ratio,o*ratio);}
     public static Vector2 Unproject(Vector2 point,float width,float height){var (s,o)=Fit(width,height);return(point-o)/s;}
     public static int HitNumber(Vector2 point)=>Enumerable.Range(0,10).FirstOrDefault(n=>Number(n).Contains(point),-1);
 }
