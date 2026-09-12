@@ -3,12 +3,15 @@ namespace KeyLearner.Studio;
 
 public enum Backdrop { Aurora, Plasma, Vortex, Starfield, RotatingStars }
 public enum Mood { Aurora, Lagoon, Sunset, Candy, PrimaryColors, BlackAndWhite }
-public enum PlayMode { SmashGarden, WordAdventure, Counting, BirdFlight }
+public enum PlayMode { SmashGarden, WordAdventure, Counting, BirdFlight, Racing, Dolphin }
 public enum Celebration { Confetti, Rain, Orbit, Bubbles, Embers }
 public enum LetterFont { Fredoka, Classic, Baloo }
 
 public sealed class Settings
 {
+    public bool TimedSpelling {get;set;}=true;
+    public double FlightResponse {get;set;}=1;
+    public double FlightTopSpeed {get;set;}=160;
     public bool ToonAssets {get;set;}=true;
     public bool UseGestureCalibration {get;set;}
     public bool SmoothEdges {get;set;}=true;
@@ -60,6 +63,7 @@ public sealed class Settings
     public string PiperModel { get; set; } = "";
     public void Normalize()
     {
+        FlightResponse=Finite(FlightResponse,.5,2,1);FlightTopSpeed=Finite(FlightTopSpeed,80,240,160);
         RenderScale=Finite(RenderScale,.5,1.5,1);LiquidScale=Finite(LiquidScale,.25,1,1);MouseTrailSize=Finite(MouseTrailSize,.3,3,1);TerrainDetail=Math.Clamp(TerrainDetail,24,100);
         BalloonPopSize=Finite(BalloonPopSize,1.5,6,3); BalloonDeflateSeconds=Finite(BalloonDeflateSeconds,.3,15,3); StarCount=Math.Clamp(StarCount,100,2400); StarSpeed=Finite(StarSpeed,.1,3,1);
         KeyIcons ??= new(); KeyVoiceChannels=Math.Clamp(KeyVoiceChannels,1,5); WordVoiceChannels=Math.Clamp(WordVoiceChannels,1,3);

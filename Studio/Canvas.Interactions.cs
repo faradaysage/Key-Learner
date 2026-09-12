@@ -17,6 +17,8 @@ public sealed partial class Canvas
     Vector2 pointer,oldPointer;bool pointerActive;float playClock,lastPaint=-1,lastCrack=-1,lastShot=-1,shake;
     public Vector2? FirstRewardPosition=>rewards.Count>0?rewards[0].P:null;
     public int Score=>reward.Score;public int RewardRemaining=>reward.Remaining;
+    public int CannonShots=>shots.Count(s=>!s.Rocket);
+    public int Blasts {get;private set;}
     public int PaintCount=>paint.Count;public int ShatterCount{get;private set;}public int RocketsLaunched{get;private set;}
     public float GlassAmount=>Sheet.Pressure;
     public Vector2 Shake=>settings.GentleMotion?Vector2.Zero:new(MathF.Sin(playClock*79)*shake*9,MathF.Cos(playClock*93)*shake*6);
@@ -50,8 +52,8 @@ public sealed partial class Canvas
         if(!pointerActive){oldPointer=p;return;}
         if(moved || leftHeld){int n=Math.Clamp((int)Vector2.Distance(oldPointer,p)/9,3,30)*(leftHeld?2:1);for(int i=1;i<=n;i++)mouseGlow.Add(new(){P=Vector2.Lerp(oldPointer,p,i/(float)n),V=new Vector2(random.Next(-150,151),random.Next(-150,151))*(leftHeld?3:1),Size=random.Next(35,80)*(float)settings.MouseTrailSize,Color=Palette[random.Next(4)]});}
         oldPointer=p;if(mouseGlow.Count>250)mouseGlow.RemoveRange(0,mouseGlow.Count-250);
-        if(right || left&&settings.Mode==PlayMode.WordAdventure)Cannon(p,width,height);
-        else if(left)Blast(p,190,false);
+        if(left)Cannon(p,width,height);
+        else if(right)Blast(p,190,false);
     }
     void Cannon(Vector2 p,int width,int height)
     {
@@ -74,6 +76,7 @@ public sealed partial class Canvas
     }
     void Blast(Vector2 p,float radius,bool cannon)
     {
+        Blasts++;
         sounds.Play(cannon?"pop":"paint",settings,.65f);
         rings.Add(new(){Position=p,Radius=25,Color=Palette[3]});if(rings.Count>20)rings.RemoveAt(0);
         Burst(p,Celebration.Embers,45,new(Gesture.Deliberate,1,.5,.5,0,0,1,0,[]));
@@ -108,16 +111,21 @@ public sealed partial class Canvas
         {
             s.Age+=dt;var previous=s.P;s.P+=s.V*dt;
             if(random.NextDouble()<dt*60 && mouseGlow.Count<250)mouseGlow.Add(new(){P=s.P,V=new(0,15),Color=s.Color,Size=25});
-            bool hit=!s.Rocket&&(letters.Any(g=>SegmentDistance(g.P,previous,s.P)<35*g.Balloon.Size)||rewards.Any(r=>SegmentDistance(r.P,previous,s.P)<r.Radius));
-            if(hit || Vector2.Dot(s.Target-s.P,s.V)<=0 || s.Age>1.4f)
+            float first=2;
+            if(!s.Rocket){
+                void Test(Vector2 center,float radius){var t=ProjectileMath.HitFraction(new(center.X,center.Y),radius,new(previous.X,previous.Y),new(s.P.X,s.P.Y));if(t is {} entry)first=Math.Min(first,entry);}
+                foreach(var g in letters)Test(g.P,35*g.Balloon.Size);foreach(var r in rewards)Test(r.P,r.Radius);
+            }
+            bool hit=first<=1;if(hit)s.P=Vector2.Lerp(previous,s.P,first);
+            if(hit || s.Rocket && (Vector2.Dot(s.Target-s.P,s.V)<=0 || s.Age>1.4f))
             {
                 shots.Remove(s);
                 if(s.Rocket){Burst(s.P,Celebration.Bubbles,48,new(Gesture.Deliberate,1,.5,.5,0,0,1,0,[]),new(){Shape=Celebration.Bubbles,Speed=2.1,Gravity=.6,Curl=0,Lifetime=1.8,Trail=.7});rings.Add(new(){Position=s.P,Radius=5,Color=s.Color});if(rings.Count>20)rings.RemoveAt(0);sounds.Play("pop",settings,.4f);}
                 else Blast(s.P,185,true);
             }
+            else if(s.P.X< -80 || s.P.X>width+80 || s.P.Y< -80 || s.P.Y>height+80 || s.Age>5)shots.Remove(s);
         }
     }
-    static float SegmentDistance(Vector2 p,Vector2 a,Vector2 b){var d=b-a;return Vector2.Distance(p,a+d*Math.Clamp(Vector2.Dot(p-a,d)/Math.Max(.001f,d.LengthSquared()),0,1));}
 
     void RepelAsset(Vector2 p,ref Vector2 v,float dt){var d=p-pointer;var distance=d.Length();if(distance<155)v+=(distance>.01f?d/distance:-Vector2.UnitY)*(1-distance/155)*1100*dt;}
     void Line(SpriteBatch b,Vector2 a,Vector2 c,Color color,float width=2){var d=c-a;b.Draw(pixel,a,null,color,MathF.Atan2(d.Y,d.X),Vector2.Zero,new Vector2(d.Length()+1,width),SpriteEffects.None,0);}

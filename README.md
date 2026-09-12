@@ -153,3 +153,20 @@ Startup, activation/deactivation, hide/show, minimize/restore, and maximize chan
 This snapshot is maintained by the native input interceptor, not claimed as a stateless hardware poll: ordinary Windows state readers can miss keys when their delivery is suppressed. The previous release-order dependency is gone, and return-to-game resets now clear the native state as well as the screen. Application-level keyboard protection still does not prevent all OS/secure-desktop/touchpad escape paths.
 
 Validation scenarios: `options`, `shift-options`, `extra-key`, `quick-options` (short holds rejected), `native-recovery`, `window-resume` (actual SDL hide/show with queued speech and effects), `ten-o`, and `twenty-keys`.
+
+
+## Explorer games and patient spelling (2.0.24)
+
+Experience > Mode now includes **Bird Flight**, **Racing** and **Dolphin**. All three collect letters in order, speak the completed word and award letter/word points, with score at the upper right. Existing parent controls and clean-resume behavior are unchanged.
+
+- Bird Flight: Up dives, Down climbs continuously into full loops, Left/Right turn. Space accelerates toward a much higher boost limit. Double-tap either turn key within 320 ms for a barrel roll. Ctrl squawks and briefly reveals/attracts the next letter, with a cooldown.
+- Racing: a perspective road with curves, lane markings, striped shoulders and a race car. Left/Right steer, Up accelerates, Down brakes, Space boosts. Ctrl calls the next letter closer. Assistance helps with collection; road shoulders keep young drivers nearby.
+- Dolphin: an underwater camera, dolphin body/tail, coral, kelp and fish. Flight-style controls swim between the seafloor and surface; Ctrl activates the letter-attracting sonar. Double-tap turns roll the dolphin.
+
+Bird/racing journeys move through forest, lakes, mountains, city, river, town and tundra regions. Terrain heights blend at boundaries; scenery includes dense trees, snowy rock, houses and taller buildings. These are procedural, stylized regions, not downloaded assets. Flight assistance remains optional. Learning includes response and boost-limit controls.
+
+**Word Adventure** now has an independent sequential spelling model. The first eight completed words have no per-letter timeout. Incorrect letters do not erase the correct prefix. Words start at up to three letters and grow by one letter per five successes (using the shortest available dictionary entries when needed). Timed challenges, if enabled, begin at 45 seconds per letter and tighten slowly, with a 15-second floor. Expiry removes only the most recent correct letter, plays a quiet buzz and shakes the letter cards unless Gentle Motion is enabled. It waits for another correct press before restarting the timer, rather than repeatedly erasing progress. The next letter and its keyboard key are highlighted; the score at upper right combines spelling and balloon rewards. Turn timed spelling off in Learning to keep unlimited time.
+
+**Cannon:** left click fires in both Smash Garden and Word Adventure; right click makes a local burst. The pointer chooses direction only. Cannonballs use swept collision tests, explode at the first asset they hit, and leave the screen quietly when they miss. Counting fireworks still burst at their scheduled destinations.
+
+New replay scenarios: `racing`, `dolphin`, `flight-loop` (5 seconds), `region-City`, `region-Mountains`, `region-River`, `patient-red` (10 seconds), `spelling-timeout`, `cannon-miss`. The current development session could not initialize OpenGL for either this build or the previous installer, so this iteration's rendered scenes and GPU performance have not been visually validated here. Simulation tests and the Release/installer build are checked separately.
