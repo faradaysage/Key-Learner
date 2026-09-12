@@ -224,3 +224,21 @@ Console.WriteLine($"All {checks} checks passed.");
 
 parentLive.Reset();heldAction=ParentAction.None;for(int i=0;i<130;i++){var a=parentLive.Update(KeySnapshot.From(new[]{162,164,27}),i/60d);if(a!=ParentAction.None)heldAction=a;}Check(heldAction==ParentAction.Exit,"two-second live exit hold needs no release sequence");
 Console.WriteLine($"All {checks} checks passed.");
+// Patient guided words preserve progress across long pauses and fat fingers.
+var patient=new GuidedSpelling();patient.Start("red");patient.Add('r',0);Check(!patient.Update(120)&&patient.Progress==1,"beginner can search for next key for two minutes");patient.Add('v',120);Check(patient.Progress==1,"stray key preserves correct guided prefix");patient.Add('e',150);Check(patient.Add('d',240)&&patient.Completed==1&&patient.Score==55,"slow red completes immediately and scores");
+for(int i=0;i<7;i++){patient.Start("red");foreach(char c in "red")patient.Add(c,300+i);}
+patient.Start("red");patient.Add('r',400);patient.Add('e',401);Check(patient.LetterSeconds==45,"timed challenge starts gently after eight successes");Check(patient.Update(447)&&patient.Progress==1,"timeout moves back exactly one letter");Check(!patient.Update(900)&&patient.Progress==1,"timeout does not repeatedly erase a word while child waits");patient.Add('e',901);patient.Add('d',902);Check(patient.Completed==9,"retyping last timed-out letter completes word");
+var loopBird=new FlightModel();loopBird.Position=new(0,350,0);float minForward=1;for(int i=0;i<180;i++){loopBird.Step(1f/60,0,1,false);minForward=Math.Min(minForward,loopBird.Forward.Z);Check(float.IsFinite(loopBird.Up.Y)&&Math.Abs(System.Numerics.Vector3.Dot(loopBird.Up,loopBird.Forward))<.001,"camera basis remains orthogonal through loop");}Check(loopBird.Pitch>0&&loopBird.Pitch<1,"full loop returns past level without pitch clamp");
+var boostBird=new FlightModel();for(int i=0;i<180;i++)boostBird.Step(1f/60,0,0,true);Check(boostBird.Speed>120,"space boost exceeds old speed cap");boostBird.TapTurn(-1);boostBird.Step(.15f,0,0,false);boostBird.TapTurn(-1);Check(boostBird.Rolls==1,"double tap initiates one barrel roll");boostBird.TapTurn(-1);Check(boostBird.Rolls==1,"extra tap cannot stack active rolls");
+var callBird=new FlightModel();float initialDistance=System.Numerics.Vector3.Distance(callBird.Position,callBird.Gate);Check(callBird.Signal()&&!callBird.Signal(),"squawk magnet has a cooldown");callBird.Step(.1f,0,0,false);Check(System.Numerics.Vector3.Distance(callBird.Position,callBird.Gate)<initialDistance-10,"squawk pulls next letter toward child");
+Check(Enumerable.Range(0,7).Select(i=>ExplorerWorld.Area(-i*950-400)).Distinct().Count()==7,"journey visits seven distinct regions");for(int i=1;i<7;i++)Check(Math.Abs(ExplorerWorld.Height(200,-i*950-.01f)-ExplorerWorld.Height(200,-i*950+.01f))<.1,"terrain boundaries are continuous");
+var racer=new FlightModel();racer.Configure(ExplorerKind.Racer);for(int i=0;i<300;i++)racer.Step(1f/60,1,0,true);Check(racer.Position.Z< -300&&Math.Abs(racer.Position.X-ExplorerWorld.Road(racer.Position.Z))<=27.1,"racer accelerates and stays alongside winding road");
+var dolphin=new FlightModel();dolphin.Configure(ExplorerKind.Dolphin);for(int i=0;i<240;i++)dolphin.Step(1f/60,0,-1,true);Check(dolphin.Position.Y<=-4&&dolphin.Position.Y>=ExplorerWorld.Bed(dolphin.Position.X,dolphin.Position.Z)+6.9,"dolphin stays between seafloor and surface");
+Console.WriteLine($"All {checks} checks passed including explorer and patient spelling regressions.");
+
+Check(ProjectileMath.HitFraction(new(0,50),10,new(0,100),new(0,0)) is {} hitAt&&Math.Abs(hitAt-.4f)<.001,"fast cannon hits first surface instead of frame endpoint");
+Check(ProjectileMath.HitFraction(new(30,50),10,new(0,100),new(0,0))==null,"cannon misses objects outside its flight path");
+Console.WriteLine($"All {checks} checks passed.");
+
+foreach(var kind in new[]{ExplorerKind.Racer,ExplorerKind.Dolphin}){var traveler=new FlightModel();traveler.Configure(kind);for(int i=0;i<3600&&traveler.Completed==0;i++)traveler.Step(1f/60,0,0,false,true);Check(traveler.Completed==1&&traveler.Score==60,"assisted "+kind+" collects all word letters and bonus");}
+Console.WriteLine($"All {checks} checks passed.");

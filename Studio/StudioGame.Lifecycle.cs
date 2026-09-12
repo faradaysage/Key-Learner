@@ -25,7 +25,7 @@ public sealed partial class StudioGame
     {
         guard?.ResetInput();held.Clear();previous=Microsoft.Xna.Framework.Input.Keyboard.GetState();
         previousMouse=Microsoft.Xna.Framework.Input.Mouse.GetState();
-        parentHold.Reset();escapeExit.Reset();optionsTaps.Reset();analyzer.Reset();recognizer.Reset();counting.Reset();
+        parentHold.Reset();escapeExit.Reset();optionsTaps.Reset();analyzer.Reset();recognizer.Reset();counting.Reset();guided.Start(target);flight.ResetInputGestures();
         voice?.Stop();canvas.Clear();keyGlow.Clear();playStarted=false;awaitingBalloons=false;
         hero="";celebrateUntil=hintUntil=flightCelebration=0;wordImage?.Dispose();wordImage=null;
         if(calibration>=0){calibration=-1;parent=true;notice="Calibration stopped when the window changed. Start a new sample to continue.";}

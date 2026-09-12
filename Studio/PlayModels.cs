@@ -25,3 +25,12 @@ public sealed class GlassDamage
     public void Step(float dt){quiet+=dt;cooldown=Math.Max(0,cooldown-dt);if(quiet>.35f)Amount=Math.Max(0,Amount-dt*.3f);}
     public void Clear(){Amount=0;quiet=cooldown=0;}
 }
+public static class ProjectileMath
+{
+    public static float? HitFraction(System.Numerics.Vector2 center,float radius,System.Numerics.Vector2 start,System.Numerics.Vector2 end)
+    {
+        var d=end-start;var offset=start-center;float c=offset.LengthSquared()-radius*radius;if(c<=0)return 0;
+        float a=d.LengthSquared();if(a<.00001f)return null;float b=2*System.Numerics.Vector2.Dot(offset,d);float disc=b*b-4*a*c;if(disc<0)return null;
+        float t=(-b-MathF.Sqrt(disc))/(2*a);return t>=0&&t<=1?t:null;
+    }
+}
