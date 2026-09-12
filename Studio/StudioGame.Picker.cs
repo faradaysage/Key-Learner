@@ -17,7 +17,7 @@ public sealed partial class StudioGame
     void PickGame(GameDefinition game){
         S.Mode=game.Mode;picker=false;ResetVisibleSession();ChooseTarget();store.Save();
     }
-    void PickerHover(Point point){for(int i=0;i<PickerGames.Length;i++)if(new Rectangle(64+i%3*446,250+i/3*281,420,261).Contains(point))gameSelection=i;}
+    void PickerHover(Point point){int first=gameSelection/6*6;for(int i=first;i<Math.Min(first+6,PickerGames.Length);i++)if(new Rectangle(64+(i%6)%3*446,250+(i%6)/3*281,420,261).Contains(point))gameSelection=i;}
     void PickerKey(int key){
         int count=PickerGames.Length;
         if(key==9){gameFilter=(gameFilter+1)%gameFilters.Length;gameSelection=0;}
@@ -45,8 +45,10 @@ public sealed partial class StudioGame
         Text("Choose an adventure. Make it yours.",64,131,Color.White*.65f,.5f);
         for(int i=0;i<gameFilters.Length;i++){int filter=i;Button(new(64+i*200,179,185,44),gameFilters[i],()=>{gameFilter=filter;gameSelection=0;},i==gameFilter);}
         var games=PickerGames;
-        for(int i=0;i<games.Length;i++){
-            var game=games[i];int x=64+i%3*446,y=250+i/3*281;bool selected=i==gameSelection;
+        int page=gameSelection/6,pages=(games.Length+5)/6;
+        if(pages>1){Button(new(1036,179,96,44),"<",()=>gameSelection=((page+pages-1)%pages)*6);Text((page+1)+" / "+pages,1150,190,Color.White,.42f);Button(new(1244,179,96,44),">",()=>gameSelection=((page+1)%pages)*6);}
+        for(int i=page*6;i<Math.Min(page*6+6,games.Length);i++){
+            var game=games[i];int x=64+(i%6)%3*446,y=250+(i%6)/3*281;bool selected=i==gameSelection;
             var rect=new Rectangle(x,y,420,261);var tint=canvas.Palette[i%4];
             Fill(new(x-3,y-3,426,267),selected?tint:new Color(30,41,64));Fill(rect,new(20,29,49));
             var art=new Rectangle(x+8,y+8,404,151);
@@ -64,7 +66,9 @@ public sealed partial class StudioGame
     }
     void DrawGameIllustration(GameDefinition game,Rectangle r,Color tint){
         Fill(r,game.Mode==PlayMode.Counting?new(13,19,52):new(26,43,68));
-        if(game.Mode==PlayMode.Counting){
+        if(game.Mode==PlayMode.Subitizing){
+            foreach(int cell in new[]{0,2,4,6,8}){int x=r.X+155+cell%3*44,y=r.Y+26+cell/3*44;for(int line=-12;line<=12;line++){int half=(int)Math.Sqrt(Math.Max(0,144-line*line));Fill(new(x-half,y+line,half*2,1),canvas.Palette[1]);}}
+        }else if(game.Mode==PlayMode.Counting){
             for(int fire=0;fire<3;fire++){float cx=r.X+80+fire*121,cy=r.Y+53+(fire%2)*30;var color=canvas.Palette[fire];
                 for(int ray=0;ray<18;ray++){float a=ray*MathF.Tau/18;var start=new Vector2(cx+MathF.Cos(a)*19,cy+MathF.Sin(a)*19);batch.Draw(pixel,start,null,color,a,Vector2.Zero,new Vector2(23,2),SpriteEffects.None,0);}}
             Text("1   2   3",r.X+139,r.Y+103,Color.White,.7f,title);
