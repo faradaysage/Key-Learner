@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace KeyLearner.Studio;
 public sealed class FlightRenderer : IDisposable
 {
+    public Effect? ToonShader {set=>glyphs.ToonShader=value;}
     readonly GraphicsDevice device;readonly BasicEffect effect;readonly GlyphMeshes glyphs;readonly SpriteFont font;
     VertexPositionNormalTexture[] terrain=[],forest=[],water=[];int detail;int cellX=int.MinValue,cellZ=int.MinValue;
     readonly List<VertexPositionNormalTexture> bird=new();
@@ -31,7 +32,7 @@ public sealed class FlightRenderer : IDisposable
         effect.DiffuseColor=mono?new(.2f):new(.11f,.34f,.19f);foreach(var pass in effect.CurrentTechnique.Passes){pass.Apply();device.DrawUserPrimitives(PrimitiveType.TriangleList,forest,0,forest.Length/3);}
         effect.DiffuseColor=mono?new(.75f):new(.12f,.42f,.65f);effect.SpecularColor=new(.6f);effect.SpecularPower=64;foreach(var pass in effect.CurrentTechnique.Passes){pass.Apply();device.DrawUserPrimitives(PrimitiveType.TriangleList,water,0,water.Length/3);}effect.SpecularColor=Vector3.Zero;
         // Distant hills and alternating terrain lighting supply depth without texture downloads.
-        var gate=V(flight.Gate);glyphs.Draw(font,char.ToUpperInvariant(flight.Letter),Matrix.CreateScale(.095f,-.095f,.095f)*Matrix.CreateRotationY(-flight.Yaw)*Matrix.CreateTranslation(gate),view,projection,palette[flight.Collected%4]);
+        glyphs.UseToon=settings.ToonAssets;var gate=V(flight.Gate);glyphs.Draw(font,char.ToUpperInvariant(flight.Letter),Matrix.CreateScale(.095f,-.095f,.095f)*Matrix.CreateRotationY(-flight.Yaw)*Matrix.CreateTranslation(gate),view,projection,palette[flight.Collected%4]);
         bird.Clear();float flap=MathF.Sin(flight.Time*(flight.Speed>30?9:4))*.5f;
         void Triangle(Vector3 a,Vector3 b,Vector3 c){var normal=Vector3.Normalize(Vector3.Cross(b-a,c-a));foreach(var p in new[]{a,b,c})bird.Add(new(p,normal,Vector2.Zero));}
         Triangle(new(0,0,-3),new(-.8f,.4f,1),new(.8f,.4f,1));Triangle(new(0,0,-3),new(.8f,.4f,1),new(0,-.65f,1));Triangle(new(0,0,-3),new(0,-.65f,1),new(-.8f,.4f,1));

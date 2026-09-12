@@ -49,3 +49,10 @@ Automated tests validate reported key streams, not OS enforcement or electrical 
 Sources:
 - [Microsoft Keyboard Filter](https://learn.microsoft.com/en-us/windows/configuration/keyboard-filter/)
 - [LowLevelKeyboardProc and timeout/removal behavior](https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc)
+
+
+### Physical key identity and fallback options (2.0.22)
+
+The native hook matches key-up to the original scan code plus extended flag, retaining the original virtual-key label. Pause/Break are pulses; overrun and synthetic extended Shift packets cannot remain held. Repairs from injected releases rebuild state and cannot authorize a strict parent chord. No idle timeout invents releases for genuinely held keys.
+
+Ten complete O taps independently open options, just as ten Escape taps exit. Other key-downs reset each sequence; repeats count once. The normal exact chord still rejects extra keys. Parent Studio shows scan repair/ignored-packet counters. Preview `native-recovery` exercises scan normalization through the game handler; `ten-o` verifies options recovery with poisoned held-key state. Physical hardware acceptance remains required.

@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -11,6 +10,8 @@ public sealed class KeyboardGuard : IDisposable
     private delegate nint HookProc(int code,nint w,nint l);
     private readonly HookProc callback;
     private readonly KeyTransitionBuffer events=new();
+    private readonly PhysicalKeyboard physical;
+    public string Diagnostics=>$"scan repairs {physical.RemappedReleases+physical.RepairedReleases}; ignored packets {physical.IgnoredPackets}";
     private readonly ManualResetEventSlim ready=new();
     private readonly Thread thread;
     private nint hook;
@@ -22,7 +23,7 @@ public sealed class KeyboardGuard : IDisposable
     public KeyboardGuard(bool suppress=true)
     {
         if(!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Protected play requires Windows.");
-        this.suppress=suppress;
+        this.suppress=suppress;physical=new(events);
         callback=OnKey;
         thread=new Thread(Pump) { IsBackground=true, Name="KeyLearner keyboard guard" };
         thread.Start();
@@ -39,7 +40,7 @@ public sealed class KeyboardGuard : IDisposable
         {
             // Track already-held physical keys so startup cannot manufacture a clean chord.
             for(var k=8;k<256;k++)
-                if(k is not (16 or 17 or 18) && (GetAsyncKeyState(k)&0x8000)!=0) events.Push(new(k,true,Now));
+                if(k is not (16 or 17 or 18) && (GetAsyncKeyState(k)&0x8000)!=0){uint scan=MapVirtualKey((uint)k,4);physical.Seed(k,(int)(scan&255),(scan&0xff00)==0xe000);}
             hook=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
             if(hook==0) throw new Win32Exception(Marshal.GetLastWin32Error());
             SetTimer(0,1,1000,0);
@@ -66,14 +67,7 @@ public sealed class KeyboardGuard : IDisposable
         var msg=(int)w;
         if(msg is 0x100 or 0x101 or 0x104 or 0x105)
         {
-            if((data.Flags&0x10)==0) // Swallow injected input too, but it must not authorize parent actions.
-            {
-                var key=(int)data.Key;
-                if(key==16) key=data.Scan==0x36?161:160;
-                if(key==17) key=(data.Flags&1)!=0?163:162;
-                if(key==18) key=(data.Flags&1)!=0?165:164;
-                events.Push(new(key,msg is 0x100 or 0x104,Now));
-            }
+            physical.Feed((int)data.Key,(int)data.Scan,(data.Flags&1)!=0,msg is 0x100 or 0x104,(data.Flags&0x10)!=0,Now);
             return suppress ? 1 : CallNextHookEx(hook,code,w,l); // Probe mode never intercepts input.
         }
         return CallNextHookEx(hook,code,w,l);
@@ -86,6 +80,7 @@ public sealed class KeyboardGuard : IDisposable
     }
     [StructLayout(LayoutKind.Sequential)] private struct HookData { public uint Key,Scan,Flags,Time; public nuint Extra; }
     [StructLayout(LayoutKind.Sequential)] private struct Message { public nint Window; public uint Id; public nuint W; public nint L; public uint Time; public int X,Y; public uint Private; }
+    [DllImport("user32.dll")] private static extern uint MapVirtualKey(uint code,uint type);
     [DllImport("user32.dll")] private static extern nuint SetTimer(nint window,nuint id,uint ms,nint callback);
     [DllImport("user32.dll",SetLastError=true)] private static extern nint SetWindowsHookEx(int id,HookProc proc,nint module,uint thread);
     [DllImport("user32.dll")] private static extern bool UnhookWindowsHookEx(nint hook);

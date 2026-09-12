@@ -19,6 +19,7 @@ public sealed partial class Canvas : IDisposable
     private readonly Texture2D pixel,glow,disc;
     private readonly SpriteFont[] fonts;
     private readonly GlyphMeshes meshes;
+    public Effect? ToonShader {set=>meshes.ToonShader=value;}
     private readonly Settings settings;
     public LivingFields Fields {get;}
     private float emberClock;
@@ -214,7 +215,7 @@ public sealed partial class Canvas : IDisposable
             b.DrawString(glyphFont,g.Text,g.P,g.Color*alpha,g.Rotation,origin,scale,SpriteEffects.None,0);
             b.DrawString(glyphFont,g.Text,g.P-new Vector2(1,2)*g.Balloon.Size,Color.Lerp(g.Color,Color.White,.65f)*(alpha*.32f),g.Rotation,origin,scale*.985f,SpriteEffects.None,0);
         }
-        if(settings.ExtrudedAssets){b.End();foreach(var g in letters){if(g.Text.Length!=1)continue;float scale=(float)settings.FontScale*(g.Font==null?.7f:1.4f)*g.Balloon.Size;var world=Matrix.CreateScale(scale)*Matrix.CreateRotationX(settings.GentleMotion?0:MathF.Sin(g.Age*.8f)*.22f)*Matrix.CreateRotationY(settings.GentleMotion?0:MathF.Sin(g.Age*.6f)*.35f)*Matrix.CreateRotationZ(g.Rotation)*Matrix.CreateTranslation(g.P.X,g.P.Y,0);meshes.Draw(g.Font??font,g.Text[0],world,Matrix.Identity,Matrix.CreateOrthographicOffCenter(0,width,height,0,-500,500),g.Color,Math.Clamp((g.Life-g.Age)/1.2f,0,1));}RenderSpace.Begin(b);}
+        if(settings.ExtrudedAssets){meshes.UseToon=settings.ToonAssets;b.End();foreach(var g in letters){if(g.Text.Length!=1)continue;float scale=(float)settings.FontScale*(g.Font==null?.7f:1.4f)*g.Balloon.Size;var world=Matrix.CreateScale(scale)*Matrix.CreateRotationX(settings.GentleMotion?0:MathF.Sin(g.Age*.8f)*.22f)*Matrix.CreateRotationY(settings.GentleMotion?0:MathF.Sin(g.Age*.6f)*.35f)*Matrix.CreateRotationZ(g.Rotation)*Matrix.CreateTranslation(g.P.X,g.P.Y,0);meshes.Draw(g.Font??font,g.Text[0],world,Matrix.Identity,Matrix.CreateOrthographicOffCenter(0,width,height,0,-500,500),g.Color,Math.Clamp((g.Life-g.Age)/1.2f,0,1));}RenderSpace.Begin(b);}
         DrawInteractions(b,time,width,height);
     }
     public void Clear() { ClearInteractions(); activeGlyph=null;activeKey=null;rings.Clear();letters.Clear(); motes.Clear(); Fields.Clear(); }

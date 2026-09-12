@@ -1,18 +1,21 @@
 namespace KeyLearner.Studio;
-/// <summary>Ten complete Escape taps; repeats do not count and any other press resets it.</summary>
-public sealed class EscapeExit
+/// <summary>Ten complete matching taps; repeats do not count and any other press resets it.</summary>
+public class TapSequence
 {
+    private readonly int key;
+    public TapSequence(int key){this.key=key;}
     private bool down;
     public int Count {get;private set;}
     public bool Feed(KeyEvent e)
     {
-        if(e.Key!=27){if(e.Down){Count=0;down=false;}return false;}
+        if(e.Key!=key){if(e.Down){Count=0;down=false;}return false;}
         if(e.Down){down=true;return false;}
         if(!down)return false;
         down=false;Count++;return Count>=10;
     }
     public void Reset(){Count=0;down=false;}
 }
+public sealed class EscapeExit : TapSequence {public EscapeExit():base(27){}}
 /// <summary>Deduplicates key repeats and rebuilds state instead of dropping releases on overflow.</summary>
 public sealed class KeyTransitionBuffer
 {
@@ -33,6 +36,7 @@ public sealed class KeyTransitionBuffer
             if(!rebuild)queue.Enqueue(e);
         }
     }
+    public void Rebuild(){lock(gate){queue.Clear();rebuild=true;Recoveries++;}}
     public bool TryRead(out KeyEvent e)
     {
         lock(gate)

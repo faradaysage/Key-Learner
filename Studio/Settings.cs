@@ -9,6 +9,8 @@ public enum LetterFont { Fredoka, Classic, Baloo }
 
 public sealed class Settings
 {
+    public bool ToonAssets {get;set;}=true;
+    public bool UseGestureCalibration {get;set;}
     public bool SmoothEdges {get;set;}=true;
     public bool FlightAssist {get;set;}=true;
     public double RenderScale {get;set;}=1;
@@ -92,13 +94,18 @@ public sealed class Profile
     public Dictionary<string, int> WordCounts { get; set; } = new();
     public Dictionary<string, double> PrefixHabits { get; set; } = new();
     public double TypingInterval { get; set; } = .4;
-    public TinyNetwork Network { get; set; } = new();
+}
+public sealed class GestureTraining
+{
+    public int SchemaVersion {get;set;}=1;
+    public TinyNetwork Network {get;set;}=new();
 }
 public sealed class Store
 {
     public string Root { get; }
     public string Status { get; private set; } = "Saved locally. No accounts or uploads.";
     public Settings Settings { get; }
+    public GestureTraining Gestures {get;private set;}=new();
     public Profile Profile { get; private set; }
     public List<WordEntry> Words { get; }
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
@@ -118,7 +125,10 @@ public sealed class Store
         Profile = Read<Profile>("profile.json") ?? new();
         Profile.PrefixHabits ??= new();
         foreach(var key in Profile.PrefixHabits.Keys.ToArray()) Profile.PrefixHabits[key]=double.IsFinite(Profile.PrefixHabits[key])?Math.Clamp(Profile.PrefixHabits[key],0,8):0;
-        Profile.WordCounts ??= new(); Profile.Network ??= new(); Profile.Network.Validate();
+        Profile.WordCounts ??= new();
+        Gestures=Read<GestureTraining>("gesture-training.json")??new();
+        if(Gestures.SchemaVersion!=1)Gestures=new();
+        Gestures.Network??=new();Gestures.Network.Validate();
         if (!double.IsFinite(Profile.TypingInterval)) Profile.TypingInterval = .4;
         Words = Read<List<WordEntry>>("words.json") ?? ImportWords();
         Words.RemoveAll(w => w is null || !ValidWord(w.Word));
@@ -145,7 +155,7 @@ public sealed class Store
         Settings.Normalize();
         try
         {
-            Write("settings.json",Settings); Write("words.json",Words); Write("profile.json",Profile);
+            Write("settings.json",Settings); Write("words.json",Words); Write("profile.json",Profile);Write("gesture-training.json",Gestures);
             Status = "Saved locally. No accounts or uploads."; return true;
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { Status = "Save failed: " + e.Message; return false; }
@@ -157,7 +167,9 @@ public sealed class Store
         if (File.Exists(path)) File.Copy(path,path + ".bak",true);
         File.Move(path + ".tmp",path,true);
     }
-    public void ResetLearning() => Profile = new();
+    public void ResetWordLearning()=>Profile=new();
+    public void ResetGestureTraining()=>Gestures=new();
+    public void ResetLearning(){ResetWordLearning();ResetGestureTraining();}
     private static List<WordEntry> ImportWords()
     {
         string[] seeds = ["milk","mom","mommy","dad","daddy","cat","dog","sun","moon","star","rain","fish","bird","bear","tree","apple","happy","love","ball","book","blue","red","green","yellow"];

@@ -56,3 +56,7 @@
 /importer:EffectImporter
 /processor:EffectProcessor
 /build:Shaders/Paint.fx
+#begin Shaders/Toon.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Shaders/Toon.fx
