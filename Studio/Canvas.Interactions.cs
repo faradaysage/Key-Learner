@@ -144,6 +144,6 @@ public sealed partial class Canvas
         foreach(var g in mouseGlow)b.Draw(glow,g.P,null,g.Color*(Math.Clamp(1-g.Age/2.2f,0,1)*.55f),0,new(32),g.Size/32,SpriteEffects.None,0);
         b.End();RenderSpace.Begin(b);
     }
-    void ClearInteractions(){paint.Clear();shots.Clear();mouseGlow.Clear();rewards.Clear();reward.Clear();fireworks.Clear();Sheet.Reset();pointerActive=false;shake=0;sounds.Update(settings,0);}
+    void ClearInteractions(){sounds.Stop();paint.Clear();shots.Clear();mouseGlow.Clear();rewards.Clear();reward.Clear();fireworks.Clear();Sheet.Reset();pointerActive=false;shake=0;sounds.Update(settings,0);}
 }
 

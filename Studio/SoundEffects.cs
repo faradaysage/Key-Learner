@@ -15,5 +15,6 @@ public sealed class SoundEffects : IDisposable
         last[name]=now;var instance=clips[name].CreateInstance();instance.Volume=Math.Clamp(s.EffectsVolume/100f*s.Volume/100f*gain,0,1);instance.Play();playing.Add(instance);
     }
     public void Update(Settings s,float heat,bool updateFire=true){foreach(var p in playing.Where(p=>p.State==SoundState.Stopped).ToArray()){p.Dispose();playing.Remove(p);}if(!s.Sound || !s.EffectsSound){foreach(var p in playing)p.Stop();}if(fire!=null && updateFire){fire.Volume=s.Sound&&s.EffectsSound?Math.Clamp(heat*.55f*s.EffectsVolume/100f*s.Volume/100f,0,1):0;if(fire.Volume>.001f && fire.State!=SoundState.Playing)fire.Play();if(fire.Volume<=.001f)fire.Stop();}}
+    public void Stop(){foreach(var p in playing){p.Stop();p.Dispose();}playing.Clear();last.Clear();fire?.Stop();}
     public void Dispose(){foreach(var p in playing)p.Dispose();fire?.Dispose();foreach(var c in clips.Values)c.Dispose();}
 }
