@@ -35,7 +35,7 @@ public sealed class ParticleFire : IDisposable
     // Caller restores its normal alpha blend batch afterwards.
     public void Draw(SpriteBatch batch,Color[] palette)
     {
-        batch.End();batch.Begin(SpriteSortMode.Deferred,BlendState.Additive,SamplerState.LinearClamp);
+        batch.End();RenderSpace.Begin(batch,BlendState.Additive);
         foreach(var f in flames)
         {
             var t=f.Age/f.Life;
@@ -45,7 +45,7 @@ public sealed class ParticleFire : IDisposable
             // RGB intensity with full alpha: the source atlas has a black additive background.
             batch.Draw(atlas,f.P,new Rectangle(f.Sprite*64,0,64,64),new Color(color.ToVector3()*opacity),MathF.Sin(f.Phase+f.Age*2)*.25f,new Vector2(32),new Vector2(size,size*(1.35f+t*.9f))/64,SpriteEffects.None,0);
         }
-        batch.End();batch.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,SamplerState.LinearClamp);
+        batch.End();RenderSpace.Begin(batch);
     }
     public void Clear(){flames.Clear();emission=0;}
     public void Dispose()=>atlas.Dispose();

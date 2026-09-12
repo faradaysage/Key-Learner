@@ -6,30 +6,53 @@
 #begin Fonts/StudioUI.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Color
 /build:Fonts/StudioUI.spritefont
 
 #begin Fonts/StudioTitle.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Color
 /build:Fonts/StudioTitle.spritefont
 
 #begin Fonts/StudioRounded.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Color
 /build:Fonts/StudioRounded.spritefont
 
 #begin Fonts/StudioClassic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Color
 /build:Fonts/StudioClassic.spritefont
 
 #begin Fonts/StudioBold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Color
 /build:Fonts/StudioBold.spritefont
 
 
 #begin Fonts/StudioIcons.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Color
 /build:Fonts/StudioIcons.spritefont
+#begin Shaders/LiquidDensity.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Shaders/LiquidDensity.fx
+#begin Shaders/LiquidSurface.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Shaders/LiquidSurface.fx
+#begin Shaders/Glass.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Shaders/Glass.fx
+
+#begin Shaders/Paint.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Shaders/Paint.fx

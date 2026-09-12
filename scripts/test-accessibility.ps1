@@ -1,3 +1,4 @@
+param([string]$Executable="bin/Release/net8.0-windows/KeyLearner.exe")
 $ErrorActionPreference='Stop'
 Add-Type @"
 using System.Runtime.InteropServices;
@@ -7,11 +8,11 @@ public static class ShortcutProbe {
 }
 "@
 $before=[ShortcutProbe]::Read()
-$normal=Start-Process artifacts/gesture-build/KeyLearner.exe -ArgumentList '--probe-accessibility' -PassThru -Wait -WindowStyle Hidden
+$normal=Start-Process $Executable -ArgumentList '--probe-accessibility' -PassThru -Wait -WindowStyle Hidden
 if($normal.ExitCode -ne 0){throw 'Normal probe failed'}
 $after=[ShortcutProbe]::Read()
 if(($before -join ',') -ne ($after -join ',')){throw 'Normal restoration mismatch'}
-$crash=Start-Process artifacts/gesture-build/KeyLearner.exe -ArgumentList @('--probe-accessibility','--wait') -PassThru -WindowStyle Hidden
+$crash=Start-Process $Executable -ArgumentList @('--probe-accessibility','--wait') -PassThru -WindowStyle Hidden
 try {
  $applied=$false
  for($i=0;$i -lt 40;$i++){Start-Sleep -Milliseconds 100;$during=[ShortcutProbe]::Read();if(($during | Where-Object {($_ -band 12) -ne 0}).Count -eq 0){$applied=$true;break}}

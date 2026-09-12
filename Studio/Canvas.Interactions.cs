@@ -4,21 +4,21 @@ namespace KeyLearner.Studio;
 
 public sealed partial class Canvas
 {
+    public Effect? PaintShader {get;set;}
     sealed class Paint {public Vector2 P;public Color Color;public float Age;public float[] Lobes= [];}
-    sealed class Crack {public Vector2 A,B;}
-    sealed class Shard {public Vector2 P,V;public float Age,Angle,Spin,Size;}
     sealed class Glow {public Vector2 P,V;public Color Color;public float Age,Size;}
     sealed class Shot {public Vector2 P,V,Target;public float Age;public bool Rocket;public Color Color;}
     sealed class Reward {public Vector2 P,V;public float Phase,Radius,Burn;public Color Color;}
-    readonly List<Paint> paint=new();readonly List<Crack> cracks=new();readonly List<Shard> shards=new();
+    readonly List<Paint> paint=new();
     readonly List<Glow> mouseGlow=new();readonly List<Shot> shots=new();readonly List<Reward> rewards=new();
-    readonly SoundEffects sounds=new();readonly GlassDamage glass=new();readonly FireworkSchedule fireworks=new();
+    public GlassSheet Sheet {get;}=new();
+    readonly SoundEffects sounds=new();readonly FireworkSchedule fireworks=new();
     readonly BalloonReward reward=new();
     Vector2 pointer,oldPointer;bool pointerActive;float playClock,lastPaint=-1,lastCrack=-1,lastShot=-1,shake;
     public Vector2? FirstRewardPosition=>rewards.Count>0?rewards[0].P:null;
     public int Score=>reward.Score;public int RewardRemaining=>reward.Remaining;
     public int PaintCount=>paint.Count;public int ShatterCount{get;private set;}public int RocketsLaunched{get;private set;}
-    public float GlassAmount=>glass.Amount;
+    public float GlassAmount=>Sheet.Pressure;
     public Vector2 Shake=>settings.GentleMotion?Vector2.Zero:new(MathF.Sin(playClock*79)*shake*9,MathF.Cos(playClock*93)*shake*6);
     public bool GestureEffect(InputContext context,int width,int height)
     {
@@ -31,24 +31,11 @@ public sealed partial class Canvas
             lastPaint=playClock;if(paint.Count>=24)paint.RemoveAt(0);
             paint.Add(new(){P=p,Color=Palette[random.Next(4)],Lobes=Enumerable.Range(0,13).Select(_=>random.Next(18,47)*1f).ToArray()});sounds.Play("paint",settings,.65f);
         }
-        if(context.Gesture==Gesture.BroadMash)
+        if(context.Gesture==Gesture.BroadMash && playClock-lastCrack>.035f)
         {
-            if(glass.Hit((float)context.Energy))
-            {
-                ShatterCount++;cracks.Clear();sounds.Play("shatter",settings);shake=1;
-                for(int i=0;i<45;i++)shards.Add(new(){P=new(random.Next(width),random.Next(height)),V=new(random.Next(-170,171),random.Next(-110,100)),Size=random.Next(20,100),Spin=random.Next(-4,5),Angle=i});
-                if(shards.Count>90)shards.RemoveRange(0,shards.Count-90);
-            }
-            else if(playClock-lastCrack>.055f && glass.Amount>0)
-            {
-                lastCrack=playClock;sounds.Play("crack",settings,.55f);
-                for(int ray=0;ray<5;ray++)
-                {
-                    var a=p;var angle=ray*MathF.Tau/5+(float)random.NextDouble();
-                    for(int j=0;j<4;j++){var b=a+new Vector2(MathF.Cos(angle),MathF.Sin(angle))*random.Next(15,70);cracks.Add(new(){A=a,B=b});if(j%2==0)cracks.Add(new(){A=b,B=b+new Vector2(MathF.Cos(angle+.8f),MathF.Sin(angle+.8f))*22});a=b;angle+=(float)(random.NextDouble()-.5);}
-                }
-                if(cracks.Count>600)cracks.RemoveRange(0,cracks.Count-600);
-            }
+            lastCrack=playClock;
+            if(Sheet.Hit(new(p.X,p.Y),(float)context.Energy)){ShatterCount++;sounds.Play("shatter",settings);shake=1;}
+            else sounds.Play("crack",settings,.55f);
         }
         if(context.Gesture==Gesture.Sweep)
         {
@@ -57,11 +44,11 @@ public sealed partial class Canvas
         }
         return true;
     }
-    public void Pointer(Vector2 p,bool active,bool moved,bool left,bool right,int width,int height)
+    public void Pointer(Vector2 p,bool active,bool moved,bool left,bool right,int width,int height,bool leftHeld=false)
     {
         pointer=p;pointerActive=active&&settings.MousePlay;
         if(!pointerActive){oldPointer=p;return;}
-        if(moved){int n=Math.Clamp((int)Vector2.Distance(oldPointer,p)/9,1,30);for(int i=1;i<=n;i++)mouseGlow.Add(new(){P=Vector2.Lerp(oldPointer,p,i/(float)n),V=new(random.Next(-20,21),-random.Next(20,70)),Size=random.Next(30,65),Color=Palette[random.Next(4)]});}
+        if(moved || leftHeld){int n=Math.Clamp((int)Vector2.Distance(oldPointer,p)/9,3,30)*(leftHeld?2:1);for(int i=1;i<=n;i++)mouseGlow.Add(new(){P=Vector2.Lerp(oldPointer,p,i/(float)n),V=new Vector2(random.Next(-150,151),random.Next(-150,151))*(leftHeld?3:1),Size=random.Next(35,80)*(float)settings.MouseTrailSize,Color=Palette[random.Next(4)]});}
         oldPointer=p;if(mouseGlow.Count>250)mouseGlow.RemoveRange(0,mouseGlow.Count-250);
         if(right || left&&settings.Mode==PlayMode.WordAdventure)Cannon(p,width,height);
         else if(left)Blast(p,190,false);
@@ -95,11 +82,11 @@ public sealed partial class Canvas
     }
     void UpdateInteractions(float dt,int width,int height)
     {
-        playClock+=dt;shake=Math.Max(0,shake-dt*1.4f);glass.Step(dt);if(glass.Amount==0)cracks.Clear();
+        playClock+=dt;shake=Math.Max(0,shake-dt*1.4f);Sheet.Step(dt,settings.GentleMotion);
         sounds.Update(settings,Fields.FireLevel);
         foreach(var p in paint){p.Age+=dt;p.P.Y+=dt*(12+p.Age*3);}paint.RemoveAll(p=>p.Age>7);
-        foreach(var s in shards){s.Age+=dt;s.V.Y+=480*dt;s.P+=s.V*dt;s.Angle+=s.Spin*dt;}shards.RemoveAll(s=>s.Age>3);
-        foreach(var g in mouseGlow){g.Age+=dt;g.P+=g.V*dt;}mouseGlow.RemoveAll(g=>g.Age>1.1f);
+
+        foreach(var g in mouseGlow){g.Age+=dt;g.P+=g.V*dt;}mouseGlow.RemoveAll(g=>g.Age>2.2f);
         foreach(var g in letters)
         {
             if(pointerActive)RepelAsset(g.P,ref g.V,dt);
@@ -139,10 +126,10 @@ public sealed partial class Canvas
         foreach(var p in paint)
         {
             var alpha=Math.Clamp((7-p.Age)/2,0,1);var c=p.Color*alpha;
-            for(int i=0;i<p.Lobes.Length;i++){var a=i*MathF.Tau/p.Lobes.Length;var v=p.P+new Vector2(MathF.Cos(a),MathF.Sin(a))*35;var size=p.Lobes[i];b.Draw(disc,v,null,c,0,new(32),size/32,SpriteEffects.None,0);if(i%3==0){var end=v+new Vector2(MathF.Sin(i)*5,p.Age*(14+size));Line(b,v,end,c,size*.19f);b.Draw(disc,end,null,c,0,new(32),size*.1f/32,SpriteEffects.None,0);}}
-            for(int i=0;i<9;i++){var a=i*MathF.Tau/9;var radial=new Vector2(MathF.Cos(a),MathF.Sin(a));var spread=Math.Min(1,p.Age*12);var start=p.P+radial*45;var end=p.P+radial*(70+p.Lobes[i])*spread;Line(b,start,end,c,3);b.Draw(disc,end+new Vector2(0,p.Age*4),null,c,0,new(32),.09f+p.Lobes[i]/400,SpriteEffects.None,0);}
-            b.Draw(disc,p.P,null,c,0,new(32),1.7f,SpriteEffects.None,0);b.Draw(glow,p.P-new Vector2(15),null,Color.White*(alpha*.4f),0,new(32),1.6f,SpriteEffects.None,0);
+            for(int i=0;i<5;i++){var offset=new Vector2((i-2)*17,20);var end=p.P+offset+new Vector2(MathF.Sin(i)*6,p.Age*(14+p.Lobes[i]));var thick=2+p.Lobes[i]*.1f;Line(b,p.P+offset,end,c,thick);Line(b,p.P+offset-new Vector2(1,0),end-new Vector2(1,0),Color.White*(alpha*.12f),1);b.Draw(disc,end,null,c,0,new(32),thick/32,SpriteEffects.None,0);}
+            for(int i=0;i<9;i++){float a=i*MathF.Tau/9+p.Lobes[0];var radial=new Vector2(MathF.Cos(a),MathF.Sin(a));var end=p.P+radial*(85+p.Lobes[i])+new Vector2(0,p.Age*12);b.Draw(disc,end,null,c,0,new(32),.06f+p.Lobes[i]/500,SpriteEffects.None,0);}
         }
+        if(PaintShader!=null && paint.Count>0){b.End();PaintShader.Parameters["MatrixTransform"].SetValue(Matrix.CreateOrthographicOffCenter(0,1440,900,0,0,1));b.Begin(SpriteSortMode.Immediate,BlendState.AlphaBlend,SamplerState.LinearClamp,DepthStencilState.None,RasterizerState.CullNone,PaintShader);foreach(var p in paint){PaintShader.Parameters["Seed"].SetValue(p.Lobes[0]);float size=120*Math.Min(1,.35f+p.Age*12);b.Draw(pixel,new Rectangle((int)(p.P.X-size),(int)(p.P.Y-size),(int)(size*2),(int)(size*2)),p.Color*Math.Clamp((7-p.Age)/2,0,1));}b.End();RenderSpace.Begin(b);}
         foreach(var r in rewards)
         {
             var scale=new Vector2(r.Radius,r.Radius*1.22f)/32;var angle=MathF.Sin(time*2+r.Phase)*.08f;
@@ -152,19 +139,11 @@ public sealed partial class Canvas
             b.Draw(glow,r.P-new Vector2(r.Radius*.24f,r.Radius*.35f),null,Color.White*.85f,angle,new(32),scale*.8f,SpriteEffects.None,0);
             b.Draw(disc,r.P-new Vector2(r.Radius*.32f,r.Radius*.45f),null,Color.White*.55f,-.45f,new(32),new Vector2(.11f,.26f)*r.Radius/32,SpriteEffects.None,0);
         }
-        foreach(var c in cracks){Line(b,c.A+Vector2.One,c.B+Vector2.One,Color.Black*(glass.Amount*.6f),3);Line(b,c.A,c.B,new Color(200,233,255)*Math.Min(.9f,glass.Amount*1.8f),1);}
-        foreach(var s in shards)
-        {
-            var alpha=Math.Clamp(1-s.Age/3,0,1);var a=s.P+new Vector2(MathF.Cos(s.Angle),MathF.Sin(s.Angle))*s.Size;var c=s.P+new Vector2(MathF.Cos(s.Angle+2.1f),MathF.Sin(s.Angle+2.1f))*s.Size*.65f;
-            // Translucent triangular panes, with a bright fracture edge.
-            for(int i=0;i<12;i++)Line(b,Vector2.Lerp(s.P,a,i/12f),Vector2.Lerp(s.P,c,i/12f),new Color(164,210,237)*(alpha*.12f),Math.Max(1,s.Size/12));
-            Line(b,s.P,a,Color.White*(alpha*.55f),1);Line(b,a,c,Color.White*(alpha*.35f),1);Line(b,c,s.P,Color.White*(alpha*.4f),1);
-        }
         foreach(var s in shots){Line(b,s.P-s.V*.025f,s.P,s.Color,3);b.Draw(disc,s.P,null,Color.White,0,new(32),.12f,SpriteEffects.None,0);}
-        b.End();b.Begin(SpriteSortMode.Deferred,BlendState.Additive,SamplerState.LinearClamp);
-        foreach(var g in mouseGlow)b.Draw(glow,g.P,null,g.Color*(Math.Clamp(1-g.Age/1.1f,0,1)*.55f),0,new(32),g.Size/32,SpriteEffects.None,0);
-        b.End();b.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,SamplerState.LinearClamp);
+        b.End();RenderSpace.Begin(b,BlendState.Additive);
+        foreach(var g in mouseGlow)b.Draw(glow,g.P,null,g.Color*(Math.Clamp(1-g.Age/2.2f,0,1)*.55f),0,new(32),g.Size/32,SpriteEffects.None,0);
+        b.End();RenderSpace.Begin(b);
     }
-    void ClearInteractions(){paint.Clear();cracks.Clear();shards.Clear();shots.Clear();mouseGlow.Clear();rewards.Clear();reward.Clear();fireworks.Clear();glass.Clear();pointerActive=false;shake=0;sounds.Update(settings,0);}
+    void ClearInteractions(){paint.Clear();shots.Clear();mouseGlow.Clear();rewards.Clear();reward.Clear();fireworks.Clear();Sheet.Reset();pointerActive=false;shake=0;sounds.Update(settings,0);}
 }
 

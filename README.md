@@ -32,7 +32,7 @@ Hold exactly one Ctrl key, one Alt key, and:
 - **Esc** to close the game.
 - **O** to open or close the parent studio.
 
-Hold all three for at least **0.7 seconds**, then release every key. Left or right modifiers work. Extra Shift, a second Ctrl/Alt, Windows keys, or any other key invalidates the whole attempt, even if released before the chord. Release everything and start again. An extra key while releasing also invalidates it. Auto-repeat does not authorize actions.
+For Exit, hold all three for at least **0.7 seconds**, then release every key. Options opens on a clean chord release with no hold delay. Left or right modifiers work. Extra Shift, a second Ctrl/Alt, Windows keys, or any other key invalidates the whole attempt, even if released before the chord. Release everything and start again. An extra key while releasing also invalidates it. Auto-repeat does not authorize actions.
 
 Escape alone shows a small reminder. It does not leave play. The studio supports mouse input, Tab to switch sections, arrows to select/adjust settings, and Enter to edit. The key-to-text mapping in text fields currently assumes US QWERTY. Chord timing is intentionally not a child-adjustable preference.
 
@@ -46,7 +46,7 @@ See [streaming recognition and living effects](docs/streaming-and-effects.md) fo
 - **Spelling:** exact words start immediate; only learned continuation habits introduce a prefix wait. Typo recovery waits for a pause or space/Enter. “mom” can become “mommy.” An incompatible next letter resolves a completed word and starts the next. A unique one-edit correction can recover “miolk” → “milk” or “mlik” → “milk.” Ambiguous corrections are rejected.
 - Completed longer words increase per-prefix waiting; standalone uses decrease it. Observed typing cadence scales the wait. This is transparent statistical adaptation.
 - The gesture analyzer uses a bounded 1.4-second history: rate, concurrent keys, horizontal spread and path straightness. It estimates deliberate input, rapid typing, clusters, broad mashing and sweeps. It cannot prove which hands were used.
-- Optional parent calibration trains a tiny 6-input / 8-hidden / 5-output neural network locally. Give balanced examples of each pattern. Predictions are used only after 40 samples and sufficient confidence; physical overlap can override an implausible “deliberate” prediction. No raw keystroke history is written to disk.
+- Optional parent calibration trains a tiny 6-input / 8-hidden / 5-output neural network locally. Give balanced examples of each pattern. Predictions are used only after 40 samples and sufficient confidence; physical overlap overrides implausible typing predictions, and learned predictions cannot classify single-key typing as Cluster or BroadMash. No raw keystroke history is written to disk.
 
 This is a working playground foundation, not a validated developmental assessment. Hardware rollover can hide keys; see the protection notes.
 
@@ -101,7 +101,7 @@ Counting launches one rocket per number over a four-second launch window, with a
 
 Key transitions are deduplicated before queuing. If the bounded queue overflows, the game rebuilds held state instead of exiting or discarding releases. The keyboard hook renews periodically because Windows can silently remove a timed-out low-level hook. A single protected instance prevents competing hooks.
 
-**Emergency exit:** tap and release Escape ten times, without pressing another key. Holding Escape does not count repeatedly. This works independently of stale modifier state. The original exact Ctrl+Alt+Escape / Ctrl+Alt+O chords still require a 0.7-second hold followed by full release.
+**Emergency exit:** tap and release Escape ten times, without pressing another key. Holding Escape does not count repeatedly. This works independently of stale modifier state. The exact Ctrl+Alt+Escape exit chord still requires a 0.7-second hold followed by full release. Ctrl+Alt+O opens options on a clean full release, with no hold delay.
 
 During protected play, Sticky Keys, Filter Keys and Toggle Keys activation shortcuts and their confirmation dialogs are disabled for the session. Existing accessibility feature enablement is preserved. A separate helper restores the shortcut flags on normal exit or process termination. Preview mode does not change accessibility settings.
 
@@ -110,3 +110,21 @@ This is not Windows kiosk isolation: secure desktop and OS touchpad gestures can
 Effects recordings and their CC0 sources are documented in Content/Sounds/ATTRIBUTION.md. Effects playback is independent of speech and defaults to a quiet 30% level.
 
 Additional replay scenarios: `cluster`, `glass`, `swipe`, `fireworks`, `word-balloons`, `word-pop`. Use `--preview --scenario word-pop --seconds 5 --screenshot <path>` for an integrated cannon/scoring test. `scripts/test-accessibility.ps1` explicitly tests real Windows shortcut flags and guardian restoration after killing its own probe process; it does not capture the keyboard.
+
+## Native-resolution graphics and Sky Speller
+
+This iteration uses MonoGame's existing 3D GPU pipeline; it does not migrate to Unity. The logical play area remains 1440 by 900, but it now renders to the display resolution at the selected render scale. Liquid density accumulation, surface lighting and wet paint shading run in GPU effects. Glass uses a connected convex partition: new fractures are clipped to an existing piece, pressure grows the network, and those exact polygons rotate and fall after the sheet is sufficiently divided. Refraction and reflection are screen-space approximations, not ray tracing. Letters and icons use cached, lit extrusions of the bundled font silhouettes.
+
+**Graphics tab:** render scale, liquid resolution, terrain detail, 3D assets, glass shading, multisample edge smoothing, VSync and flight assistance. Its six-second benchmark exercises a fixed native-resolution workload, restores the previous settings afterwards, includes update/physics time, synchronizes GPU work with readback, and reports a 95th-percentile frame time. It suggests High/Balanced/Performance settings; applying and saving remains a parent choice. This estimate is not a guarantee for every laptop or workload.
+
+**Sky Speller (Experience > Mode > Bird Flight):** the bird continuously flies over procedural hills, lakes and trees. Left/right turn; Up dives; Down climbs; Space accelerates; Ctrl makes a procedural squawk. Banking, pitch, speed and wind affect motion. Ground contact gently redirects flight. Collect one 3D letter at a time, earning 10 points each and a word-length bonus on completion; the completed word is spoken. Flight assistance gently steers toward the next letter and can be disabled. This implements the first proposed mode; distractor-letter and free-word modes remain future additions.
+
+Options now open after a clean **Ctrl+Alt+O press and full release**, without the previous hold delay. The exit chord retains its hold requirement and ten Escape taps remain the independent fallback. Additional keys still invalidate the options chord.
+
+Gesture calibration is supervised: the tiny network trains only while the parent labels a pattern, while spelling/prefix timing adapts during play. Learned predictions cannot invent a cluster or mash from single-key typing. The software keyboard now shows held keys independently of fading recent presses, plus the live and maximum held-key count. The event path is tested with twenty simultaneous keys; actual keyboard hardware may report fewer (rollover/ghosting).
+
+Mouse trails again scatter radially with the original +/-150 velocity range and a longer fade; their size is adjustable in Play & safety. Asset collisions now reach the actual screen bottom rather than an invisible boundary 100 pixels above it.
+
+Additional preview scenarios: `flight`, `quick-options`, `twenty-keys`, `fracture`, `benchmark` (use `--seconds 8`). Preview `--page graphics --studio` opens graphics controls. Shaders compile through the same Windows installer pipeline.
+
+References: [MonoGame 3D rendering](https://docs.monogame.net/articles/getting_to_know/whatis/graphics/WhatIs_3DRendering.html), [custom GPU effects](https://docs.monogame.net/articles/getting_started/content_pipeline/custom_effects.html), [Microsoft keyboard ghosting explanation](https://www.microsoft.com/applied-sciences/projects/anti-ghosting).

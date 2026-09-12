@@ -14,3 +14,5 @@ All source recordings are CC0 (public domain dedication). No account, runtime do
 The effects bus defaults to 30% of the speech master level, with additional per-effect attenuation, eight simultaneous one-shots, and short duplicate suppression. Fire uses a separate quiet loop. Speech is independent and is never cancelled by effects.
 
 License: https://creativecommons.org/publicdomain/zero/1.0/
+
+`squawk.wav` is an original procedural bird chirp synthesized locally for this project from frequency-modulated sine waves and seeded noise. It contains no external recording.

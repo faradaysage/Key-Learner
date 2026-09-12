@@ -7,7 +7,7 @@ public sealed class SoundEffects : IDisposable
     readonly List<SoundEffectInstance> playing=new();
     readonly Dictionary<string,double> last=new();
     SoundEffectInstance? fire;
-    public SoundEffects(){try{foreach(var name in new[]{"pop","paint","crack","shatter","cannon","fire"}){using var s=File.OpenRead(Path.Combine(AppContext.BaseDirectory,"Content","Sounds",name+".wav"));clips[name]=SoundEffect.FromStream(s);}fire=clips["fire"].CreateInstance();fire.IsLooped=true;}catch(Exception e) when(e is IOException or NoAudioHardwareException or InvalidOperationException){}}
+    public SoundEffects(){try{foreach(var name in new[]{"pop","paint","crack","shatter","cannon","fire","squawk"}){using var s=File.OpenRead(Path.Combine(AppContext.BaseDirectory,"Content","Sounds",name+".wav"));clips[name]=SoundEffect.FromStream(s);}fire=clips["fire"].CreateInstance();fire.IsLooped=true;}catch(Exception e) when(e is IOException or NoAudioHardwareException or InvalidOperationException){}}
     public void Play(string name,Settings s,float gain=1)
     {
         Update(s,0,false);var now=KeyboardGuard.Now;

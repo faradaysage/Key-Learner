@@ -18,7 +18,7 @@ try {
  dotnet publish KeyLearner.csproj -c Release -r win-x64 --self-contained true -o $publish "-p:Version=$Version" "-p:FileVersion=$Version.0" -p:PublishSingleFile=false "-p:RuntimeFrameworkVersion=$runtime"
  if($LASTEXITCODE -ne 0){throw 'Publish failed'}
  if(Test-Path (Join-Path $publish 'data/private_dictionary.csv')){throw 'Private dictionary must never be packaged.'}
- foreach($required in @('KeyLearner.exe','coreclr.dll','Content/Branding/KeyLearner.ico','Content/Voice/a.wav','Content/Fonts/StudioRounded.xnb','Content/Effects/fire-atlas.png','Content/Sounds/fire.wav','Content/Sounds/shatter.wav','Content/Sounds/ATTRIBUTION.md')){
+ foreach($required in @('KeyLearner.exe','coreclr.dll','Content/Branding/KeyLearner.ico','Content/Voice/a.wav','Content/Fonts/StudioRounded.xnb','Content/Effects/fire-atlas.png','Content/Sounds/fire.wav','Content/Sounds/shatter.wav','Content/Sounds/ATTRIBUTION.md','Content/Sounds/squawk.wav','Content/Shaders/LiquidDensity.xnb','Content/Shaders/LiquidSurface.xnb','Content/Shaders/Glass.xnb','Content/Shaders/Paint.xnb')){
   if(!(Test-Path (Join-Path $publish $required))){throw "Missing packaged dependency: $required"}
  }
  & $Compiler "/DAppVersion=$Version" "/DPublishDir=$publish" "/DInstallerDir=$output" installer/KeyLearner.iss
