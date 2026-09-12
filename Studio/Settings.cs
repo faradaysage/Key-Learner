@@ -3,7 +3,7 @@ namespace KeyLearner.Studio;
 
 public enum Backdrop { Aurora, Plasma, Vortex, Starfield, RotatingStars }
 public enum Mood { Aurora, Lagoon, Sunset, Candy, PrimaryColors, BlackAndWhite }
-public enum PlayMode { SmashGarden, WordAdventure, Counting, BirdFlight, Racing, Dolphin, Subitizing }
+public enum PlayMode { SmashGarden, WordAdventure, Counting, BirdFlight, Racing, Dolphin, Subitizing, HowManyNow, WhatsHiding, MakeNumber, DotDuel, CannonHop }
 public enum Celebration { Confetti, Rain, Orbit, Bubbles, Embers }
 public enum LetterFont { Fredoka, Classic, Baloo }
 
@@ -111,6 +111,7 @@ public sealed class Store
     public Settings Settings { get; }
     public GestureTraining Gestures {get;private set;}=new();
     public Profile Profile { get; private set; }
+    public MathProgress MathLearning {get;private set;}=new();
     public List<WordEntry> Words { get; }
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
     public Store(string? root = null)
@@ -126,6 +127,7 @@ public sealed class Store
             Settings.DefaultsVersion=1;
         }
         if(savedSettings is null) DiscoverLocalVoice();
+        MathLearning=Read<MathProgress>("math-progress.json")??new();
         Profile = Read<Profile>("profile.json") ?? new();
         Profile.PrefixHabits ??= new();
         foreach(var key in Profile.PrefixHabits.Keys.ToArray()) Profile.PrefixHabits[key]=double.IsFinite(Profile.PrefixHabits[key])?Math.Clamp(Profile.PrefixHabits[key],0,8):0;
@@ -159,7 +161,7 @@ public sealed class Store
         Settings.Normalize();
         try
         {
-            Write("settings.json",Settings); Write("words.json",Words); Write("profile.json",Profile);Write("gesture-training.json",Gestures);
+            Write("math-progress.json",MathLearning);Write("settings.json",Settings); Write("words.json",Words); Write("profile.json",Profile);Write("gesture-training.json",Gestures);
             Status = "Saved locally. No accounts or uploads."; return true;
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { Status = "Save failed: " + e.Message; return false; }

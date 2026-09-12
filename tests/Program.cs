@@ -299,3 +299,68 @@ Console.WriteLine($"All {checks} checks passed including subitizing.");
 
 foreach(var size in new[]{(720f,1080f),(1920f,1080f),(1152f,720f),(1080f,1920f)}){float rw=Math.Max(576,size.Item1*.5f),rh=Math.Max(360,size.Item2*.5f);var render=DotLayout.RenderFit(size.Item1,size.Item2,rw,rh);bool valid=true;for(int n=0;n<10;n++){var p=(DotLayout.Number(n).Center*render.Scale+render.Offset)*new System.Numerics.Vector2(size.Item1/rw,size.Item2/rh);valid&=DotLayout.HitNumber(DotLayout.Unproject(p,size.Item1,size.Item2))==n;}Check(valid,"render-resolution clamping preserves portrait proportions and touch mapping at "+size);}
 Console.WriteLine($"All {checks} checks passed.");
+
+// Visual math: seed-stable constrained generation, adaptive progression, and non-blocking retry flow.
+foreach(var activity in Enum.GetValues<MathActivity>())foreach(int level in Enumerable.Range(1,8)){
+    var d=MathDifficulty.At(level);var deck=new MathRounds(947);var twin=new MathRounds(947);MathRound? last=null;
+    bool bounds=true,choices=true,answers=true,deterministic=true,alternate=true,frame=true;int zero=0;
+    for(int i=0;i<400;i++){
+        var r=deck.Next(activity,d);var s=twin.Next(activity,d);
+        deterministic&=r.A==s.A&&r.B==s.B&&r.Subtract==s.Subtract&&r.Answer==s.Answer&&r.Choices.SequenceEqual(s.Choices);
+        bounds&=r.A>=0&&r.A<=d.Limit&&r.B>=0&&r.B<=d.Limit;
+        choices&=r.Choices.Distinct().Count()==r.Choices.Length&&r.Choices.Count(n=>n==r.Answer)==1&&r.Choices.Length<=4;
+        if(activity is MathActivity.HowManyNow or MathActivity.CannonHop){
+            answers&=r.Answer==(r.Subtract?r.A-r.B:r.A+r.B)&&r.Answer>=0&&r.Answer<=d.Limit;
+            frame&=r.Subtract||d.Capacity-r.A>=r.B;
+            if(last!=null)alternate&=last.Subtract!=r.Subtract;
+        }else if(activity==MathActivity.Hiding)answers&=r.B==r.Answer&&r.A-r.B>=0&&(r.A-r.B)+r.Answer==r.A;
+        else if(activity==MathActivity.MakeNumber)answers&=r.A<r.B&&r.Answer==r.B&&r.B<=d.Capacity;
+        else answers&=r.Answer==(r.A==r.B?2:(r.Fewer?r.A<r.B:r.A>r.B)?0:1);
+        if(r.Answer==0)zero++;last=r;
+    }
+    Check(bounds&&answers&&frame,$"math {activity} level {level}: valid operands, answers, nonnegative subtraction, and frame capacity");
+    Check(choices&&deterministic&&alternate,$"math {activity} level {level}: unique choices, seed reproducibility, balanced operations");
+    if(activity==MathActivity.HowManyNow&&level>=2)Check(zero>0&&zero<180,"zero is present without dominating math level "+level);
+}
+void ReachMath(MathGame g,MathPhase phase){for(int i=0;i<1800&&g.Phase!=phase;i++)g.Step(.02);Check(g.Phase==phase,"math reaches "+phase+" without blocking");}
+foreach(var activity in Enum.GetValues<MathActivity>()){
+    var progress=new MathProgress();var g=new MathGame(activity,progress,120,level:4);
+    Check(!g.Answer(g.Round.Answer)&&!g.Cell(0),activity+" ignores input during countdown");ReachMath(g,MathPhase.AwaitAnswer);
+    for(int i=0;i<4000;i++)g.Step(.1);
+    Check(g.CanAnswer&&g.Stage==1,activity+" never times out a slow answer");
+    if(activity!=MathActivity.MakeNumber){
+        int wrong=g.Round.Choices.First(n=>n!=g.Round.Answer);g.Answer(wrong);
+        Check(g.Phase==MathPhase.Incorrect&&g.Stage==1&&!g.Answer(g.Round.Answer),activity+" error locks input without losing stage");
+        ReachMath(g,MathPhase.AwaitAnswer);g.Answer(wrong);ReachMath(g,MathPhase.Count);
+        Check(g.Errors==2&&g.Replaying,activity+" second error counts concrete objects");ReachMath(g,MathPhase.AwaitAnswer);g.Answer(g.Round.Answer);
+        ReachMath(g,MathPhase.Reward);
+    }else{
+        int before=g.BuiltCount;g.Cell(0);Check(g.BuiltCount==before-1,"builder permits removing occupied cells");
+        for(int i=0;i<g.Difficulty.Capacity&&g.CanAnswer;i++)if((g.BuiltMask&(1<<i))==0)g.Cell(i);
+        Check(g.Phase==MathPhase.Reward,"builder completes automatically at target cardinality");
+    }
+    Check(g.Stage==2&&!g.Answer(g.Round.Answer)&&!g.Cell(0),activity+" awards one stage and rejects reward-period input");
+    g.Restart();Check(g.Stage==2&&g.Phase==MathPhase.Ready,activity+" focus resume preserves exactly one earned stage");
+}
+var adaptation=new MathSkillProgress();for(int i=0;i<4;i++)adaptation.Complete(true);Check(adaptation.Level==2&&adaptation.Stage==5,"four accurate rounds advance one difficulty variable");
+adaptation.Complete(false);adaptation.Complete(true);adaptation.Complete(false);Check(adaptation.Level==1&&adaptation.Stage==8,"repeated errors ease difficulty without removing stages");
+for(int i=0;i<100;i++)adaptation.Complete(true);Check(adaptation.Level==8,"difficulty cannot exceed eight");for(int i=0;i<100;i++)adaptation.Complete(false);Check(adaptation.Level==1,"difficulty cannot fall below one");
+var mathMemory=new MathProgress();Check(!mathMemory.HopUnlocked,"number-line game starts gated by visual learning");
+for(int i=0;i<6;i++){var g=new MathGame(MathActivity.HowManyNow,mathMemory,level:4,a:3,b:1,subtract:i%2==0);ReachMath(g,MathPhase.AwaitAnswer);g.Answer(g.Round.Answer);}
+Check(mathMemory.HopUnlocked,"three joining and three separating rounds unlock hops");
+var retainedStage=mathMemory.For(MathActivity.HowManyNow).Stage;
+store.MathLearning.Skills=mathMemory.Skills;store.MathLearning.JoiningCompleted=3;store.MathLearning.SeparatingCompleted=3;store.MathLearning.LastActivity=MathActivity.Hiding;store.Save();
+var restoredMath=new Store(root);Check(restoredMath.MathLearning.HopUnlocked&&restoredMath.MathLearning.For(MathActivity.HowManyNow).Stage==retainedStage&&restoredMath.MathLearning.LastActivity==MathActivity.Hiding,"local save restores math progress and last activity");
+var confirmed=new MathGame(MathActivity.HowManyNow,new(),level:8,a:5,b:2,subtract:true);ReachMath(confirmed,MathPhase.AwaitAnswer);confirmed.Answer(3);Check(confirmed.Phase==MathPhase.Confirm&&confirmed.Stage==1,"equation-first answer explains visually before reward");ReachMath(confirmed,MathPhase.Reward);Check(confirmed.Stage==2,"confirmation awards stage once");
+foreach(var size in new[]{(1366f,768f),(1920f,1080f),(1152f,720f)}){
+    var ratio=new System.Numerics.Vector2(size.Item1/1440,size.Item2/900);bool correct=true;
+    foreach(var r in Enumerable.Range(0,10).Select(i=>MathLayout.CellButton(i,10)).Concat(Enumerable.Range(0,4).Select(i=>MathLayout.Choice(i,4))).Concat(Enumerable.Range(0,11).Select(MathLayout.Track)))correct&=r.Contains(MathLayout.Unproject(r.Center*ratio,size.Item1,size.Item2));
+    Check(correct,"math pointer targets agree with suite rendering at "+size);
+}
+Console.WriteLine($"All {checks} checks passed including visual math.");
+
+var memoryRound=new MathGame(MathActivity.HowManyNow,new(),level:6,a:5,b:2,subtract:false);
+ReachMath(memoryRound,MathPhase.Observe);Check(!memoryRound.Hidden,"advanced final quantity has a stable observation interval before hiding");ReachMath(memoryRound,MathPhase.AwaitAnswer);Check(memoryRound.Hidden,"memory stage hides only after observing the result");memoryRound.Answer(memoryRound.Round.Choices.First(n=>n!=7));ReachMath(memoryRound,MathPhase.AwaitAnswer);Check(!memoryRound.Hidden&&memoryRound.Replaying,"error restores persistent concrete support instead of another memory test");
+var resumedMath=new MathGame(MathActivity.Hiding,new(),level:4);ReachMath(resumedMath,MathPhase.AwaitAnswer);int originalHidden=resumedMath.Round.B;resumedMath.Answer(resumedMath.Round.Choices.First(n=>n!=originalHidden));resumedMath.Restart();Check(resumedMath.Round.B==originalHidden&&resumedMath.Errors==1&&resumedMath.Phase==MathPhase.Ready,"focus return replays the same math problem and preserves assistance");
+var heldNarration=new MathGame(MathActivity.HowManyNow,new());for(int i=0;i<7;i++)heldNarration.Step(.1,true);Check(heldNarration.Phase==MathPhase.Ready,"countdown allows the current spoken cue to finish");for(int i=0;i<200;i++)heldNarration.Step(.1,true);Check(heldNarration.Phase!=MathPhase.Ready,"unavailable speech cannot stall the round forever");
+Console.WriteLine($"All {checks} checks passed including math replay and narration.");

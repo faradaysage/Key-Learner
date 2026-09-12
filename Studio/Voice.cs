@@ -52,11 +52,11 @@ public sealed class Voice : IDisposable
         if(File.Exists(warm)){try{using var stream=File.OpenRead(warm);using var audio=SoundEffect.FromStream(stream);}catch(Exception e){Debug.WriteLine(e);}}
         worker=new Thread(PrepareAudio){IsBackground=true,Name="KeyLearner offline voice cache"};worker.Start();
     }
-    public void Say(string text,Settings settings,string recording="",bool key=false)
+    public void Say(string text,Settings settings,string recording="",bool key=false,bool brisk=false)
     {
         if(!settings.Sound || string.IsNullOrWhiteSpace(text))return;
         keyChannels=Math.Clamp(settings.KeyVoiceChannels,1,5);wordChannels=Math.Clamp(settings.WordVoiceChannels,1,3);
-        var r=new Request(text,recording,settings.PiperExecutable,settings.PiperModel,settings.WindowsVoice,settings.SpeechRate,settings.Volume,key,Now);
+        var r=new Request(text,recording,brisk?"":settings.PiperExecutable,brisk?"":settings.PiperModel,settings.WindowsVoice,brisk?Math.Clamp(settings.SpeechRate+5,3,8):settings.SpeechRate,settings.Volume,key,Now);
         Requested++;
         var queue=key?keys:words;
         if(queue.Count>=(key?8:32)){Overflow++;Log("overflow "+text);return;}

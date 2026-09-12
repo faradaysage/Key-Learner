@@ -6,6 +6,10 @@ A Windows native, offline keyboard playground inspired by Scott Hanselman's Baby
 
 The Windows installer workflow produces a self-contained x64 setup EXE and SHA-256 checksum under its **KeyLearner-Windows-installer** artifact. Download, unzip, and run setup. Subsequent installers update the same per-user installation and retain the parent profile. No .NET installation is required. See [installer builds and upgrades](docs/installer.md).
 
+## Visual math
+
+Five pointer-first activities extend Dot Pop: **How Many Now?**, **What's Hiding?**, **Make the Number**, **Dot Duel**, and **Cannon Hop**. Find them under Numbers in the existing game picker. They start with concrete quantities, give patient visual explanations after mistakes, and gradually introduce arithmetic within 10. [Progression, controls, and reproducible visual tests](docs/visual-math.md).
+
 ## Try it
 
 Build with .NET 8 or newer:

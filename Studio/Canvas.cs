@@ -179,15 +179,7 @@ public sealed partial class Canvas : IDisposable
         }
         Fields.Draw(b,width,height);
         Fields.Fire.Draw(b,palette);
-        foreach(var m in motes)
-        {
-            var alpha=Math.Clamp((m.Life-m.Age)/1.4f,0,1);
-            for(var trail=1;trail<=3 && !settings.GentleMotion;trail++) b.Draw(glow,m.P-m.V*(trail*.025f),null,m.Color*(alpha*m.Trail/(trail+2)),0,new(32),m.Size/12,SpriteEffects.None,0);
-            b.Draw(glow,m.P,null,m.Color*(alpha*.30f),0,new(32),m.Size/8,SpriteEffects.None,0);
-            if(m.Effect==Celebration.Confetti || m.Effect==Celebration.Rain)
-                b.Draw(pixel,m.P,null,m.Color*alpha,m.Spin*m.Age,Vector2.Zero,new Vector2(m.Size*.55f,m.Size*(m.Effect==Celebration.Rain?2:1)),SpriteEffects.None,0);
-            else b.Draw(disc,m.P,null,m.Color*(alpha*.7f),0,new(32),m.Size/32,SpriteEffects.None,0);
-        }
+        DrawFeedbackParticles(b);
         foreach(var ring in rings)
         {
             var fade=Math.Clamp(1-ring.Age/.8f,0,1);
@@ -217,6 +209,19 @@ public sealed partial class Canvas : IDisposable
         }
         if(settings.ExtrudedAssets){meshes.UseToon=settings.ToonAssets;b.End();foreach(var g in letters){if(g.Text.Length!=1)continue;float scale=(float)settings.FontScale*(g.Font==null?.7f:1.4f)*g.Balloon.Size;var world=Matrix.CreateScale(scale)*Matrix.CreateRotationX(settings.GentleMotion?0:MathF.Sin(g.Age*.8f)*.22f)*Matrix.CreateRotationY(settings.GentleMotion?0:MathF.Sin(g.Age*.6f)*.35f)*Matrix.CreateRotationZ(g.Rotation)*Matrix.CreateTranslation(g.P.X,g.P.Y,0);meshes.Draw(g.Font??font,g.Text[0],world,Matrix.Identity,Matrix.CreateOrthographicOffCenter(0,width,height,0,-500,500),g.Color,Math.Clamp((g.Life-g.Age)/1.2f,0,1));}RenderSpace.Begin(b);}
         DrawInteractions(b,time,width,height);
+    }
+    public void MathImpact(Vector2 position)=>Burst(position,Celebration.Embers,28,new(Gesture.Deliberate,1,.5,.5,0,0,1,0,[]));
+    public void DrawFeedbackParticles(SpriteBatch b)
+    {
+        foreach(var m in motes)
+        {
+            var alpha=Math.Clamp((m.Life-m.Age)/1.4f,0,1);
+            for(var trail=1;trail<=3 && !settings.GentleMotion;trail++) b.Draw(glow,m.P-m.V*(trail*.025f),null,m.Color*(alpha*m.Trail/(trail+2)),0,new(32),m.Size/12,SpriteEffects.None,0);
+            b.Draw(glow,m.P,null,m.Color*(alpha*.30f),0,new(32),m.Size/8,SpriteEffects.None,0);
+            if(m.Effect==Celebration.Confetti || m.Effect==Celebration.Rain)
+                b.Draw(pixel,m.P,null,m.Color*alpha,m.Spin*m.Age,Vector2.Zero,new Vector2(m.Size*.55f,m.Size*(m.Effect==Celebration.Rain?2:1)),SpriteEffects.None,0);
+            else b.Draw(disc,m.P,null,m.Color*(alpha*.7f),0,new(32),m.Size/32,SpriteEffects.None,0);
+        }
     }
     public void Clear() { ClearInteractions(); activeGlyph=null;activeKey=null;rings.Clear();letters.Clear(); motes.Clear(); Fields.Clear(); }
     public void Dispose() { meshes.Dispose();sounds.Dispose(); Fields.Dispose(); backdrop.Dispose(); pixel.Dispose(); glow.Dispose(); disc.Dispose(); }

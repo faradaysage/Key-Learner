@@ -116,13 +116,19 @@ public sealed partial class StudioGame : Game
         var capture=Array.IndexOf(args,"--screenshot"); if(capture>=0 && capture+1<args.Length) screenshot=Path.GetFullPath(args[capture+1]);
         if((demo || startStudio || screenshot!=null || scenario.Length>0) && !preview) throw new ArgumentException("Demo, studio inspection and screenshots require --preview.");
         var data=Array.IndexOf(args,"--data"); var root=data>=0 && data+1<args.Length?args[data+1]:null;
+        if(preview&&string.IsNullOrWhiteSpace(root))root=Path.Combine(Path.GetTempPath(),"KeyLearner-preview-"+Guid.NewGuid().ToString("N"));
         store=new Store(root); recognizer=new(store);
         if(preview) {if(Enum.TryParse<Backdrop>(ReadArg(args,"--backdrop"),true,out var previewBackdrop))S.Backdrop=previewBackdrop;if(Enum.TryParse<Mood>(ReadArg(args,"--theme"),true,out var previewTheme))S.Theme=previewTheme;tab=ReadArg(args,"--page") switch {"voice"=>1,"learning"=>2,"dictionary"=>3,"developer"=>4,"icons"=>5,"balloons"=>6,"graphics"=>8,_=>0};if(ReadArg(args,"--mode")=="adventure")S.Mode=PlayMode.WordAdventure;if(ReadArg(args,"--mode")=="flight")S.Mode=PlayMode.BirdFlight;if(ReadArg(args,"--mode")=="racing")S.Mode=PlayMode.Racing;if(ReadArg(args,"--mode")=="dolphin")S.Mode=PlayMode.Dolphin;if(ReadArg(args,"--mode")=="dots" || scenario.StartsWith("dots-"))S.Mode=PlayMode.Subitizing;if(ReadArg(args,"--mode")=="counting")S.Mode=PlayMode.Counting;}
+        ConfigureMathPreview(args);
         PrepareReplay();
         var sortedReplay=replay.OrderBy(e=>e.Time).ToArray();replay.Clear();foreach(var e in sortedReplay)replay.Enqueue(e);
         graphics=new(this) {PreferredBackBufferWidth=preview?(args.Contains("--portrait")?720:1152):GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
             PreferredBackBufferHeight=preview?(args.Contains("--portrait")?1080:720):GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height,
             IsFullScreen=!preview,HardwareModeSwitch=false,SynchronizeWithVerticalRetrace=S.VSync};
+        if(preview){
+            if(int.TryParse(ReadArg(args,"--width"),out int pw))graphics.PreferredBackBufferWidth=Math.Clamp(pw,640,2560);
+            if(int.TryParse(ReadArg(args,"--height"),out int ph))graphics.PreferredBackBufferHeight=Math.Clamp(ph,360,1600);
+        }
         Content.RootDirectory="Content"; Window.Title="KeyLearner | a little world of discovery";
         Window.AllowUserResizing=false; Window.AllowAltF4=preview;
         Activated+=(_,_)=>Interlocked.Exchange(ref visibilityReset,1);
@@ -182,7 +188,7 @@ public sealed partial class StudioGame : Game
         if(!preview && visible && accessibility==null)accessibility=new(store.Root);
         if(!visible){base.Update(gameTime);return;}
         UpdateBenchmark();
-        while(replay.Count>0 && gameTime.TotalGameTime.TotalSeconds>=replay.Peek().Time) {var item=replay.Dequeue();Handle(item with {Time=now});}
+        while(replay.Count>0 && gameTime.TotalGameTime.TotalSeconds>=replay.Peek().Time) {var item=replay.Dequeue();if(scenario=="picker-select"&&item.Down&&item.Key==39)gameSelection=0;Handle(item with {Time=now});}
         if(guard!=null)
         {
 
@@ -212,13 +218,14 @@ public sealed partial class StudioGame : Game
             var p=new Point(mouse.X*W/GraphicsDevice.Viewport.Width,mouse.Y*H/GraphicsDevice.Viewport.Height);
             var button=buttons.LastOrDefault(b=>b.Rect.Contains(p)); button.Click?.Invoke();
         }
-        if(!parent && !picker && !IsExplorer && !IsDotGame)canvas.Pointer(new Vector2(mouse.X*W/(float)GraphicsDevice.Viewport.Width,mouse.Y*H/(float)GraphicsDevice.Viewport.Height),IsActive,mouse.X!=previousMouse.X || mouse.Y!=previousMouse.Y,mouse.LeftButton==ButtonState.Pressed && previousMouse.LeftButton==ButtonState.Released,mouse.RightButton==ButtonState.Pressed && previousMouse.RightButton==ButtonState.Released,W,H,mouse.LeftButton==ButtonState.Pressed);
+        if(!parent && !picker && !IsExplorer && !IsDotGame && !IsMathGame)canvas.Pointer(new Vector2(mouse.X*W/(float)GraphicsDevice.Viewport.Width,mouse.Y*H/(float)GraphicsDevice.Viewport.Height),IsActive,mouse.X!=previousMouse.X || mouse.Y!=previousMouse.Y,mouse.LeftButton==ButtonState.Pressed && previousMouse.LeftButton==ButtonState.Released,mouse.RightButton==ButtonState.Pressed && previousMouse.RightButton==ButtonState.Released,W,H,mouse.LeftButton==ButtonState.Pressed);
         if(scenario=="word-pop" && gameTime.TotalGameTime.TotalSeconds>replayClickAt+.85 && canvas.FirstRewardPosition is {} balloonPoint){canvas.Pointer(balloonPoint,true,false,true,false,W,H);replayClickAt=gameTime.TotalGameTime.TotalSeconds;}
         if(scenario=="fracture" && gameTime.TotalGameTime.TotalSeconds>1.5 && canvas.Sheet.Panes.Count<12){canvas.Sheet.Hit(new(320,350),1);}
+        if(IsMathPlay)UpdateMath((float)gameTime.ElapsedGameTime.TotalSeconds,mouse);
         if(IsDotPlay)UpdateDots((float)gameTime.ElapsedGameTime.TotalSeconds,mouse);
         previousMouse=mouse;
         if(calibration>=0 && now>calibrateUntil) { calibration=-1; parent=true; store.Save(); notice="Calibration saved. Add samples for each pattern for a balanced model."; held.Clear(); parentHold.Reset(); }
-        if(!parent && !picker && (!IsDotGame || calibration>=0))
+        if(!parent && !picker && (!IsDotGame && !IsMathGame || calibration>=0))
         {
             if(IsExplorer && calibration<0)UpdateFlight((float)gameTime.ElapsedGameTime.TotalSeconds);
             if(!IsExplorer && calibration<0 && !awaitingBalloons) { if(S.Mode==PlayMode.WordAdventure){if(guided.Update(now))canvas.SpellingTimeout();}else{var word=recognizer.Update(now);if(word!=null)Celebrate(word);} }
@@ -258,6 +265,7 @@ public sealed partial class StudioGame : Game
             ParentKey(e.Key);return;
         }
         if(e.Key is 27 or 79 && held.Any(ParentChord.IsControl) && held.Any(k=>ParentChord.IsAlt(k)||k is 160 or 161))return;
+        if(IsMathGame && calibration<0){if(!held.Any(ParentChord.IsModifier))MathKey(e.Key);return;}
         if(IsDotGame && calibration<0)return;
         if(benchmarking)return;
         if(IsExplorer && calibration<0){
@@ -354,7 +362,7 @@ public sealed partial class StudioGame : Game
     }
     private void ToggleParent()
     {
-        optionsTaps.Reset();picker=false;gameShortcut.Reset();dotSounds?.Stop();
+        optionsTaps.Reset();picker=false;gameShortcut.Reset();dotSounds?.Stop();ResetMath();
         if(benchmarking){FinishBenchmark();return;}
         if(parent && !store.Save()) { notice=store.Status; return; }
         awaitingBalloons=false;parent=!parent; editValue=null; editCommit=null; calibration=-1;
@@ -367,20 +375,20 @@ public sealed partial class StudioGame : Game
         var renderStart=System.Diagnostics.Stopwatch.GetTimestamp();
         ResizeSurface();
         PrepareGamePreviews();
-        if(!IsDotPlay)canvas.Prepare();
+        if(!IsDotPlay && !IsMathPlay)canvas.Prepare();
         GraphicsDevice.SetRenderTarget(surface); GraphicsDevice.Clear(canvas.Background);
         RenderSpace.Begin(batch);
         buttons.Clear();
-        if(IsDotPlay)DrawDots();else if(!parent && !picker && IsExplorer && calibration<0){batch.End();flightRenderer.Draw(benchmarking?benchmarkFlight:flight,S,canvas.Palette);RenderSpace.Begin(batch);}else canvas.Draw(batch,(float)gameTime.TotalGameTime.TotalSeconds,W,H);
-        if(parent) DrawParent(); else if(picker)DrawPicker();else if(!benchmarking && !IsDotPlay) DrawPlay();
+        if(IsMathPlay)DrawMath();else if(IsDotPlay)DrawDots();else if(!parent && !picker && IsExplorer && calibration<0){batch.End();flightRenderer.Draw(benchmarking?benchmarkFlight:flight,S,canvas.Palette);RenderSpace.Begin(batch);}else canvas.Draw(batch,(float)gameTime.TotalGameTime.TotalSeconds,W,H);
+        if(parent) DrawParent(); else if(picker)DrawPicker();else if(!benchmarking && !IsDotPlay && !IsMathPlay) DrawPlay();
         if(benchmarking)Text("Benchmark / "+Math.Max(0,6-(now-benchmarkStart)).ToString("0")+" seconds",40,160,Color.White,.6f);
         if(editValue!=null) DrawEdit();
         batch.End();
         GraphicsDevice.SetRenderTarget(composite);GraphicsDevice.Clear(canvas.Background);
         batch.Begin();batch.Draw(surface,composite.Bounds,Color.White);batch.End();
-        if(!parent && !picker && !IsDotGame)glassRenderer.Draw(canvas.Sheet,surface,batch,pixel,S.GlassShader,S.GentleMotion);
+        if(!parent && !picker && !IsDotGame && !IsMathGame)glassRenderer.Draw(canvas.Sheet,surface,batch,pixel,S.GlassShader,S.GentleMotion);
         GraphicsDevice.SetRenderTarget(null); GraphicsDevice.Clear(canvas.Background);
-        batch.Begin(samplerState:SamplerState.LinearClamp); var destination=GraphicsDevice.Viewport.Bounds;if(!parent && !IsDotGame){destination.X+=(int)canvas.Shake.X;destination.Y+=(int)canvas.Shake.Y;}batch.Draw(composite,destination,Color.White); batch.End();
+        batch.Begin(samplerState:SamplerState.LinearClamp); var destination=GraphicsDevice.Viewport.Bounds;if(!parent && !IsDotGame && !IsMathGame){destination.X+=(int)canvas.Shake.X;destination.Y+=(int)canvas.Shake.Y;}if(IsMathPlay){destination.X+=(int)MathShake.X;destination.Y+=(int)MathShake.Y;}batch.Draw(composite,destination,Color.White); batch.End();
         if(benchmarking){var sample=new Color[1];composite.GetData(0,new Rectangle(composite.Width/2,composite.Height/2,1,1),sample,0,1);benchmarkFrames.Add(System.Diagnostics.Stopwatch.GetElapsedTime(benchmarkFrameStart>0?benchmarkFrameStart:renderStart).TotalMilliseconds);}
         renderSeconds+=System.Diagnostics.Stopwatch.GetElapsedTime(renderStart).TotalSeconds;renderFrames++;
         if(!captured && screenshot!=null && gameTime.TotalGameTime.TotalSeconds>replaySeconds-.1)
@@ -452,7 +460,7 @@ public sealed partial class StudioGame : Game
     }
     private void VerifyReplay()
     {
-        var success=scenario switch {"dots-correct"=>dots.Stage>=2,"dots-retry"=>dots.Stage>=2 && dots.Mastery==0,"dots-visible"=>dots.DotsVisible && dots.Stage==1,"picker" or "game-picker"=>picker && !parent,"picker-select"=>!picker && S.Mode==PlayMode.WordAdventure,"cannon-miss"=>canvas.CannonShots==0 && canvas.Blasts==0,"patient-red"=>hero=="red" && recognizedCount==1,"spelling-timeout"=>guided.Progress==1,"racing"=>flight.Kind==ExplorerKind.Racer && flight.Position.Z< -100,"dolphin"=>flight.Kind==ExplorerKind.Dolphin && flight.Position.Y<0 && flight.Position.Z< -100,"flight-loop"=>float.IsFinite(flight.Position.Y),"shift-options"=>parent,"window-resume"=>lifecycleStage==2 && resumeClears>=2 && lifecycleVerified && voice?.Pending==0 && held.Count==0 && hero=="" && canvas.ParticleCount==0 && canvas.GlyphCount==0,"ten-o"=>parent,"native-recovery"=>parent && hero=="milk" && canvas.PaintCount==0 && canvas.ShatterCount==0,"twenty-keys"=>held.Count==20 && maximumHeld==20,"quick-options"=>!parent,"benchmark"=>!benchmarking && benchmarkFrames.Count>30 && recommendation.Length>0,"fracture"=>true,"flight"=>flight.Position.Z< -40,"cluster"=>canvas.PaintCount>0,"glass"=>canvas.ShatterCount>0,"swipe"=>canvas.Fields.Blobs.Drops.Any(d=>d.Wobble>0),"fireworks"=>canvas.RocketsLaunched==(replaySeconds>=5?10:8),"word-balloons"=>canvas.RewardRemaining==3,"word-pop"=>canvas.Score==45 && canvas.RewardRemaining==0,"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
+        var success=scenario switch {"math-pointer"=>math?.Stage==2&&picker&&!parent,"math-complete"=>math!=null&&math.Stage>=2&&mathPreviewActions==1,"math-round"=>math!=null,"dots-correct"=>dots.Stage>=2,"dots-retry"=>dots.Stage>=2 && dots.Mastery==0,"dots-visible"=>dots.DotsVisible && dots.Stage==1,"picker" or "game-picker"=>picker && !parent,"picker-select"=>!picker && S.Mode==PlayMode.WordAdventure,"cannon-miss"=>canvas.CannonShots==0 && canvas.Blasts==0,"patient-red"=>hero=="red" && recognizedCount==1,"spelling-timeout"=>guided.Progress==1,"racing"=>flight.Kind==ExplorerKind.Racer && flight.Position.Z< -100,"dolphin"=>flight.Kind==ExplorerKind.Dolphin && flight.Position.Y<0 && flight.Position.Z< -100,"flight-loop"=>float.IsFinite(flight.Position.Y),"shift-options"=>parent,"window-resume"=>lifecycleStage==2 && resumeClears>=2 && lifecycleVerified && voice?.Pending==0 && held.Count==0 && hero=="" && canvas.ParticleCount==0 && canvas.GlyphCount==0,"ten-o"=>parent,"native-recovery"=>parent && hero=="milk" && canvas.PaintCount==0 && canvas.ShatterCount==0,"twenty-keys"=>held.Count==20 && maximumHeld==20,"quick-options"=>!parent,"benchmark"=>!benchmarking && benchmarkFrames.Count>30 && recommendation.Length>0,"fracture"=>true,"flight"=>flight.Position.Z< -40,"cluster"=>canvas.PaintCount>0,"glass"=>canvas.ShatterCount>0,"swipe"=>canvas.Fields.Blobs.Drops.Any(d=>d.Wobble>0),"fireworks"=>canvas.RocketsLaunched==(replaySeconds>=5?10:8),"word-balloons"=>canvas.RewardRemaining==3,"word-pop"=>canvas.Score==45 && canvas.RewardRemaining==0,"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
         if(scenario is "rapid-milk" or "mommy" or "balloon" && S.Sound)success=success && voice!=null && voice.Started==voice.Requested && voice.Completed==voice.Requested && voice.Overflow==0;
         if(!success) throw new InvalidOperationException("Preview scenario failed: "+scenario+"; hero="+hero+"; parent="+parent);
         if(screenshot!=null && voice!=null) File.WriteAllLines(screenshot+".audio.txt",new[]{ $"requested={voice.Requested}; started={voice.Started}; completed={voice.Completed}; overflow={voice.Overflow}; peak={voice.PeakOverlap}; max delay={voice.MaximumStartDelay:0.000}s"}.Concat(voice.Trace));
@@ -740,7 +748,7 @@ public sealed partial class StudioGame : Game
     }
     protected override void Dispose(bool disposing)
     {
-        if(disposing) {ReleaseSession();dotDisc?.Dispose();dotSounds?.Dispose();foreach(var texture in gamePreviews.Values)texture.Dispose();wordImage?.Dispose();flightRenderer?.Dispose();canvas?.Dispose();surface?.Dispose();composite?.Dispose();pixel?.Dispose();batch?.Dispose();}
+        if(disposing) {ReleaseSession();mathBalls?.Dispose();dotDisc?.Dispose();dotSounds?.Dispose();foreach(var texture in gamePreviews.Values)texture.Dispose();wordImage?.Dispose();flightRenderer?.Dispose();canvas?.Dispose();surface?.Dispose();composite?.Dispose();pixel?.Dispose();batch?.Dispose();}
         base.Dispose(disposing);
     }
     private void ResizeSurface()

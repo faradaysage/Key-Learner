@@ -51,7 +51,14 @@ public sealed partial class StudioGame
     }
     void DotCircle(Vector2 p,float radius,Color color)=>batch.Draw(dotDisc!,p,null,color,0,new(64),radius/64,SpriteEffects.None,0);
     void DotLine(Vector2 a,Vector2 b,float width,Color color){var d=b-a;batch.Draw(pixel,a,null,color,MathF.Atan2(d.Y,d.X),new(0,.5f),new Vector2(d.Length(),width),SpriteEffects.None,0);}
-    void DotRounded(DotRect r,Color color){const int corner=22;Fill(new((int)r.X+corner,(int)r.Y,(int)r.Width-corner*2,(int)r.Height),color);Fill(new((int)r.X,(int)r.Y+corner,(int)r.Width,(int)r.Height-corner*2),color);foreach(int x in new[]{0,1})foreach(int y in new[]{0,1})DotCircle(new(r.X+corner+x*(r.Width-corner*2),r.Y+corner+y*(r.Height-corner*2)),corner,color);}
+    void DotRounded(DotRect r,Color color){
+        // Non-overlapping pieces keep translucent cards uniformly shaded.
+        int x=(int)r.X,y=(int)r.Y,w=(int)r.Width,h=(int)r.Height,c=Math.Min(22,Math.Min(w,h)/2);
+        Fill(new(x+c,y,w-2*c,h),color);Fill(new(x,y+c,c,h-2*c),color);Fill(new(x+w-c,y+c,c,h-2*c),color);
+        for(int side=0;side<2;side++)for(int row=0;row<2;row++)
+            batch.Draw(dotDisc!,new Rectangle(x+side*(w-c),y+row*(h-c),c,c),new Rectangle(side*64,row*64,64,64),color);
+    }
+
     void DotText(string text,Vector2 center,float scale,Color color,SpriteFont? font=null){font??=title;batch.DrawString(font,text,center-font.MeasureString(text)*scale/2,color,0,Vector2.Zero,scale,SpriteEffects.None,0);}
     void DotRing(Vector2 center,float radius,float width,Color color){for(int i=0;i<64;i++){float a=i*MathF.Tau/64,b=(i+1)*MathF.Tau/64;DotLine(center+new Vector2(MathF.Cos(a),MathF.Sin(a))*radius,center+new Vector2(MathF.Cos(b),MathF.Sin(b))*radius,width,color);}}
     void DotBurst(Vector2 center,float age,int seed){
