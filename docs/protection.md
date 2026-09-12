@@ -4,9 +4,9 @@
 
 Normal launch installs a Windows WH_KEYBOARD_LL hook on a dedicated message-pump thread. The callback queues physical transitions for the game and consumes ordinary keyboard messages, including injected input. Injected input cannot authorize parent actions. The callback does not synthesize replacement keystrokes into Windows.
 
-The game is borderless fullscreen, disables MonoGame Alt+F4, requests topmost placement and mouse confinement with SDL, and cancels application close requests until the exact parent exit gesture. It attempts to restore focus if lost. The hook remains in place when the parent studio is open. Cleanup unhooks and releases SDL confinement. Crashes and forced process termination end the session protection.
+The game is borderless fullscreen, disables MonoGame Alt+F4, requests topmost placement and mouse confinement with SDL, and cancels application close requests until the exact parent exit gesture. On focus loss it stops collecting game input, clears transient state, and keeps the blocking hook installed. The hook remains in place when the parent studio is open. Cleanup unhooks and releases SDL confinement. Crashes and forced process termination end the session protection.
 
-The chord requires one physical Ctrl, one Alt and one target, held for 700 ms and fully released. Keys held before an attempt and extra keys during release poison that attempt. The whole set must be released before trying again.
+Every frame checks the current 256-key snapshot. Exact Ctrl+Alt+O or Ctrl+Shift+O opens options after two seconds; exact Ctrl+Alt+Esc exits after two seconds. No release sequence is required. Extra physical keys restart the hold timer; toggle indicators do not count. After an action, release all keys before another action. A frame gap over 250 ms restarts the timer.
 
 ## What it cannot guarantee
 
@@ -33,11 +33,11 @@ Use a separate child/test account with no valuable applications open. An adult m
 | Alt+Tab, Alt+Esc, Alt+F4, Ctrl+Esc, Ctrl+Shift+Esc | Consumed; remain in the game |
 | Win, Win+D/L/R/Tab, browser/media keys | Ordinary reported key messages consumed |
 | Esc | Reminder only |
-| Ctrl+Alt+Esc, held 0.7 s, released | Game closes; normal keyboard restored |
-| Ctrl+Alt+O, held 0.7 s, released | Studio toggles; guard remains installed |
+| Ctrl+Alt+Esc, held 2 s | Game closes; normal keyboard restored |
+| Ctrl+Alt+O, held 2 s | Studio toggles; guard remains installed |
 | Correct chord plus Shift, both Ctrl keys, or random key | No parent action |
-| Extra key pressed and released during a chord | No parent action |
-| Release a target, press another before releasing modifiers | No parent action |
+| Extra key pressed and released during a chord | Hold timer restarts |
+| Release a target, press another before releasing modifiers | New exact combination must be held for two seconds |
 | Hold keys at launch; repeat keys; mash many keys; unplug keyboard | No false parent action; verify recovery |
 | Mouse corners, secondary monitor, touchpad 3/4-finger gestures | Check actual device; application confinement can be bypassed |
 | Sticky/Filter/Toggle Keys activation sequences | Must be tested/configured at OS layer |
@@ -56,3 +56,12 @@ Sources:
 The native hook matches key-up to the original scan code plus extended flag, retaining the original virtual-key label. Pause/Break are pulses; overrun and synthetic extended Shift packets cannot remain held. Repairs from injected releases rebuild state and cannot authorize a strict parent chord. No idle timeout invents releases for genuinely held keys.
 
 Ten complete O taps independently open options, just as ten Escape taps exit. Other key-downs reset each sequence; repeats count once. The normal exact chord still rejects extra keys. Parent Studio shows scan repair/ignored-packet counters. Preview `native-recovery` exercises scan normalization through the game handler; `ten-o` verifies options recovery with poisoned held-key state. Physical hardware acceptance remains required.
+
+
+### Clean resume (2.0.23)
+
+The live snapshot is independent of buffered gameplay events. It is still maintained by the Windows interceptor: blocked Windows delivery can prevent ordinary polling APIs from reporting pressed keys. We do not substitute zero polling results for physical release events.
+
+Focus/visibility transitions clear the native ledger, event queue, game-held state, shortcut timers, gesture history, recognition fragments, speech and effects together. Gameplay processing is paused while inactive; only parent holds and ten-tap fallbacks consume input, allowing an adult to close or restore the window. the hook continues suppressing Windows keyboard delivery. Returning starts a fresh input session. Ten O taps provide an independent input reset and options route. Key transitions older than 250 ms cannot become deferred effects or speech. The game no longer repeatedly restores/raises its window while continuing to play queued input in the background.
+
+Synthetic and hide/show regressions are automated. The user's physical desktop escape remains unconfirmed on this development device; Windows touchpad/secure-desktop behavior remains outside this guard's guarantee.

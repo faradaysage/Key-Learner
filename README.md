@@ -32,7 +32,7 @@ Hold exactly one Ctrl key, one Alt key, and:
 - **Esc** to close the game.
 - **O** to open or close the parent studio.
 
-For Exit, hold all three for at least **0.7 seconds**, then release every key. Options opens on a clean chord release with no hold delay. Left or right modifiers work. Extra Shift, a second Ctrl/Alt, Windows keys, or any other key invalidates the whole attempt, even if released before the chord. Release everything and start again. An extra key while releasing also invalidates it. Auto-repeat does not authorize actions.
+Hold an exact combination for **two seconds**. No release is required. Left or right modifiers work. Additional physical keys restart the timer; Caps/Num/Scroll Lock indicators are ignored. Release all keys after an action before triggering another. Ctrl+Shift+O is also accepted for options.
 
 Escape alone shows a small reminder. It does not leave play. The studio supports mouse input, Tab to switch sections, arrows to select/adjust settings, and Enter to edit. The key-to-text mapping in text fields currently assumes US QWERTY. Chord timing is intentionally not a child-adjustable preference.
 
@@ -101,7 +101,7 @@ Counting launches one rocket per number over a four-second launch window, with a
 
 Key transitions are deduplicated before queuing. If the bounded queue overflows, the game rebuilds held state instead of exiting or discarding releases. The keyboard hook renews periodically because Windows can silently remove a timed-out low-level hook. A single protected instance prevents competing hooks.
 
-**Emergency exit:** tap and release Escape ten times, without pressing another key. Holding Escape does not count repeatedly. This works independently of stale modifier state. The exact Ctrl+Alt+Escape exit chord still requires a 0.7-second hold followed by full release. Ctrl+Alt+O opens options on a clean full release, with no hold delay.
+**Emergency exit:** tap and release Escape ten times, without pressing another key. Holding Escape does not count repeatedly. This works independently of stale modifier state. The exact Ctrl+Alt+Escape exit chord and Ctrl+Alt+O options chord each require a two-second hold.
 
 During protected play, Sticky Keys, Filter Keys and Toggle Keys activation shortcuts and their confirmation dialogs are disabled for the session. Existing accessibility feature enablement is preserved. A separate helper restores the shortcut flags on normal exit or process termination. Preview mode does not change accessibility settings.
 
@@ -119,7 +119,7 @@ This iteration uses MonoGame's existing 3D GPU pipeline; it does not migrate to 
 
 **Sky Speller (Experience > Mode > Bird Flight):** the bird continuously flies over procedural hills, lakes and trees. Left/right turn; Up dives; Down climbs; Space accelerates; Ctrl makes a procedural squawk. Banking, pitch, speed and wind affect motion. Ground contact gently redirects flight. Collect one 3D letter at a time, earning 10 points each and a word-length bonus on completion; the completed word is spoken. Flight assistance gently steers toward the next letter and can be disabled. This implements the first proposed mode; distractor-letter and free-word modes remain future additions.
 
-Options now open after a clean **Ctrl+Alt+O press and full release**, without the previous hold delay. The exit chord retains its hold requirement and ten Escape taps remain the independent fallback. Additional keys still invalidate the options chord.
+Hold exactly **Ctrl+Alt+O** (or **Ctrl+Shift+O**) for two seconds to open options. Hold exactly **Ctrl+Alt+Esc** for two seconds to exit. No release is required. Extra pressed keys restart the timer; lock indicators do not count as pressed keys. Ten O / Escape taps remain independent fallbacks.
 
 Gesture calibration is supervised: the tiny network trains only while the parent labels a pattern, while spelling/prefix timing adapts during play. Learned predictions cannot invent a cluster or mash from single-key typing. The software keyboard now shows held keys independently of fading recent presses, plus the live and maximum held-key count. The event path is tested with twenty simultaneous keys; actual keyboard hardware may report fewer (rollover/ghosting).
 
@@ -136,10 +136,20 @@ Key releases now match the physical scan code from the original press, even if W
 
 Clusters and mashing require a fresh burst of overlapping distinct presses within 140 ms. Old held-key counts alone cannot turn paced typing into paint, and typing speed alone cannot trigger glass. Deliberate and rapid typing need no calibration. The optional network can refine a physically plausible multi-key pattern; it cannot override typing into a mash.
 
-**Ten complete O taps open Parent Studio**, independently of the strict chord's held-key state. Any other press resets the sequence, and auto-repeat does not count. Ten Escape taps remain the exit fallback. The normal options shortcut is exact Ctrl+Alt+O followed by full release; additional keys still invalidate that shortcut.
+**Ten complete O taps open Parent Studio**, independently of the strict chord's held-key state. Any other press resets the sequence, and auto-repeat does not count. Ten Escape taps remain the exit fallback. The normal options shortcut is an exact two-second Ctrl+Alt+O (or Ctrl+Shift+O) hold; extra keys restart the timer.
 
 **Learning** now offers separate Reset gesture training and Reset word learning buttons. The word model lives in `profile.json`; the calibration network lives in `gesture-training.json` and trains only during the twelve-second parent-labeled calibration sessions. In-game word and prefix learning never updates gesture weights. Legacy embedded gesture weights are retired on upgrade, preserving word counts and prefix habits. Calibration is off by default and can be enabled independently of word learning.
 
 **Toon asset shading** is on by default in Graphics. Extruded letters, numbers, icons, and flight letter gates use banded lighting and dark silhouettes; turn it off to restore the previous lighting. It requires 3D assets in Smash Garden.
 
 Regressions include translated key releases, Pause without key-up, strict options recovery, independent tap sequences, separate learning resets, and legacy profile migration. Integrated previews: `native-recovery`, `ten-o`. These do not replace acceptance testing on the laptop's physical keyboard and touchpad.
+
+## Current key snapshots and clean resume (2.0.23)
+
+The protected input layer publishes a 256-key snapshot independently of its bounded event queue. Parent controls check that snapshot every frame; speech, spelling and gesture recognition cannot consume or suppress it. Shortcuts no longer reconstruct a clean press/release sequence from gameplay history. Caps/Num/Scroll Lock count only while physically pressed, not while their indicator is on. Ten O taps also reset the input ledger to recover parent controls.
+
+Startup, activation/deactivation, hide/show, minimize/restore, and maximize changes clear native held state, pending key events, speech queues/playback, effects sounds, particles, glass, paint, fireworks, word fragments and recent-key highlights. Inactive windows discard gameplay input and do not advance speech/gameplay. Parent holds and ten-tap fallbacks remain available in the background; opening options explicitly restores the window. Old events more than 250 ms late are discarded rather than replayed. Learned profiles are preserved. Calibration stops on a visibility change.
+
+This snapshot is maintained by the native input interceptor, not claimed as a stateless hardware poll: ordinary Windows state readers can miss keys when their delivery is suppressed. The previous release-order dependency is gone, and return-to-game resets now clear the native state as well as the screen. Application-level keyboard protection still does not prevent all OS/secure-desktop/touchpad escape paths.
+
+Validation scenarios: `options`, `shift-options`, `extra-key`, `quick-options` (short holds rejected), `native-recovery`, `window-resume` (actual SDL hide/show with queued speech and effects), `ten-o`, and `twenty-keys`.

@@ -203,3 +203,24 @@ var legacyRoot=Path.Combine(root,"legacy-learning");Directory.CreateDirectory(le
 File.WriteAllText(Path.Combine(legacyRoot,"profile.json"),"""{"WordCounts":{"mommy":7},"PrefixHabits":{"mom":3},"Network":{"Samples":999}}""");
 var legacyLearning=new Store(legacyRoot);Check(legacyLearning.Profile.WordCounts["mommy"]==7 && legacyLearning.Profile.PrefixHabits["mom"]==3 && legacyLearning.Gestures.Network.Samples==0,"legacy word habits survive while embedded gesture weights are retired");
 Console.WriteLine($"All {checks} checks passed.");
+
+// Current state is independent of event delivery, model history and lock toggle bits.
+Check(!KeySnapshot.WindowsDown(1)&&KeySnapshot.WindowsDown(unchecked((short)0x8001)),"Caps Lock toggled is not held; only high bit is down");
+var liveQueue=new KeyTransitionBuffer();foreach(int k in Enumerable.Range(65,20))liveQueue.Push(new(k,true,0));liveQueue.DiscardEvents();Check(liveQueue.Pending==0&&liveQueue.Snapshot().Count==20,"discarding history cannot swallow current twenty-key state");
+foreach(int k in Enumerable.Range(65,20))liveQueue.Push(new(k,false,.1));Check(liveQueue.Snapshot().Count==0,"snapshot sees releases before consumer drains events");
+var parentLive=new ParentHold();var combo=KeySnapshot.From(new[]{162,164,79});ParentAction heldAction=ParentAction.None;
+for(int i=0;i<=130;i++){var a=parentLive.Update(combo,i/60d);if(a!=ParentAction.None)heldAction=a;}
+Check(heldAction==ParentAction.Options,"two-second current-state hold opens without a release event");Check(parentLive.Update(combo,4)==ParentAction.None,"continued hold cannot toggle options repeatedly");
+parentLive.Reset();for(int i=0;i<60;i++)parentLive.Update(combo,i/60d);parentLive.Update(KeySnapshot.From(new[]{162,164,79,20}),1);
+Check(parentLive.Update(combo,1.01)==ParentAction.None,"physically held Caps Lock invalidates exact chord");heldAction=ParentAction.None;for(int i=0;i<130;i++){var a=parentLive.Update(combo,1.02+i/60d);if(a!=ParentAction.None)heldAction=a;}Check(heldAction==ParentAction.Options,"clean current chord recovers without releasing and rebuilding old history");
+parentLive.Reset();parentLive.Update(combo,0);Check(parentLive.Update(combo,5)==ParentAction.None,"stalled frames never satisfy hold duration");
+parentLive.Reset();heldAction=ParentAction.None;for(int i=0;i<130;i++){var a=parentLive.Update(KeySnapshot.From(new[]{163,161,79}),i/60d);if(a!=ParentAction.None)heldAction=a;}Check(heldAction==ParentAction.Options,"right Ctrl Shift O alias uses exact live hold");
+parentLive.Reset();for(int i=0;i<200;i++)Check(parentLive.Update(KeySnapshot.From(new[]{162,164,160,79}),i/60d)==ParentAction.None,"additional modifier rejects live shortcut");
+var resumeQueue=new KeyTransitionBuffer();var resumePhysical=new PhysicalKeyboard(resumeQueue);resumePhysical.Feed(20,58,false,true,false,0);resumePhysical.Feed(65,30,false,true,false,.1);resumePhysical.Clear();Check(resumeQueue.Pending==0&&resumeQueue.Snapshot().Count==0&&resumePhysical.Held==0,"visibility reset clears native ledger, current snapshot, and queued keys together");resumePhysical.Feed(65,30,false,true,false,1);Check(resumeQueue.Snapshot().IsDown(65)&&resumeQueue.Pending==1,"fresh key works immediately after resume reset");
+Console.WriteLine($"All {checks} checks passed.");
+
+parentLive.Reset();for(int i=0;i<110;i++)parentLive.Update(combo,i/60d);parentLive.Observe(KeySnapshot.From(new[]{162,164,79,65}));parentLive.Observe(combo);Check(parentLive.Update(combo,1.85)==ParentAction.None&&parentLive.Update(combo,2)==ParentAction.None,"extra press between frames restarts continuous hold");
+Console.WriteLine($"All {checks} checks passed.");
+
+parentLive.Reset();heldAction=ParentAction.None;for(int i=0;i<130;i++){var a=parentLive.Update(KeySnapshot.From(new[]{162,164,27}),i/60d);if(a!=ParentAction.None)heldAction=a;}Check(heldAction==ParentAction.Exit,"two-second live exit hold needs no release sequence");
+Console.WriteLine($"All {checks} checks passed.");

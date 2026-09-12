@@ -36,6 +36,9 @@ public sealed class KeyTransitionBuffer
             if(!rebuild)queue.Enqueue(e);
         }
     }
+    public KeySnapshot Snapshot(){lock(gate)return KeySnapshot.From(Enumerable.Range(0,256).Where(k=>held[k]));}
+    public void DiscardEvents(){lock(gate){queue.Clear();rebuild=false;}}
+    public void Clear(){lock(gate){Array.Clear(held);queue.Clear();rebuild=false;}}
     public void Rebuild(){lock(gate){queue.Clear();rebuild=true;Recoveries++;}}
     public bool TryRead(out KeyEvent e)
     {

@@ -26,6 +26,7 @@ public sealed class Voice : IDisposable
     private readonly string cache;
     private volatile bool stopping;
     private Process? process;
+    public int Pending=>keys.Count+words.Count+lanes.Count(l=>l.Request!=null);
     public string Status {get;private set;}="Windows speech";
     public string[] Voices {get;private set;}=[];
     public int Requested {get;private set;}
@@ -142,6 +143,7 @@ public sealed class Voice : IDisposable
     public void Stop()
     {
         keys.Clear();words.Clear();
+        while(preparation.TryTake(out var waiting))preparing.TryRemove(Destination(waiting),out _);
         foreach(var lane in lanes){lane.Prompt=null;lane.Synth?.SpeakAsyncCancelAll();lane.Audio?.Stop();lane.Audio?.Dispose();lane.Clip?.Dispose();lane.Audio=null;lane.Clip=null;lane.Request=null;Interlocked.Exchange(ref lane.Busy,0);}
     }
     public void Dispose()

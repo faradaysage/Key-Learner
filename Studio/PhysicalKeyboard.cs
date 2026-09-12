@@ -12,6 +12,7 @@ public sealed class PhysicalKeyboard
     public PhysicalKeyboard(KeyTransitionBuffer output)=>this.output=output;
     static int Id(int key,int scan,bool extended)=>scan==0?0x10000+key:(scan&0xff)|(extended?0x100:0);
     static int Normalize(int key,int scan,bool extended)=>key switch {16=> (scan&0xff)==0x36?161:160,17=>extended?163:162,18=>extended?165:164,_=>key};
+    public void Clear(){pressed.Clear();output.Clear();}
     public void Seed(int key,int scan,bool extended)
     {
         if(key is 3 or 19 || key>=255)return;
