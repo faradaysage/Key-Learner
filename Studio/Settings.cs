@@ -1,7 +1,7 @@
 using System.Text.Json;
 namespace KeyLearner.Studio;
 
-public enum Backdrop { Aurora, Plasma, Vortex }
+public enum Backdrop { Aurora, Plasma, Vortex, Starfield, RotatingStars }
 public enum Mood { Aurora, Lagoon, Sunset, Candy, PrimaryColors, BlackAndWhite }
 public enum PlayMode { SmashGarden, WordAdventure, Counting }
 public enum Celebration { Confetti, Rain, Orbit, Bubbles, Embers }
@@ -9,8 +9,13 @@ public enum LetterFont { Fredoka, Classic, Baloo }
 
 public sealed class Settings
 {
+    public int DefaultsVersion { get; set; }
+    public double BalloonPopSize { get; set; } = 3;
+    public double BalloonDeflateSeconds { get; set; } = 3;
+    public int StarCount { get; set; } = 650;
+    public double StarSpeed { get; set; } = 1;
     public int EffectsVersion { get; set; }
-    public Backdrop Backdrop { get; set; } = Backdrop.Plasma;
+    public Backdrop Backdrop { get; set; } = Backdrop.Starfield;
     public Mood Theme { get; set; } = Mood.PrimaryColors;
     public PlayMode Mode { get; set; }
     public LetterFont Font { get; set; }
@@ -39,6 +44,7 @@ public sealed class Settings
     public string PiperModel { get; set; } = "";
     public void Normalize()
     {
+        BalloonPopSize=Finite(BalloonPopSize,1.5,6,3); BalloonDeflateSeconds=Finite(BalloonDeflateSeconds,.3,15,3); StarCount=Math.Clamp(StarCount,100,2400); StarSpeed=Finite(StarSpeed,.1,3,1);
         KeyIcons ??= new(); KeyVoiceChannels=Math.Clamp(KeyVoiceChannels,1,5); WordVoiceChannels=Math.Clamp(WordVoiceChannels,1,3);
         Volume = Math.Clamp(Volume, 0, 100); SpeechRate = Math.Clamp(SpeechRate, -10, 10);
         ParticleLimit = Math.Clamp(ParticleLimit, 50, 2000);
@@ -47,7 +53,7 @@ public sealed class Settings
         Bounce = Finite(Bounce, 0, .95, .65); EffectStrength = Finite(EffectStrength, .1, 2, 1);
         FontScale = Finite(FontScale, .5, 1.8, 1);
         WindowsVoice ??= ""; PiperExecutable ??= ""; PiperModel ??= "";
-        if (!Enum.IsDefined(Backdrop)) Backdrop=Backdrop.Plasma;
+        if (!Enum.IsDefined(Backdrop)) Backdrop=Backdrop.Starfield;
         if (!Enum.IsDefined(Theme)) Theme = Mood.PrimaryColors;
         if (!Enum.IsDefined(Mode)) Mode = PlayMode.SmashGarden;
         if (!Enum.IsDefined(Font)) Font = LetterFont.Fredoka;
@@ -86,6 +92,12 @@ public sealed class Store
         Directory.CreateDirectory(Root);
         var savedSettings=Read<Settings>("settings.json");
         Settings = savedSettings ?? new(); Settings.Normalize();
+        if(Settings.DefaultsVersion<1)
+        {
+            if(Settings.Theme==Mood.Aurora)Settings.Theme=Mood.PrimaryColors;
+            if(Settings.Backdrop==Backdrop.Plasma)Settings.Backdrop=Backdrop.Starfield;
+            Settings.DefaultsVersion=1;
+        }
         if(savedSettings is null) DiscoverLocalVoice();
         Profile = Read<Profile>("profile.json") ?? new();
         Profile.PrefixHabits ??= new();

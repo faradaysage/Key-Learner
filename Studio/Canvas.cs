@@ -8,6 +8,13 @@ public sealed class Canvas : IDisposable
     private sealed class Glyph { public string Text=""; public Vector2 P,V; public float Age,Life,Rotation; public Color Color; public SpriteFont? Font; public BalloonMotion Balloon=new(); }
     private readonly List<Mote> motes=new();
     private readonly List<Glyph> letters=new();
+    private Glyph? activeGlyph;
+    private int? activeKey;
+    private sealed class PopRing {public Vector2 Position;public float Age,Radius;public Color Color;}
+    private readonly List<PopRing> rings=new();
+    public int PoppedCount {get;private set;}
+    public int CountGlyph(string text)=>letters.Count(g=>g.Text==text);
+    public void BeginKey(int key){if(activeKey!=key){activeGlyph?.Balloon.Release();activeGlyph=null;}activeKey=key;}
     private readonly Random random=new(73);
     private readonly Texture2D pixel,glow,disc;
     private readonly SpriteFont[] fonts;
@@ -51,11 +58,12 @@ public sealed class Canvas : IDisposable
         if(iconFont!=null)p=new Vector2(random.Next(110,width-110),random.Next(130,height-210));
         var color=Palette[random.Next(4)];
         if(text.Length>0) {
-            var existing=letters.LastOrDefault(g=>g.Text==text.ToUpperInvariant() && g.Font==iconFont);
-            if(existing!=null){existing.Balloon.Inflate();existing.Age=0;existing.V.Y=-60;p=existing.P;}
+            var existing=activeGlyph is {} candidate && letters.Contains(candidate) && candidate.Age<candidate.Life && candidate.Text==text.ToUpperInvariant() && candidate.Font==iconFont?candidate:null;
+            if(existing!=null){existing.Balloon.Inflate();existing.Age=0;existing.V.Y=Math.Max(-260,existing.V.Y-85);p=existing.P;}
             else {
+            activeGlyph?.Balloon.Release();
             if(letters.Count>=55) letters.RemoveAt(0);
-            letters.Add(new() {Text=text.ToUpperInvariant(),P=p,V=new((float)(context.Dx*130)+random.Next(-45,46),-90),Life=(float)settings.LetterLifetime,Color=color,Font=iconFont}); }
+            activeGlyph=new() {Text=text.ToUpperInvariant(),P=p,V=new((float)(context.Dx*130)+random.Next(-45,46),-90),Life=(float)settings.LetterLifetime,Color=color,Font=iconFont}; letters.Add(activeGlyph); }
         }
                 var count=(int)((5+context.Energy*8)*settings.EffectStrength*(settings.GentleMotion?.4:1));
         for(var i=0;i<count;i++)
@@ -66,7 +74,7 @@ public sealed class Canvas : IDisposable
             Fields.Blobs.Add(new(p.X+random.Next(-18,19),p.Y+random.Next(-18,19)),velocity,random.Next(6,13),new(tint.X,tint.Y,tint.Z),5,Math.Clamp(settings.ParticleLimit-motes.Count,0,180));
         }
     }
-    public void Celebrate(Celebration effect,int width,int height,EffectRecipe? recipe=null) { letters.Clear();
+    public void Celebrate(Celebration effect,int width,int height,EffectRecipe? recipe=null) { activeGlyph=null;letters.Clear();
         var keep=Math.Max(0,settings.ParticleLimit-Math.Min(150,settings.ParticleLimit));
         if(Fields.Blobs.Drops.Count>keep)Fields.Blobs.Drops.RemoveRange(0,Fields.Blobs.Drops.Count-keep);
         if(motes.Count>keep)motes.RemoveRange(0,motes.Count-keep);
@@ -110,11 +118,33 @@ public sealed class Canvas : IDisposable
             }
             foreach(var g in letters)
             {
-                g.Age+=h;g.Balloon.Step(h);
-                if(g.Age>.45f) { g.V.Y+=(float)settings.Gravity*h; g.P+=g.V*h*(settings.GentleMotion?.3f:1); Bounce(ref g.P,ref g.V,45*g.Balloon.Size,width,height-100); }
+                if(g.Balloon.Popped)continue;
+                g.Age+=h;g.Balloon.Step(h,(float)settings.BalloonDeflateSeconds,(float)settings.BalloonPopSize);
+                if(g.Balloon.Size>1.03f)g.Age=Math.Min(g.Age,Math.Max(0,g.Life-1.3f));
+                if(g.Balloon.Popped)
+                {
+                    PoppedCount++;g.Age=g.Life;if(activeGlyph==g)activeGlyph=null;
+                    if(rings.Count>=12)rings.RemoveAt(0);
+                    rings.Add(new(){Position=g.P,Radius=25*g.Balloon.Size,Color=g.Color});
+                    var keep=Math.Max(0,settings.ParticleLimit-120);
+                    if(motes.Count>keep)motes.RemoveRange(0,motes.Count-keep);
+                    if(Fields.Blobs.Drops.Count>keep)Fields.Blobs.Drops.RemoveRange(0,Fields.Blobs.Drops.Count-keep);
+                    Burst(g.P,Celebration.Embers,100,new(Gesture.Deliberate,1,.5,.5,0,0,1,0,[]));
+                    Burst(g.P,Celebration.Confetti,35,new(Gesture.Deliberate,1,.5,.5,0,0,1,0,[]));
+                    continue;
+                }
+                var inflated=g.Balloon.Size>1.08f;
+                if(inflated)g.V.Y=MathHelper.Lerp(g.V.Y,-45-(g.Balloon.Size-1)*75,1-MathF.Exp(-h*4));
+                else g.V.Y+=(float)settings.Gravity*h;
+                g.P+=g.V*h*(settings.GentleMotion?.45f:1);
+                var radius=Math.Min(45*g.Balloon.Size*(float)settings.FontScale,(height-100)*.45f);
+                Bounce(ref g.P,ref g.V,radius,width,height-100);
+                if(inflated && g.P.Y<=radius+.1f)g.V.Y=0;
                 g.Rotation=settings.GentleMotion?0:MathF.Sin(g.Age*1.4f)*.09f;
             }
         }
+        foreach(var ring in rings)ring.Age+=dt;
+        rings.RemoveAll(r=>r.Age>=.8f);
         motes.RemoveAll(m=>m.Age>=m.Life);
         var remaining=Math.Max(0,settings.ParticleLimit-Fields.Blobs.Drops.Count);
         if(motes.Count>remaining) motes.RemoveRange(0,motes.Count-remaining);
@@ -132,14 +162,14 @@ public sealed class Canvas : IDisposable
         var palette=Palette;
         backdrop.Draw(b,width,height,settings);
         // Slow harmonic curtains, sparse stars, and layered glow create depth without flashing.
-        for(var layer=0;layer<(settings.Theme==Mood.BlackAndWhite?0:3);layer++)
+        for(var layer=0;layer<(settings.Theme==Mood.BlackAndWhite || settings.Backdrop is Backdrop.Starfield or Backdrop.RotatingStars?0:3);layer++)
             for(var i=0;i<38;i++)
             {
                 var x=i*width/37f;
                 var y=height*(.35f+layer*.15f)+MathF.Sin(i*.17f+time*.15f+layer)*height*.1f+MathF.Sin(i*.37f-time*.11f)*32;
                 b.Draw(glow,new Vector2(x,y),null,palette[layer]*.055f,0,new(32),new Vector2(width/12f,height/2f)/64,SpriteEffects.None,0);
             }
-        for(var i=0;i<(settings.Theme==Mood.BlackAndWhite?0:65);i++)
+        for(var i=0;i<(settings.Theme==Mood.BlackAndWhite || settings.Backdrop is Backdrop.Starfield or Backdrop.RotatingStars?0:65);i++)
         {
             var x=(i*137.57f)%width; var y=(i*79.31f)%height;
             b.Draw(disc,new Vector2(x,y),null,Color.White*(.08f+.06f*MathF.Sin(time*.4f+i)),0,new(32),.04f,SpriteEffects.None,0);
@@ -155,6 +185,19 @@ public sealed class Canvas : IDisposable
                 b.Draw(pixel,m.P,null,m.Color*alpha,m.Spin*m.Age,Vector2.Zero,new Vector2(m.Size*.55f,m.Size*(m.Effect==Celebration.Rain?2:1)),SpriteEffects.None,0);
             else b.Draw(disc,m.P,null,m.Color*(alpha*.7f),0,new(32),m.Size/32,SpriteEffects.None,0);
         }
+        foreach(var ring in rings)
+        {
+            var fade=Math.Clamp(1-ring.Age/.8f,0,1);
+            var radius=ring.Radius+ring.Age*(settings.GentleMotion?60:220);
+            for(int i=0;i<64;i++)
+            {
+                var a=i*MathF.Tau/64;var next=(i+1)*MathF.Tau/64;
+                var start=ring.Position+new Vector2(MathF.Cos(a),MathF.Sin(a))*radius;
+                var end=ring.Position+new Vector2(MathF.Cos(next),MathF.Sin(next))*radius;
+                var delta=end-start;
+                b.Draw(pixel,start,null,Color.Lerp(ring.Color,Color.White,.6f)*fade,MathF.Atan2(delta.Y,delta.X),Vector2.Zero,new Vector2(delta.Length()+1,4*fade),SpriteEffects.None,0);
+            }
+        }
         var font=fonts[(int)settings.Font];
         foreach(var g in letters)
         {
@@ -169,6 +212,6 @@ public sealed class Canvas : IDisposable
             b.DrawString(glyphFont,g.Text,g.P-new Vector2(1,2)*g.Balloon.Size,Color.Lerp(g.Color,Color.White,.65f)*(alpha*.32f),g.Rotation,origin,scale*.985f,SpriteEffects.None,0);
         }
     }
-    public void Clear() { letters.Clear(); motes.Clear(); Fields.Clear(); }
+    public void Clear() { activeGlyph=null;activeKey=null;rings.Clear();letters.Clear(); motes.Clear(); Fields.Clear(); }
     public void Dispose() { Fields.Dispose(); backdrop.Dispose(); pixel.Dispose(); glow.Dispose(); disc.Dispose(); }
 }

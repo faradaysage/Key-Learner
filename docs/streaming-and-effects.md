@@ -30,3 +30,16 @@ The old default confetti word celebration migrates to upward embers. Explicit al
 Smash Garden hides its title, instructions, keyboard illustration and diagnostics after the first play input. Discovered words remain visible. Escape can still reveal the parent-chord reminder.
 
 Icons appear at scattered positions while their key-to-icon mappings remain deterministic. Repeating a visible glyph inflates it with a short squeeze, pressure impulse, and damped settling, with bounded growth. Droplets have contrasting rims and shaded cores. Plasma and Vortex backdrops are original harmonic effects responsive to input; Aurora remains available. Black And White disables decorative background fields.
+
+
+## Balloon rewards and space backdrops
+
+Only the current consecutive key run owns an inflatable glyph. Any different key, including Space, retires that glyph. Returning to its key creates a new one; separated repeated letters are therefore independent. A retired balloon cannot pop or reinflate.
+
+Each tap adds 0.28 size units. While active, one such step leaks away over Balloon Deflate Seconds (default 3). Retired balloons lose all remaining pressure over that interval. A damped spring preserves the squeeze/inflate/settle movement; extra volume supplies upward lift and a soft ceiling stop. Inflated glyphs remain visible while shrinking. Balloon Pop Size defaults to 3 times normal, configurable from 1.5 to 6. Popping reserves room for a themed ember/confetti reward and expanding ring.
+
+Starfield uses forward perspective flight; Rotating Stars uses a slowly rotating 3D cloud. Star Count and Star Speed live under Developer. Gentle Motion slows travel. All star artwork and implementation are original; the references provide motion inspiration:
+- https://samme.github.io/phaser-examples-mirror/demoscene/starfield.html
+- https://mkhj.github.io/Demoscene-effects/effects/starfield/
+
+Primary Colors and Starfield are the defaults. A versioned migration updates old Aurora/Plasma defaults once, while retaining other existing themes/backdrops and preserving all choices made after migration.

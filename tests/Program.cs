@@ -132,8 +132,28 @@ switched.Feed(new(27,false,1));switched.Feed(new(79,true,1.1));switched.Feed(new
 Check(switched.Feed(new(162,false,2.2))==ParentAction.None,"changing target during release cannot authorize");
 var balloon=new BalloonMotion();balloon.Inflate();balloon.Step(.008f);
 Check(balloon.Size<1,"balloon squeezes before inflating");
-for(int i=0;i<240;i++)balloon.Step(1f/120);
-Check(Math.Abs(balloon.Size-1.28f)<.01f,"balloon settles at inflated size");
-for(int i=0;i<100;i++){balloon.Inflate();for(int j=0;j<12;j++)balloon.Step(1f/120);}
-Check(balloon.Target<=3.8f && balloon.Size<=4.2f,"keyboard storm cannot grow balloon without bound");
+for(int i=0;i<360;i++)balloon.Step(1f/120);
+Check(Math.Abs(balloon.Target-1)<.001f,"one puff deflates in three seconds");
+var measured=new BalloonMotion();
+for(int tap=0;tap<18 && !measured.Popped;tap++){measured.Inflate();for(int i=0;i<120;i++)measured.Step(1f/120);}
+Check(measured.Popped,"measured one-second taps reach a pop reward");
+var slow=new BalloonMotion();
+for(int tap=0;tap<12;tap++){slow.Inflate();for(int i=0;i<3600;i++)slow.Step(1f/120);}
+Check(!slow.Popped && Math.Abs(slow.Target-1)<.001f,"thirty-second taps cannot accumulate pressure");
+var retired=new BalloonMotion();for(int i=0;i<5;i++)retired.Inflate();retired.Release();var pressure=retired.Target;retired.Inflate();
+Check(retired.Target==pressure,"retired balloon cannot reinflate");
+for(int i=0;i<480;i++)retired.Step(1f/120);
+Check(Math.Abs(retired.Size-1)<.01f && !retired.Popped,"retired balloon returns to original size without popping");
+var lowLimit=new BalloonMotion();for(int i=0;i<4;i++)lowLimit.Inflate();for(int i=0;i<120;i++)lowLimit.Step(1f/120,3,1.5f);
+Check(lowLimit.Popped,"parent pop-size setting changes reward threshold");
+Check(new Settings().Theme==Mood.PrimaryColors && new Settings().Backdrop==Backdrop.Starfield,"primary colors and flight starfield are defaults");
+var starfield=new StarfieldMotion();for(int frame=0;frame<600;frame++)starfield.Step(1f/60,3,false);
+Check(Enumerable.Range(0,2400).All(i=>{var p=starfield.Project(i,false);return float.IsFinite(p.X) && float.IsFinite(p.Y) && p.Z>0;}),"flight stars recycle with finite perspective");
+Check(Enumerable.Range(0,2400).All(i=>{var p=starfield.Project(i,true);return float.IsFinite(p.X) && float.IsFinite(p.Y) && p.Z>0;}),"rotating star cloud stays in front of the camera");
+File.WriteAllText(Path.Combine(root,"settings.json"),"{\"Theme\":0,\"Backdrop\":1}");
+var migrated=new Store(root);
+Check(migrated.Settings.Theme==Mood.PrimaryColors && migrated.Settings.Backdrop==Backdrop.Starfield,"older default profile migrates to primary colors and stars");
+migrated.Settings.Theme=Mood.Aurora;migrated.Settings.Backdrop=Backdrop.Plasma;migrated.Save();
+var chosen=new Store(root);
+Check(chosen.Settings.Theme==Mood.Aurora && chosen.Settings.Backdrop==Backdrop.Plasma,"later explicit theme choice survives restart");
 Console.WriteLine($"All {checks} checks passed. Test data: {root}");

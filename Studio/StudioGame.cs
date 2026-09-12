@@ -79,7 +79,7 @@ public sealed class StudioGame : Game
     private string editLabel="";
     private readonly Random random=new();
     private Texture2D? wordImage;
-    private string[] Tabs=>["Experience","Voice","Learning","Dictionary","Developer","Key icons"];
+    private string[] Tabs=>["Experience","Voice","Learning","Dictionary","Developer","Key icons","Balloons"];
     private Settings S=>store.Settings;
     private List<WordEntry> Filtered=>store.Words.Where(w=>w.Word.Contains(query,StringComparison.OrdinalIgnoreCase)).OrderBy(w=>w.Word).ToList();
 
@@ -91,7 +91,7 @@ public sealed class StudioGame : Game
         if((demo || startStudio || screenshot!=null || scenario.Length>0) && !preview) throw new ArgumentException("Demo, studio inspection and screenshots require --preview.");
         var data=Array.IndexOf(args,"--data"); var root=data>=0 && data+1<args.Length?args[data+1]:null;
         store=new Store(root); recognizer=new(store);
-        if(preview) {if(Enum.TryParse<Mood>(ReadArg(args,"--theme"),true,out var previewTheme))S.Theme=previewTheme;tab=ReadArg(args,"--page") switch {"voice"=>1,"learning"=>2,"dictionary"=>3,"developer"=>4,"icons"=>5,_=>0};if(ReadArg(args,"--mode")=="adventure")S.Mode=PlayMode.WordAdventure;if(ReadArg(args,"--mode")=="counting")S.Mode=PlayMode.Counting;}
+        if(preview) {if(Enum.TryParse<Backdrop>(ReadArg(args,"--backdrop"),true,out var previewBackdrop))S.Backdrop=previewBackdrop;if(Enum.TryParse<Mood>(ReadArg(args,"--theme"),true,out var previewTheme))S.Theme=previewTheme;tab=ReadArg(args,"--page") switch {"voice"=>1,"learning"=>2,"dictionary"=>3,"developer"=>4,"icons"=>5,"balloons"=>6,_=>0};if(ReadArg(args,"--mode")=="adventure")S.Mode=PlayMode.WordAdventure;if(ReadArg(args,"--mode")=="counting")S.Mode=PlayMode.Counting;}
         PrepareReplay();
         graphics=new(this) {PreferredBackBufferWidth=preview?1152:GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
             PreferredBackBufferHeight=preview?720:GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height,
@@ -178,7 +178,7 @@ public sealed class StudioGame : Game
             ParentKey(e.Key);return;
         }
         if(e.Key is 27 or 79 && held.Any(ParentChord.IsControl) && held.Any(ParentChord.IsAlt))return;
-        playStarted=true;
+        playStarted=true;canvas.BeginKey(e.Key);
         var context=analyzer.Add(e.Key,e.Time,held.Count,store.Profile,S.AdaptiveLearning);
         keyGlow[e.Key]=now;
         if(calibration>=0) { store.Profile.Network.Train(context.Features,calibration); canvas.Emit(KeyboardMap.Character(e.Key)?.ToString()??"",context,W,H); return; }
@@ -264,8 +264,9 @@ public sealed class StudioGame : Game
         }
         if(scenario=="balloon")
         {
-            for(int i=0;i<10;i++){replay.Enqueue(new(65,true,.1+i*.14));replay.Enqueue(new(65,false,.15+i*.14));}
+            for(int i=0;i<10;i++){replay.Enqueue(new(65,true,.1+i*.28));replay.Enqueue(new(65,false,.15+i*.28));}
         }
+        if(scenario=="balloon-sequence"){double t=.1;foreach(var c in "qwqq"){replay.Enqueue(new(char.ToUpperInvariant(c),true,t));replay.Enqueue(new(char.ToUpperInvariant(c),false,t+.08));t+=.3;}}
         if(scenario=="icons")
         {
             replay.Enqueue(new(112,true,.1));replay.Enqueue(new(112,false,.2));
@@ -286,7 +287,7 @@ public sealed class StudioGame : Game
     }
     private void VerifyReplay()
     {
-        var success=scenario switch {"balloon"=>canvas.GlyphCount==1 && canvas.LargestGlyph>3,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
+        var success=scenario switch {"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
         if(scenario is "rapid-milk" or "mommy" or "balloon" && S.Sound)success=success && voice!=null && voice.Started==voice.Requested && voice.Completed==voice.Requested && voice.Overflow==0;
         if(!success) throw new InvalidOperationException("Preview scenario failed: "+scenario+"; hero="+hero+"; parent="+parent);
         if(screenshot!=null && voice!=null) File.WriteAllLines(screenshot+".audio.txt",new[]{ $"requested={voice.Requested}; started={voice.Started}; completed={voice.Completed}; overflow={voice.Overflow}; peak={voice.PeakOverlap}; max delay={voice.MaximumStartDelay:0.000}s"}.Concat(voice.Trace));
@@ -350,7 +351,7 @@ public sealed class StudioGame : Game
         Text("THE PARENT STUDIO",55,32,canvas.Palette[0],.45f);
         Text("Make room for wonder.",55,74,Color.White,.96f,title);
         Text("A little world, tuned to your child.",56,137,Color.White*.5f,.55f);
-        for(var i=0;i<Tabs.Length;i++) { var index=i; Button(new(55+i*220,193,207,53),Tabs[i],()=>{tab=index;row=0;},tab==i); }
+        for(var i=0;i<Tabs.Length;i++) { var index=i; Button(new(55+i*190,193,178,53),Tabs[i],()=>{tab=index;row=0;},tab==i); }
         if(tab==3) DrawDictionary(); else if(tab==5) DrawIcons(); else DrawSettings();
         Fill(new(0,795,W,105),new Color(15,22,38));
         Text(notice,55,810,Color.White*.6f,.43f,maxWidth:1020);
@@ -361,15 +362,17 @@ public sealed class StudioGame : Game
         0=>["Mode","Theme","Font","Sound","GentleMotion","ShowKeyboard","FontScale","Backdrop"],
         1=>["WindowsVoice","SpeechRate","Volume","SpeakLetters","PiperExecutable","PiperModel","KeyVoiceChannels","WordVoiceChannels"],
         2=>["ForgivingSpelling","AdaptiveLearning","WordPause","PrefixPause"],
-        _=>["ParticleLimit","Gravity","Bounce","EffectStrength","LetterLifetime","ShowContext"] };
+        6=>["BalloonPopSize","BalloonDeflateSeconds"],
+        _=>["ParticleLimit","Gravity","Bounce","EffectStrength","LetterLifetime","ShowContext","StarCount","StarSpeed"] };
     private void DrawSettings()
     {
         var names=PropertiesForTab();
-        Text(tab switch {0=>"Small changes. A whole new mood.",1=>"A familiar voice makes a difference.",2=>"Follow their intent, at their pace.",_=>"Fine-tune the feel."},55,275,Color.White,.78f,title);
+        Text(tab switch {0=>"Small changes. A whole new mood.",1=>"A familiar voice makes a difference.",2=>"Follow their intent, at their pace.",6=>"A little puff. A big celebration.",_=>"Fine-tune the feel."},55,275,Color.White,.78f,title);
         var descriptions=tab switch {
             0=>"Smash for exploration. Word Adventure for early spelling. Counting for number sequences.",
             1=>"Recordings first, optional offline Piper second, installed Windows speech as fallback.",
             2=>"Mistakes are forgiven only when typing looks deliberate and a correction is unambiguous.",
+            6=>"Pop size is a multiple of normal size. Deflate seconds is the time to lose one puff.",
             _=>"Bounded particles and fixed physics substeps keep keyboard storms responsive." };
         Text(descriptions,56,327,Color.White*.5f,.45f);
         for(var i=0;i<names.Length;i++)
@@ -378,6 +381,7 @@ public sealed class StudioGame : Game
             var y=374+i*49;
             Button(new(55,y,1050,42),Nice(property.Name)+"   /   "+Display(property),()=>{row=index;ChangeProperty(property,1);},row==i);
         }
+        if(tab==6){Text("Switching keys retires the old balloon. Return to that key to start a fresh one.",55,500,Color.White*.6f,.45f);Text("Inflated balloons float upward; a steady rhythm earns a sparkling pop.",55,535,Color.White*.6f,.45f);}
         if(tab==1)
         {
             Button(new(1140,374,240,48),"Try this voice",()=>voice?.Say("Hello little explorer. Milk. Mommy. Let's play.",S));
@@ -474,7 +478,7 @@ public sealed class StudioGame : Game
             S.WindowsVoice=values[(Math.Max(0,index)+direction+values.Length)%values.Length];
         }
         else if(type==typeof(string)) Edit(Nice(p.Name),(string)p.GetValue(S)!,v=>p.SetValue(S,v.Trim().Trim('"')));
-        else if(type==typeof(int)) {var step=p.Name=="ParticleLimit"?50:p.Name=="Volume"?5:1;p.SetValue(S,(int)p.GetValue(S)!+step*direction);}
+        else if(type==typeof(int)) {var step=p.Name is "ParticleLimit" or "StarCount"?50:p.Name=="Volume"?5:1;p.SetValue(S,(int)p.GetValue(S)!+step*direction);}
         else if(type==typeof(double)) {var step=p.Name=="Gravity"?10:.1;p.SetValue(S,(double)p.GetValue(S)!+step*direction);}
         S.Normalize(); notice="Unsaved changes. Save & return to keep them.";
     }
