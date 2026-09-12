@@ -13,9 +13,12 @@ public sealed class KeyboardGuard : IDisposable
     private delegate nint HookProc(int code,nint w,nint l);
     private readonly object stateGate=new();
     private readonly InputFocus focus;
-    private readonly nint gameWindow;
+    private readonly nint gameWindow,gameDesktop;
     public int FocusLosses {get{lock(stateGate)return focus.Losses;}}
-    public bool OwnsForeground=>gameWindow!=0 && GetForegroundWindow()==gameWindow;
+    // UOI_IO verifies that this desktop actually receives input, independently of SDL
+    // activation or a foreground HWND left over from before the lock screen appeared.
+    public bool DesktopReceivesInput=>gameDesktop!=0 && GetUserObjectInformation(gameDesktop,6,out var input,4,out _) && input!=0;
+    public bool OwnsForeground=>gameWindow!=0 && GetForegroundWindow()==gameWindow && DesktopReceivesInput;
     public int SessionResets {get;private set;}
     private readonly HookProc callback;
     private readonly KeyTransitionBuffer events=new();
@@ -33,6 +36,7 @@ public sealed class KeyboardGuard : IDisposable
     {
         if(!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Protected play requires Windows.");
         this.suppress=suppress;physical=new(events);
+        gameDesktop=GetThreadDesktop(GetCurrentThreadId());
         gameWindow=GetActiveWindow();
         if(gameWindow==0)gameWindow=Process.GetCurrentProcess().MainWindowHandle;
         if(suppress && gameWindow==0)throw new InvalidOperationException("Game window could not be identified; keyboard interception was not enabled.");
@@ -84,14 +88,14 @@ public sealed class KeyboardGuard : IDisposable
     {
         if(code<0 || disposed) return CallNextHookEx(hook,code,w,l);
         // Check the native foreground on EVERY callback, before even reading the key.
-        // GetForegroundWindow also returns null when our desktop is not active.
-        lock(stateGate)if(!focus.Accepts(GetForegroundWindow()))return CallNextHookEx(hook,code,w,l);
+        // Also verify the desktop itself is receiving input; errors pass through.
+        lock(stateGate)if(!focus.Accepts(GetForegroundWindow(),DesktopReceivesInput))return CallNextHookEx(hook,code,w,l);
         var data=Marshal.PtrToStructure<HookData>(l);
         var msg=(int)w;
         if(msg is 0x100 or 0x101 or 0x104 or 0x105)
         {
             lock(stateGate){
-                if(!focus.Accepts(GetForegroundWindow()))return CallNextHookEx(hook,code,w,l);
+                if(!focus.Accepts(GetForegroundWindow(),DesktopReceivesInput))return CallNextHookEx(hook,code,w,l);
                 physical.Feed((int)data.Key,(int)data.Scan,(data.Flags&1)!=0,msg is 0x100 or 0x104,(data.Flags&0x10)!=0,Now);
             }
             return suppress ? 1 : CallNextHookEx(hook,code,w,l);
@@ -108,6 +112,8 @@ public sealed class KeyboardGuard : IDisposable
     [StructLayout(LayoutKind.Sequential)] private struct Message { public nint Window; public uint Id; public nuint W; public nint L; public uint Time; public int X,Y; public uint Private; }
     [DllImport("user32.dll",SetLastError=true)] private static extern nint SetWinEventHook(uint min,uint max,nint module,EventProc callback,uint process,uint thread,uint flags);
     [DllImport("user32.dll")] private static extern bool UnhookWinEvent(nint hook);
+    [DllImport("user32.dll")] private static extern nint GetThreadDesktop(uint thread);
+    [DllImport("user32.dll",EntryPoint="GetUserObjectInformationW",SetLastError=true)] private static extern bool GetUserObjectInformation(nint desktop,int index,out int value,uint length,out uint needed);
     [DllImport("user32.dll")] private static extern nint GetForegroundWindow();
     [DllImport("user32.dll")] private static extern nint GetActiveWindow();
     [DllImport("user32.dll")] private static extern nuint SetTimer(nint window,nuint id,uint ms,nint callback);

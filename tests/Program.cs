@@ -277,3 +277,6 @@ Console.WriteLine($"All {checks} checks passed.");
 gg.Reset();gg.Feed(new(71,true,5),true);gg.Feed(new(71,false,5.1),true);gg.Feed(new(71,true,5.3),true);Check(!gg.Feed(new(71,false,5.4),true),"modified G taps never open child picker");
 var clearReward=new LetterCourse();clearReward.Start("a");clearReward.Collect();clearReward.DismissReward();Check(clearReward.RewardRemaining==0&&clearReward.Score==20,"resume clears completion effects without erasing earned points");
 Console.WriteLine($"All {checks} checks passed.");
+
+focusLease.SetActive(true);Check(!focusLease.Accepts(123,false)&&!focusLease.Active,"lock-screen desktop revokes capture even if the foreground HWND is stale");
+Console.WriteLine($"All {checks} checks passed.");
