@@ -21,8 +21,8 @@ public static class Program
             if(OperatingSystem.IsWindows())SetCurrentProcessExplicitAppUserModelID("KeyLearner.Desktop");
             if(args.Contains("--probe-guard"))
             {
-                using(var probe=new KeyboardGuard(suppress:false)) Thread.Sleep(100);
-                File.WriteAllText(Path.Combine(AppContext.BaseDirectory,"guard-probe.txt"),"PASS: native keyboard hook installed and released in pass-through mode.");
+                using(var probe=new KeyboardGuard(suppress:false)){Thread.Sleep(100);if(!probe.TryReadDesktopInput(out _))throw new InvalidOperationException("Native desktop input-state query failed.");if(probe.Snapshot().Count!=0)throw new InvalidOperationException("Disarmed native probe retained input.");}
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory,"guard-probe.txt"),"PASS: native keyboard/focus hooks installed and released in pass-through mode; desktop input-state query succeeded; disarmed input stayed empty.");
                 return;
             }
             using var app=new StudioGame(args); app.Run();

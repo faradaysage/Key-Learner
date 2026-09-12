@@ -17,7 +17,8 @@ public sealed class KeyboardGuard : IDisposable
     public int FocusLosses {get{lock(stateGate)return focus.Losses;}}
     // UOI_IO verifies that this desktop actually receives input, independently of SDL
     // activation or a foreground HWND left over from before the lock screen appeared.
-    public bool DesktopReceivesInput=>gameDesktop!=0 && GetUserObjectInformation(gameDesktop,6,out var input,4,out _) && input!=0;
+    public bool TryReadDesktopInput(out bool receivesInput){receivesInput=false;if(gameDesktop==0 || !GetUserObjectInformation(gameDesktop,6,out var input,4,out _))return false;receivesInput=input!=0;return true;}
+    public bool DesktopReceivesInput=>TryReadDesktopInput(out var input) && input;
     public bool OwnsForeground=>gameWindow!=0 && GetForegroundWindow()==gameWindow && DesktopReceivesInput;
     public int SessionResets {get;private set;}
     private readonly HookProc callback;
