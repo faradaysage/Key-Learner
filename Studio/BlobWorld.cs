@@ -9,15 +9,15 @@ public sealed class BlobWorld
     {
         public Vector2 Position,Velocity;
         public Vector3 Tint;
-        public float Radius,Age,Life=5;
+        public float Radius,Age,Wobble,Life=5;
         public bool Dead;
         public float Mass=>Radius*Radius;
     }
     public List<Drop> Drops {get;}=new();
     public int Fusions {get;private set;}
     public int Splits {get;private set;}
-    public void Add(Vector2 p,Vector2 v,float radius,Vector3 tint,float life,int limit)
-    {if(Drops.Count<limit)Drops.Add(new(){Position=p,Velocity=v,Radius=radius,Tint=tint,Life=life});}
+    public void Add(Vector2 p,Vector2 v,float radius,Vector3 tint,float life,int limit,float wobble=0)
+    {if(Drops.Count<limit)Drops.Add(new(){Position=p,Velocity=v,Radius=radius,Tint=tint,Life=life,Wobble=wobble});}
     public void Clear()=>Drops.Clear();
     public void Step(float dt,int width,int height,float gravity,float bounce,int limit)
     {
@@ -39,7 +39,7 @@ public sealed class BlobWorld
         {
             var a=Drops[i];if(a.Dead)continue;
             var cell=((int)(a.Position.X/80),(int)(a.Position.Y/80));
-            for(var x=-1;x<=1 && !a.Dead;x++)for(var y=-1;y<=1 && !a.Dead;y++)
+            for(var x=-2;x<=2 && !a.Dead;x++)for(var y=-2;y<=2 && !a.Dead;y++)
             {
                 if(!cells.TryGetValue((cell.Item1+x,cell.Item2+y),out var neighbors))continue;
                 foreach(var j in neighbors)
@@ -53,11 +53,12 @@ public sealed class BlobWorld
                     // Surface tension first pulls touching halos toward each other.
                     var attraction=normal*14*dt;
                     a.Velocity+=attraction;b.Velocity-=attraction;
-                    if(distance<reach*.72f && relative<150 && a.Mass+b.Mass<=38*38)
+                    if(distance<reach*.72f && relative<150 && a.Mass+b.Mass<=(a.Wobble+b.Wobble>0?64*64:38*38))
                     {
                         var total=a.Mass+b.Mass;var fraction=b.Mass/total;
                         a.Position=Vector2.Lerp(a.Position,b.Position,fraction);
                         a.Velocity=Vector2.Lerp(a.Velocity,b.Velocity,fraction);
+                        a.Wobble=Math.Max(a.Wobble,b.Wobble);
                         a.Tint=Vector3.Lerp(a.Tint,b.Tint,fraction);
                         var remaining=(a.Life-a.Age)*(1-fraction)+(b.Life-b.Age)*fraction;
                         a.Radius=MathF.Sqrt(total);a.Life=remaining;a.Age=0;b.Dead=true;Fusions++;
@@ -75,7 +76,7 @@ public sealed class BlobWorld
                                 var tangent=new Vector2(-normal.Y,normal.X);
                                 big.Radius/=MathF.Sqrt(2);
                                 var velocity=big.Velocity;
-                                additions.Add(new(){Position=big.Position-tangent*big.Radius*.7f,Velocity=velocity-tangent*90,Radius=big.Radius,Tint=big.Tint,Life=big.Life,Age=big.Age});
+                                additions.Add(new(){Position=big.Position-tangent*big.Radius*.7f,Velocity=velocity-tangent*90,Radius=big.Radius,Wobble=big.Wobble,Tint=big.Tint,Life=big.Life,Age=big.Age});
                                 big.Position+=tangent*big.Radius*.7f;big.Velocity=velocity+tangent*90;Splits++;
                             }
                         }

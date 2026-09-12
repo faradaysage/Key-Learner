@@ -14,6 +14,10 @@ public static class Program
     {
         try
         {
+            if(args.Length>=4 && args[0]=="--restore-accessibility"){AccessibilitySession.Watch(args);return;}
+            if(args.Contains("--probe-accessibility")){Directory.CreateDirectory(Path.Combine(Path.GetTempPath(),"KeyLearner-accessibility-probe"));using var session=new AccessibilitySession(Path.Combine(Path.GetTempPath(),"KeyLearner-accessibility-probe"));Thread.Sleep(args.Contains("--wait")?30000:500);return;}
+            using var single=new System.Threading.Mutex(false,"Local\\KeyLearner.ProtectedSession");
+            if(!args.Contains("--preview") && !args.Contains("--probe-guard")){try{if(!single.WaitOne(0))return;}catch(System.Threading.AbandonedMutexException){}}
             if(OperatingSystem.IsWindows())SetCurrentProcessExplicitAppUserModelID("KeyLearner.Desktop");
             if(args.Contains("--probe-guard"))
             {
@@ -35,38 +39,51 @@ public static class Program
     [DllImport("user32.dll",CharSet=CharSet.Unicode)] private static extern int MessageBox(nint window,string text,string caption,uint type);
 }
 
-public sealed class StudioGame : Game
+public sealed partial class StudioGame : Game
 {
     private const int W=1440,H=900;
     private readonly GraphicsDeviceManager graphics;
     private readonly bool preview,demo,startStudio;
     private readonly string? screenshot;
     private readonly string scenario;
+    private readonly double replaySeconds;
+    private double replayClickAt;
+    private long benchmarkFrameStart;
     private readonly Queue<KeyEvent> replay=new();
     private bool captured;
     private double renderSeconds; private int renderFrames;
-    private int recognizedCount;
+    private int recognizedCount,maximumHeld;
     private double lastLetterInput,lastRecognitionLag;
     private readonly Store store;
     private List<EffectRecipe> recipes=[];
     private readonly GestureAnalyzer analyzer=new();
     private readonly ParentChord chord=new();
+    private readonly EscapeExit escapeExit=new();
+    private readonly TapSequence optionsTaps=new(79);
+    private bool recoveringInput;
     private readonly CountingRecognizer counting=new();
+    private readonly FlightModel flight=new();
+    private FlightRenderer flightRenderer=null!;
+    private double flightCelebration;
     private readonly HashSet<int> held=new();
     private readonly List<(Rectangle Rect,Action Click)> buttons=new();
     private readonly Dictionary<int,double> keyGlow=new();
     private WordRecognizer recognizer;
     private KeyboardGuard? guard;
+    private AccessibilitySession? accessibility;
     private Voice? voice;
     private Canvas canvas=null!;
     private SpriteBatch batch=null!;
     private SpriteFont ui=null!,title=null!,iconFont=null!;
     private IconLibrary icons=null!;
-    private bool playStarted;
+    private bool playStarted,awaitingBalloons;
     private int selectedIconKey=112,iconPage;
     private string iconQuery="";
     private Texture2D pixel=null!;
-    private RenderTarget2D surface=null!;
+    private RenderTarget2D surface=null!,composite=null!;
+    private GlassRenderer glassRenderer=null!;
+    private (int Width,int Height) renderSize;
+    private bool renderSmooth;
     private KeyboardState previous;
     private MouseState previousMouse;
     private bool parent,allowExit,cleaned;
@@ -79,23 +96,24 @@ public sealed class StudioGame : Game
     private string editLabel="";
     private readonly Random random=new();
     private Texture2D? wordImage;
-    private string[] Tabs=>["Experience","Voice","Learning","Dictionary","Developer","Key icons","Balloons"];
+    private string[] Tabs=>["Experience","Voice","Learning","Dictionary","Developer","Key icons","Balloons","Play & safety","Graphics"];
     private Settings S=>store.Settings;
     private List<WordEntry> Filtered=>store.Words.Where(w=>w.Word.Contains(query,StringComparison.OrdinalIgnoreCase)).OrderBy(w=>w.Word).ToList();
 
     public StudioGame(string[] args)
     {
         scenario=ReadArg(args,"--scenario");
+        replaySeconds=double.TryParse(ReadArg(args,"--seconds"),out var seconds)?Math.Clamp(seconds,3,30):3;
         preview=args.Contains("--preview"); demo=args.Contains("--demo"); startStudio=args.Contains("--studio");
         var capture=Array.IndexOf(args,"--screenshot"); if(capture>=0 && capture+1<args.Length) screenshot=Path.GetFullPath(args[capture+1]);
         if((demo || startStudio || screenshot!=null || scenario.Length>0) && !preview) throw new ArgumentException("Demo, studio inspection and screenshots require --preview.");
         var data=Array.IndexOf(args,"--data"); var root=data>=0 && data+1<args.Length?args[data+1]:null;
         store=new Store(root); recognizer=new(store);
-        if(preview) {if(Enum.TryParse<Backdrop>(ReadArg(args,"--backdrop"),true,out var previewBackdrop))S.Backdrop=previewBackdrop;if(Enum.TryParse<Mood>(ReadArg(args,"--theme"),true,out var previewTheme))S.Theme=previewTheme;tab=ReadArg(args,"--page") switch {"voice"=>1,"learning"=>2,"dictionary"=>3,"developer"=>4,"icons"=>5,"balloons"=>6,_=>0};if(ReadArg(args,"--mode")=="adventure")S.Mode=PlayMode.WordAdventure;if(ReadArg(args,"--mode")=="counting")S.Mode=PlayMode.Counting;}
+        if(preview) {if(Enum.TryParse<Backdrop>(ReadArg(args,"--backdrop"),true,out var previewBackdrop))S.Backdrop=previewBackdrop;if(Enum.TryParse<Mood>(ReadArg(args,"--theme"),true,out var previewTheme))S.Theme=previewTheme;tab=ReadArg(args,"--page") switch {"voice"=>1,"learning"=>2,"dictionary"=>3,"developer"=>4,"icons"=>5,"balloons"=>6,"graphics"=>8,_=>0};if(ReadArg(args,"--mode")=="adventure")S.Mode=PlayMode.WordAdventure;if(ReadArg(args,"--mode")=="flight")S.Mode=PlayMode.BirdFlight;if(ReadArg(args,"--mode")=="counting")S.Mode=PlayMode.Counting;}
         PrepareReplay();
         graphics=new(this) {PreferredBackBufferWidth=preview?1152:GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
             PreferredBackBufferHeight=preview?720:GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height,
-            IsFullScreen=!preview,HardwareModeSwitch=false,SynchronizeWithVerticalRetrace=true};
+            IsFullScreen=!preview,HardwareModeSwitch=false,SynchronizeWithVerticalRetrace=S.VSync};
         Content.RootDirectory="Content"; Window.Title="KeyLearner | a little world of discovery";
         Window.AllowUserResizing=false; Window.AllowAltF4=preview;
         IsMouseVisible=true; IsFixedTimeStep=true; TargetElapsedTime=TimeSpan.FromSeconds(1.0/60);
@@ -104,30 +122,40 @@ public sealed class StudioGame : Game
     {
         SetWindowIcon();
         batch=new(GraphicsDevice); pixel=new(GraphicsDevice,1,1); pixel.SetData(new[]{Color.White});
-        surface=new(GraphicsDevice,W,H);
+        ResizeSurface();
+        glassRenderer=new(GraphicsDevice,Content.Load<Effect>("Shaders/Glass"));
         ui=Content.Load<SpriteFont>("Fonts/StudioUI"); title=Content.Load<SpriteFont>("Fonts/StudioTitle");
         var fonts=new[]{Content.Load<SpriteFont>("Fonts/StudioRounded"),Content.Load<SpriteFont>("Fonts/StudioClassic"),Content.Load<SpriteFont>("Fonts/StudioBold")};
         iconFont=Content.Load<SpriteFont>("Fonts/StudioIcons");icons=new();
-        canvas=new(GraphicsDevice,fonts,S); voice=new(store.Root);
+        flightRenderer=new(GraphicsDevice,fonts[0]);
+        canvas=new(GraphicsDevice,fonts,S);canvas.PaintShader=Content.Load<Effect>("Shaders/Paint");canvas.ToonShader=Content.Load<Effect>("Shaders/Toon");flightRenderer.ToonShader=Content.Load<Effect>("Shaders/Toon");canvas.Fields.Configure(Content.Load<Effect>("Shaders/LiquidDensity"),Content.Load<Effect>("Shaders/LiquidSurface")); voice=new(store.Root);
         parent=startStudio; recipes=EffectRecipe.Load(store.Root); ChooseTarget();
+        if(scenario is "word-balloons" or "word-pop"){S.Mode=PlayMode.WordAdventure;target="cat";Celebrate(store.Words.First(w=>w.Word=="cat"));}
+        if(scenario=="flight"){S.Mode=PlayMode.BirdFlight;flight.SetWord("cat");}
+        if(scenario=="fireworks")canvas.CountFireworks(10);
         if(scenario=="guided-mommy"){S.Mode=PlayMode.WordAdventure;target="mommy";}
         if(!preview)
         {
+            accessibility=new(store.Root);
             guard=new KeyboardGuard();
             SDL_SetWindowGrab(Window.Handle,1);
             SDL_SetWindowAlwaysOnTop(Window.Handle,1);
         }
+        if(scenario=="benchmark")StartBenchmark();
+        if(scenario is "fracture" or "twenty-keys")S.ShowContext=true;
         notice=store.Status;
         base.LoadContent();
     }
     protected override void Update(GameTime gameTime)
     {
-        now=KeyboardGuard.Now;
+        if(benchmarking)benchmarkFrameStart=System.Diagnostics.Stopwatch.GetTimestamp();
+        now=KeyboardGuard.Now;UpdateBenchmark();
         while(replay.Count>0 && gameTime.TotalGameTime.TotalSeconds>=replay.Peek().Time) {var item=replay.Dequeue();Handle(item with {Time=now});}
         if(guard!=null)
         {
-            if(guard.Overflow) throw new InvalidOperationException("Input queue overflow. Session ended safely.");
+
             while(guard.TryRead(out var e)) Handle(e);
+            if(recoveringInput && held.Count==0)recoveringInput=false;
             if(!IsActive) { SDL_RestoreWindow(Window.Handle); SDL_RaiseWindow(Window.Handle); }
         }
         else
@@ -143,14 +171,19 @@ public sealed class StudioGame : Game
             var p=new Point(mouse.X*W/GraphicsDevice.Viewport.Width,mouse.Y*H/GraphicsDevice.Viewport.Height);
             var button=buttons.LastOrDefault(b=>b.Rect.Contains(p)); button.Click?.Invoke();
         }
+        if(!parent && S.Mode!=PlayMode.BirdFlight)canvas.Pointer(new Vector2(mouse.X*W/(float)GraphicsDevice.Viewport.Width,mouse.Y*H/(float)GraphicsDevice.Viewport.Height),IsActive,mouse.X!=previousMouse.X || mouse.Y!=previousMouse.Y,mouse.LeftButton==ButtonState.Pressed && previousMouse.LeftButton==ButtonState.Released,mouse.RightButton==ButtonState.Pressed && previousMouse.RightButton==ButtonState.Released,W,H,mouse.LeftButton==ButtonState.Pressed);
+        if(scenario=="word-pop" && gameTime.TotalGameTime.TotalSeconds>replayClickAt+.85 && canvas.FirstRewardPosition is {} balloonPoint){canvas.Pointer(balloonPoint,true,false,true,false,W,H);replayClickAt=gameTime.TotalGameTime.TotalSeconds;}
+        if(scenario=="fracture" && gameTime.TotalGameTime.TotalSeconds>1.5 && canvas.Sheet.Panes.Count<12){canvas.Sheet.Hit(new(320,350),1);}
         previousMouse=mouse;
         if(calibration>=0 && now>calibrateUntil) { calibration=-1; parent=true; store.Save(); notice="Calibration saved. Add samples for each pattern for a balanced model."; held.Clear(); chord.Reset(); }
         if(!parent)
         {
-            if(calibration<0) { var word=recognizer.Update(now,S.Mode==PlayMode.WordAdventure?target:null); if(word!=null) Celebrate(word); }
+            if(S.Mode==PlayMode.BirdFlight && calibration<0)UpdateFlight((float)gameTime.ElapsedGameTime.TotalSeconds);
+            if(S.Mode!=PlayMode.BirdFlight && calibration<0 && !awaitingBalloons) { var word=recognizer.Update(now,S.Mode==PlayMode.WordAdventure?target:null); if(word!=null) Celebrate(word); }
 
+            if(awaitingBalloons && canvas.RewardRemaining==0){awaitingBalloons=false;recognizer.Reset();ChooseTarget();}
             counting.Update(now);
-            canvas.Fields.SpaceHeld=held.Contains(32);
+            canvas.Fields.SpaceHeld=S.Mode!=PlayMode.BirdFlight && held.Contains(32);
             canvas.Update((float)gameTime.ElapsedGameTime.TotalSeconds,W,H);
         }
         if(demo && gameTime.TotalGameTime.TotalSeconds<2.5 && gameTime.TotalGameTime.Milliseconds%120<18)
@@ -159,13 +192,19 @@ public sealed class StudioGame : Game
             canvas.Emit(c.ToString(),new(Gesture.Sweep,.9,random.NextDouble(),random.NextDouble(),.4,-.1,.8,1,[]),W,H);
             hero="wonder"; celebrateUntil=now+5;
         }
-        if(screenshot!=null && gameTime.TotalGameTime.TotalSeconds>3) { VerifyReplay(); allowExit=true; Exit(); }
+        if(screenshot!=null && gameTime.TotalGameTime.TotalSeconds>replaySeconds) { VerifyReplay(); allowExit=true; Exit(); }
         voice?.Update();
         base.Update(gameTime);
     }
     private void Handle(KeyEvent e)
     {
+        if(e.Key==-1){held.Clear();chord.Reset();escapeExit.Reset();optionsTaps.Reset();analyzer.Reset();recoveringInput=true;return;}
+        if(escapeExit.Feed(e)){allowExit=true;Exit();return;}
+        bool openOptions=optionsTaps.Feed(e);
         if(e.Down) { if(!held.Add(e.Key)) return; } else held.Remove(e.Key);
+        if(openOptions){optionsTaps.Reset();calibration=-1;if(!parent)ToggleParent();return;}
+        maximumHeld=Math.Max(maximumHeld,held.Count);
+        if(recoveringInput){if(held.Count==0){recoveringInput=false;chord.Reset();}return;}
         var action=chord.Feed(e);
         if(action==ParentAction.Exit) { allowExit=true; Exit(); return; }
         if(action==ParentAction.Options) { ToggleParent(); return; }
@@ -178,31 +217,34 @@ public sealed class StudioGame : Game
             ParentKey(e.Key);return;
         }
         if(e.Key is 27 or 79 && held.Any(ParentChord.IsControl) && held.Any(ParentChord.IsAlt))return;
+        if(benchmarking)return;
+        if(S.Mode==PlayMode.BirdFlight && calibration<0){if(ParentChord.IsControl(e.Key))canvas.Squawk();return;}
         playStarted=true;canvas.BeginKey(e.Key);
-        var context=analyzer.Add(e.Key,e.Time,held.Count,store.Profile,S.AdaptiveLearning);
+        var context=analyzer.Add(e.Key,e.Time,held.Count(k=>!ParentChord.IsModifier(k)),store.Gestures.Network,S.UseGestureCalibration);
         keyGlow[e.Key]=now;
-        if(calibration>=0) { store.Profile.Network.Train(context.Features,calibration); canvas.Emit(KeyboardMap.Character(e.Key)?.ToString()??"",context,W,H); return; }
+        if(calibration>=0) { store.Gestures.Network.Train(context.Features,calibration); canvas.Emit(KeyboardMap.Character(e.Key)?.ToString()??"",context,W,H); return; }
         var character=KeyboardMap.Character(e.Key);
+        var gestured=canvas.GestureEffect(context,W,H);
                 if(e.Key==32) canvas.Fields.Ignite();
-        else if(character!=null) canvas.Emit(character.ToString()!,context,W,H);
-        else canvas.Emit(icons.Glyph(icons.NameFor(e.Key,S)),context,W,H,iconFont);
+        else if(!gestured && character!=null) canvas.Emit(character.ToString()!,context,W,H);
+        else if(!gestured) canvas.Emit(icons.Glyph(icons.NameFor(e.Key,S)),context,W,H,iconFont);
         if(ParentChord.IsModifier(e.Key))return;
         if(e.Key==8) { recognizer.Backspace(); return; }
         if(e.Key is 32 or 13) { var done=recognizer.Flush(S.Mode==PlayMode.WordAdventure?target:null); if(done!=null) Celebrate(done); return; }
-        if(character==null) { if(S.SpeakLetters)voice?.Say(icons.NameFor(e.Key,S).Replace("face-", "").Replace("-", " "),S,key:true); return; }
+        if(character==null) { if(S.SpeakLetters && !gestured)voice?.Say(icons.NameFor(e.Key,S).Replace("face-", "").Replace("-", " "),S,key:true); return; }
         if(char.IsAsciiDigit(character.Value))
         {
             recognizer.Reset();
             var number=counting.Add(character.Value,e.Time);
-            if(number!=null) { hero=number.Value.ToString(); celebrateUntil=now+2.5; lastWordAt=now;  canvas.Celebrate(Celebration.Orbit,W,H); voice?.Say(hero,S); }
+            if(number!=null) { hero=number.Value.ToString(); celebrateUntil=now+2.5; lastWordAt=now;  canvas.CountFireworks(number.Value); voice?.Say(hero,S); }
             if(number==null && counting.Pending.Length==0 && S.SpeakLetters)voice?.Say(character.ToString()!,S,key:true);
             return; // Keep the first digit of a pending multi-digit count quiet.
         }
-        if(S.Mode==PlayMode.Counting) return;
+        if(S.Mode==PlayMode.Counting || awaitingBalloons) return;
         if(S.Mode==PlayMode.WordAdventure)celebrateUntil=0;
         lastLetterInput=now;
         var word=recognizer.Add(character.Value,e.Time,context,S.Mode==PlayMode.WordAdventure?target:null); if(word!=null) Celebrate(word);
-        if(word==null && S.SpeakLetters) voice?.Say(character.ToString()!,S,key:true);
+        if(word==null && S.SpeakLetters && !gestured) voice?.Say(character.ToString()!,S,key:true);
     }
     private void Celebrate(WordEntry word)
     {
@@ -216,17 +258,40 @@ public sealed class StudioGame : Game
             try { using var stream=File.OpenRead(word.Image); if(stream.Length>8_000_000) throw new IOException("Image must be smaller than 8 MB."); wordImage=Texture2D.FromStream(GraphicsDevice,stream); }
             catch(Exception e) when(e is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException) { notice="Image unavailable: "+e.Message; }
         }
-        if(S.Mode==PlayMode.WordAdventure && word.Word==target) ChooseTarget();
+        if(S.Mode==PlayMode.WordAdventure && word.Word==target){canvas.ReleaseWordBalloons(word.Word,W,H);awaitingBalloons=true;recognizer.Reset();}
+    }
+    private void UpdateFlight(float dt)
+    {
+        if(benchmarking){benchmarkFlight.Step(dt,0,0,false,true);return;}
+
+        if(flight.Collected>=flight.Word.Length){ChooseTarget();}
+        var previous=flight.Collected;
+        if(flight.Step(dt,(held.Contains(39)?1:0)-(held.Contains(37)?1:0),(held.Contains(40)?1:0)-(held.Contains(38)?1:0),held.Contains(32),S.FlightAssist))
+        {
+            if(flight.Collected>=flight.Word.Length){voice?.Say(flight.Word,S);hero=flight.Word;flightCelebration=now+1.2;}
+            else voice?.Say(flight.Word[previous].ToString(),S,key:true);
+        }
+    }
+    private void DrawFlight()
+    {
+        Text("SKY SPELLER",45,30,Color.White,.65f,title);Text("Score  "+flight.Score,45,80,Color.White,.5f);
+        Center(now<flightCelebration?hero.ToUpperInvariant():new string(flight.Word.Take(flight.Collected).Select(char.ToUpperInvariant).ToArray())+new string('_',flight.Word.Length-flight.Collected),85,Color.White,.9f,title);
+        Text("Arrows steer / Up dives / Down climbs / Space flaps faster / Ctrl squawks",45,825,Color.White,.44f);
+        Text("Speed "+flight.Speed.ToString("0")+"     Altitude "+flight.Position.Y.ToString("0"),45,860,Color.White*.75f,.4f);
+        if(now<hintUntil)Text("Ctrl + Alt + O, release: parents. Tap Escape 10 times to quit.",45,120,Color.White,.45f);
     }
     private void ChooseTarget()
     {
         var candidates=store.Words.Where(w=>w.Enabled && w.Adventure).Select(w=>w.Word).ToArray();
         target=candidates.Length>0?candidates[random.Next(candidates.Length)]:"";
+        if(S.Mode==PlayMode.BirdFlight)flight.SetWord(target.Length>0?target:"cat");
     }
     private void ToggleParent()
     {
+        optionsTaps.Reset();
+        if(benchmarking){FinishBenchmark();return;}
         if(parent && !store.Save()) { notice=store.Status; return; }
-        parent=!parent; editValue=null; editCommit=null; calibration=-1;
+        awaitingBalloons=false;parent=!parent; editValue=null; editCommit=null; calibration=-1;
         recognizer.Reset(); recognizer.RefreshDictionary(); analyzer.Reset();  voice?.Stop(); canvas.Clear();playStarted=false;
         if(!parent) { ChooseTarget(); counting.Reset(); }
         notice=store.Status; recipes=EffectRecipe.Load(store.Root);
@@ -234,24 +299,50 @@ public sealed class StudioGame : Game
     protected override void Draw(GameTime gameTime)
     {
         var renderStart=System.Diagnostics.Stopwatch.GetTimestamp();
+        ResizeSurface();
         canvas.Prepare();
         GraphicsDevice.SetRenderTarget(surface); GraphicsDevice.Clear(canvas.Background);
-        batch.Begin(samplerState:SamplerState.LinearClamp,blendState:BlendState.AlphaBlend);
+        RenderSpace.Begin(batch);
         buttons.Clear();
-        canvas.Draw(batch,(float)gameTime.TotalGameTime.TotalSeconds,W,H);
-        if(parent) DrawParent(); else DrawPlay();
+        if(!parent && S.Mode==PlayMode.BirdFlight && calibration<0){batch.End();flightRenderer.Draw(benchmarking?benchmarkFlight:flight,S,canvas.Palette);RenderSpace.Begin(batch);}else canvas.Draw(batch,(float)gameTime.TotalGameTime.TotalSeconds,W,H);
+        if(parent) DrawParent(); else if(!benchmarking) DrawPlay();
+        if(benchmarking)Text("Benchmark / "+Math.Max(0,6-(now-benchmarkStart)).ToString("0")+" seconds",40,160,Color.White,.6f);
         if(editValue!=null) DrawEdit();
         batch.End();
+        GraphicsDevice.SetRenderTarget(composite);GraphicsDevice.Clear(canvas.Background);
+        batch.Begin();batch.Draw(surface,composite.Bounds,Color.White);batch.End();
+        if(!parent)glassRenderer.Draw(canvas.Sheet,surface,batch,pixel,S.GlassShader,S.GentleMotion);
         GraphicsDevice.SetRenderTarget(null); GraphicsDevice.Clear(canvas.Background);
-        batch.Begin(samplerState:SamplerState.LinearClamp); batch.Draw(surface,GraphicsDevice.Viewport.Bounds,Color.White); batch.End();
+        batch.Begin(samplerState:SamplerState.LinearClamp); var destination=GraphicsDevice.Viewport.Bounds;if(!parent){destination.X+=(int)canvas.Shake.X;destination.Y+=(int)canvas.Shake.Y;}batch.Draw(composite,destination,Color.White); batch.End();
+        if(benchmarking){var sample=new Color[1];composite.GetData(0,new Rectangle(composite.Width/2,composite.Height/2,1,1),sample,0,1);benchmarkFrames.Add(System.Diagnostics.Stopwatch.GetElapsedTime(benchmarkFrameStart>0?benchmarkFrameStart:renderStart).TotalMilliseconds);}
         renderSeconds+=System.Diagnostics.Stopwatch.GetElapsedTime(renderStart).TotalSeconds;renderFrames++;
-        if(!captured && screenshot!=null && gameTime.TotalGameTime.TotalSeconds>2.9)
-        { using var file=File.Create(screenshot); surface.SaveAsPng(file,W,H); captured=true; }
+        if(!captured && screenshot!=null && gameTime.TotalGameTime.TotalSeconds>replaySeconds-.1)
+        { using var file=File.Create(screenshot); composite.SaveAsPng(file,composite.Width,composite.Height); captured=true; }
         base.Draw(gameTime);
     }
         private static string ReadArg(string[] args,string name) {var i=Array.IndexOf(args,name);return i>=0 && i+1<args.Length?args[i+1]:"";}
     private void PrepareReplay()
     {
+        if(scenario=="ten-o"){
+            foreach(int k in new[]{65,83,68,162,164})replay.Enqueue(new(k,true,.1));
+            for(int i=0;i<10;i++){replay.Enqueue(new(79,true,.3+i*.15));replay.Enqueue(new(79,false,.35+i*.15));}
+        }
+        if(scenario=="native-recovery"){
+            var buffer=new KeyTransitionBuffer();var physical=new PhysicalKeyboard(buffer);
+            physical.Feed(96,82,false,true,false,.1);physical.Feed(45,82,false,false,false,.12);
+            physical.Feed(19,69,false,true,false,.15);physical.Feed(255,255,false,true,false,.17);
+            double t=.3;foreach(var k in new[]{(77,50),(73,23),(76,38),(75,37)}){physical.Feed(k.Item1,k.Item2,false,true,false,t);physical.Feed(k.Item1,k.Item2,false,false,false,t+.04);t+=.09;}
+            foreach(var k in new[]{(17,29),(18,56),(79,24)}){physical.Feed(k.Item1,k.Item2,false,true,false,t);t+=.03;}
+            foreach(var k in new[]{(79,24),(18,56),(17,29)}){physical.Feed(k.Item1,k.Item2,false,false,false,t);t+=.03;}
+            while(buffer.TryRead(out var e))replay.Enqueue(e);
+        }
+        if(scenario=="twenty-keys")for(int k=65;k<85;k++)replay.Enqueue(new(k,true,.2));
+        if(scenario=="quick-options"){double t=.1;foreach(int k in new[]{162,164,79}){replay.Enqueue(new(k,true,t));t+=.01;}foreach(int k in new[]{79,164,162}){replay.Enqueue(new(k,false,t));t+=.01;}}
+        if(scenario is "cluster" or "glass" or "swipe")
+        {
+            var keys=scenario=="swipe"?"QWERTYUIOP":scenario=="glass"?"QAZPLMWSXOKNEDC":"ASDF";
+            double t=.2;for(int round=0;round<(scenario=="glass"?4:1);round++){foreach(var c in keys){replay.Enqueue(new(c,true,t));if(scenario=="swipe")replay.Enqueue(new(c,false,t+.03));t+=scenario=="glass"?.02:.055;}if(scenario!="swipe")foreach(var c in keys){replay.Enqueue(new(c,false,t));t+=.001;}t+=.04;}
+        }
         if(scenario is "milk" or "mommy" or "rapid-milk" or "guided-mommy")
         {
             var word=scenario=="milk"?"miolk":scenario=="rapid-milk"?"milk":"mommy";double time=.15;
@@ -287,7 +378,7 @@ public sealed class StudioGame : Game
     }
     private void VerifyReplay()
     {
-        var success=scenario switch {"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
+        var success=scenario switch {"ten-o"=>parent,"native-recovery"=>parent && held.Count==0 && hero=="milk" && canvas.PaintCount==0 && canvas.ShatterCount==0,"twenty-keys"=>held.Count==20 && maximumHeld==20,"quick-options"=>parent,"benchmark"=>!benchmarking && benchmarkFrames.Count>30 && recommendation.Length>0,"fracture"=>true,"flight"=>flight.Position.Z< -40,"cluster"=>canvas.PaintCount>0,"glass"=>canvas.ShatterCount>0,"swipe"=>canvas.Fields.Blobs.Drops.Any(d=>d.Wobble>0),"fireworks"=>canvas.RocketsLaunched==(replaySeconds>=5?10:8),"word-balloons"=>canvas.RewardRemaining==3,"word-pop"=>canvas.Score==45 && canvas.RewardRemaining==0,"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
         if(scenario is "rapid-milk" or "mommy" or "balloon" && S.Sound)success=success && voice!=null && voice.Started==voice.Requested && voice.Completed==voice.Requested && voice.Overflow==0;
         if(!success) throw new InvalidOperationException("Preview scenario failed: "+scenario+"; hero="+hero+"; parent="+parent);
         if(screenshot!=null && voice!=null) File.WriteAllLines(screenshot+".audio.txt",new[]{ $"requested={voice.Requested}; started={voice.Started}; completed={voice.Completed}; overflow={voice.Overflow}; peak={voice.PeakOverlap}; max delay={voice.MaximumStartDelay:0.000}s"}.Concat(voice.Trace));
@@ -295,6 +386,7 @@ public sealed class StudioGame : Game
     }
     private void DrawPlay()
     {
+        if(S.Mode==PlayMode.BirdFlight && calibration<0){DrawFlight();return;}
         var quiet=S.Mode==PlayMode.SmashGarden && playStarted && calibration<0;
         if(!quiet) {
         Text("keylearner",50,35,Color.White*.8f,.85f);
@@ -315,6 +407,11 @@ public sealed class StudioGame : Game
                 batch.Draw(wordImage,new Rectangle((int)(W/2-wordImage.Width*scale/2),470,(int)(wordImage.Width*scale),(int)(wordImage.Height*scale)),Color.White);
             }
         }
+        else if(awaitingBalloons)
+        {
+            Center("Pop the balloons!",170,Color.White,.9f,title);
+            Center("Click to fire. Move the mouse to bounce them.",235,canvas.Palette[0],.55f);
+        }
         else if(S.Mode==PlayMode.WordAdventure)
         {
             Center(target.Length>0?"Can you find these letters?":"Choose adventure words in the parent dictionary.",220,Color.White*.7f,.62f);
@@ -329,17 +426,19 @@ public sealed class StudioGame : Game
         }
         else if(!quiet && recognizer.Buffer.Length>0) Center(recognizer.Buffer,150,Color.White*.6f,.7f);
         else if(!quiet && canvas.ParticleCount==0) { Center("A little touch. A little wonder.",305,Color.White*.9f,1.04f,title); Center("Press a key and see what grows.",390,canvas.Palette[0],.7f); }
-        if(S.ShowKeyboard && !quiet) DrawKeyboard();
+        if(S.Mode==PlayMode.WordAdventure)Text("Score  "+canvas.Score+"     Balloons  "+canvas.RewardRemaining,50,130,canvas.Palette[2],.55f);
+        if(S.ShowKeyboard && (!quiet || S.ShowContext)) DrawKeyboard();
         if(S.ShowContext && !quiet) Text($"{analyzer.Current.Gesture} / confidence {analyzer.Current.Confidence:P0} / {canvas.ParticleCount} particles",45,680,Color.White*.55f,.46f);
-        if(now<hintUntil) Text("Hold exactly Ctrl + Alt + Esc for 0.7s, then release to close. Ctrl + Alt + O: parents.",28,8,Color.White*.8f,.42f);
+        if(now<hintUntil) Text("Close: exact Ctrl + Alt + Esc (hold 0.7s, release), or 10 Escape taps. Ctrl + Alt + O or ten O taps: parents.",28,8,Color.White*.8f,.42f);
         if(!quiet) Text("Every little discovery counts.",50,850,Color.White*.3f,.42f);
     }
     private void DrawKeyboard()
     {
+        Text($"Held: {held.Count}  /  maximum: {maximumHeld}",490,675,Color.White*.7f,.38f);
         string[] rows=["1234567890","QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
         for(var r=0;r<rows.Length;r++) for(var i=0;i<rows[r].Length;i++)
         {
-            var key=rows[r][i]; var lit=keyGlow.TryGetValue(key,out var time)?(float)Math.Clamp(1-(now-time)/1.2,0,1):0;
+            var key=rows[r][i]; var lit=held.Contains(key)?1f:keyGlow.TryGetValue(key,out var time)?(float)Math.Clamp(1-(now-time)/1.2,0,1):0;
             var x=490+i*43+r*13; var y=705+r*31;
             Fill(new(x,y,37,25),Color.Lerp(new Color(33,41,61),canvas.Palette[r],lit*.75f));
             Text(key.ToString(),x+12,y+3,Color.White*(.27f+lit*.7f),.33f);
@@ -351,9 +450,10 @@ public sealed class StudioGame : Game
         Text("THE PARENT STUDIO",55,32,canvas.Palette[0],.45f);
         Text("Make room for wonder.",55,74,Color.White,.96f,title);
         Text("A little world, tuned to your child.",56,137,Color.White*.5f,.55f);
-        for(var i=0;i<Tabs.Length;i++) { var index=i; Button(new(55+i*190,193,178,53),Tabs[i],()=>{tab=index;row=0;},tab==i); }
+        for(var i=0;i<Tabs.Length;i++) { var index=i; Button(new(55+i*148,193,140,53),Tabs[i],()=>{tab=index;row=0;},tab==i); }
         if(tab==3) DrawDictionary(); else if(tab==5) DrawIcons(); else DrawSettings();
         Fill(new(0,795,W,105),new Color(15,22,38));
+        Text($"v{typeof(Program).Assembly.GetName().Version} / {guard?.Diagnostics??"preview"}",55,879,Color.White*.45f,.3f);
         Text(notice,55,810,Color.White*.6f,.43f,maxWidth:1020);
         Text("Tab: next section    Arrows: select / adjust    Enter: edit    Ctrl + Alt + Esc: close",55,853,Color.White*.4f,.4f);
         Button(new(1135,816,250,53),"Save & return to play",()=>ToggleParent(),true);
@@ -361,16 +461,19 @@ public sealed class StudioGame : Game
     private string[] PropertiesForTab() => tab switch {
         0=>["Mode","Theme","Font","Sound","GentleMotion","ShowKeyboard","FontScale","Backdrop"],
         1=>["WindowsVoice","SpeechRate","Volume","SpeakLetters","PiperExecutable","PiperModel","KeyVoiceChannels","WordVoiceChannels"],
-        2=>["ForgivingSpelling","AdaptiveLearning","WordPause","PrefixPause"],
+        2=>["ForgivingSpelling","AdaptiveLearning","WordPause","PrefixPause","UseGestureCalibration"],
+        8=>["RenderScale","LiquidScale","TerrainDetail","ExtrudedAssets","GlassShader","SmoothEdges","VSync"],
+        7=>["GestureEffects","MousePlay","GrowingFire","EffectsSound","EffectsVolume","MouseTrailSize"],
         6=>["BalloonPopSize","BalloonDeflateSeconds"],
         _=>["ParticleLimit","Gravity","Bounce","EffectStrength","LetterLifetime","ShowContext","StarCount","StarSpeed"] };
     private void DrawSettings()
     {
         var names=PropertiesForTab();
-        Text(tab switch {0=>"Small changes. A whole new mood.",1=>"A familiar voice makes a difference.",2=>"Follow their intent, at their pace.",6=>"A little puff. A big celebration.",_=>"Fine-tune the feel."},55,275,Color.White,.78f,title);
+        Text(tab switch {0=>"Small changes. A whole new mood.",1=>"A familiar voice makes a difference.",2=>"Follow their intent, at their pace.",6=>"A little puff. A big celebration.",8=>"A sharper world. Tuned to this laptop.",_=>"Fine-tune the feel."},55,275,Color.White,.78f,title);
         var descriptions=tab switch {
             0=>"Smash for exploration. Word Adventure for early spelling. Counting for number sequences.",
             1=>"Recordings first, optional offline Piper second, installed Windows speech as fallback.",
+            8=>"Native output and GPU shading. Render scale 1 = native display resolution.",
             2=>"Mistakes are forgiven only when typing looks deliberate and a correction is unambiguous.",
             6=>"Pop size is a multiple of normal size. Deflate seconds is the time to lose one puff.",
             _=>"Bounded particles and fixed physics substeps keep keyboard storms responsive." };
@@ -381,6 +484,8 @@ public sealed class StudioGame : Game
             var y=374+i*49;
             Button(new(55,y,1050,42),Nice(property.Name)+"   /   "+Display(property),()=>{row=index;ChangeProperty(property,1);},row==i);
         }
+        if(tab==8){DrawBenchmarkControls();Button(new(55,737,490,42),"Toon asset shading / "+(S.ToonAssets?"On":"Off"),()=>S.ToonAssets=!S.ToonAssets);Button(new(565,737,490,42),"Flight assistance / "+(S.FlightAssist?"On":"Off"),()=>S.FlightAssist=!S.FlightAssist);}
+        if(tab==7){Button(new(1130,620,245,48),"Touchpad setup & quit",()=>{allowExit=true;ReleaseSession();System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("ms-settings:devices-touchpad"){UseShellExecute=true});Exit();});Text("Clusters paint / mashing cracks glass / swipes make liquid trails.",55,674,Color.White*.6f,.43f);Text("Emergency: ten Escape taps quit; ten O taps open options. No other presses.",55,705,canvas.Palette[0],.43f);Text("Windows touchpad: set three/four-finger actions to Nothing before play.",55,737,Color.White*.6f,.43f);Text("Guard cannot block secure desktop or guarantee isolation. Use a dedicated child account.",55,768,Color.White*.5f,.4f);}
         if(tab==6){Text("Switching keys retires the old balloon. Return to that key to start a fresh one.",55,500,Color.White*.6f,.45f);Text("Inflated balloons float upward; a steady rhythm earns a sparkling pop.",55,535,Color.White*.6f,.45f);}
         if(tab==1)
         {
@@ -391,10 +496,11 @@ public sealed class StudioGame : Game
         }
         if(tab==2)
         {
-            Text("Optional calibration / 12 seconds per pattern",55,589,canvas.Palette[0],.48f);
-            for(var i=0;i<5;i++) {var index=i; Button(new(55+i*264,628,248,45),((Gesture)i).ToString(),()=>{calibration=index;calibrateUntil=now+12;parent=false;analyzer.Reset();recognizer.Reset();voice?.Stop();});}
-            Text("Patterns are estimates, not proof of one hand or two. Samples: "+store.Profile.Network.Samples,55,693,Color.White*.5f,.44f);
-            Button(new(1110,718,270,44),"Reset learned preferences",()=>{store.ResetLearning();notice="Learning reset. Save to keep this change.";});
+            Text("Optional calibration / 12 seconds per pattern",55,632,canvas.Palette[0],.48f);
+            for(var i=0;i<5;i++) {var index=i; Button(new(55+i*264,667,248,45),((Gesture)i).ToString(),()=>{S.UseGestureCalibration=true;calibration=index;calibrateUntil=now+12;parent=false;analyzer.Reset();recognizer.Reset();voice?.Stop();});}
+            Text("Calibration only trains the network. Word timing learns during play. Samples: "+store.Gestures.Network.Samples,55,722,Color.White*.5f,.44f);
+            Button(new(55,750,350,38),"Reset gesture training",()=>{store.ResetGestureTraining();analyzer.Reset();notice="Gesture calibration reset; word learning kept. Save to keep this change.";});
+            Button(new(425,750,350,38),"Reset word learning",()=>{recognizer.Reset();store.ResetWordLearning();notice="Word habits reset; gesture calibration kept. Save to keep this change.";});
         }
     }
         private void DrawIcons()
@@ -461,7 +567,7 @@ public sealed class StudioGame : Game
         var next=names[(Array.IndexOf(names,current)+1)%names.Length];
         if(Enum.TryParse<Celebration>(next,out var builtin)) {entry.Effect=builtin;entry.EffectPreset="";} else entry.EffectPreset=next;
     }
-    private static string Nice(string name)=>System.Text.RegularExpressions.Regex.Replace(name,"([a-z])([A-Z])","$1 $2");
+    private static string Nice(string name)=> name=="AdaptiveLearning"?"Learn word habits":System.Text.RegularExpressions.Regex.Replace(name,"([a-z])([A-Z])","$1 $2");
     private string Display(PropertyInfo p)
     {
         var value=p.GetValue(S);
@@ -480,7 +586,7 @@ public sealed class StudioGame : Game
         else if(type==typeof(string)) Edit(Nice(p.Name),(string)p.GetValue(S)!,v=>p.SetValue(S,v.Trim().Trim('"')));
         else if(type==typeof(int)) {var step=p.Name is "ParticleLimit" or "StarCount"?50:p.Name=="Volume"?5:1;p.SetValue(S,(int)p.GetValue(S)!+step*direction);}
         else if(type==typeof(double)) {var step=p.Name=="Gravity"?10:.1;p.SetValue(S,(double)p.GetValue(S)!+step*direction);}
-        S.Normalize(); notice="Unsaved changes. Save & return to keep them.";
+        S.Normalize(); if(p.Name=="VSync"){graphics.SynchronizeWithVerticalRetrace=S.VSync;graphics.ApplyChanges();}notice="Unsaved changes. Save & return to keep them.";
     }
     private void ParentKey(int key)
     {
@@ -549,14 +655,21 @@ public sealed class StudioGame : Game
     private void ReleaseSession()
     {
         if(cleaned)return;cleaned=true;
-        guard?.Dispose(); guard=null;
+        if(benchmarking){benchmarking=false;RestoreBenchmarkSettings();}
+        guard?.Dispose(); guard=null;accessibility?.Dispose();accessibility=null;
         if(!preview) {SDL_SetWindowGrab(Window.Handle,0);SDL_SetWindowAlwaysOnTop(Window.Handle,0);}
         voice?.Dispose();store.Save();
     }
     protected override void Dispose(bool disposing)
     {
-        if(disposing) {ReleaseSession();wordImage?.Dispose();canvas?.Dispose();surface?.Dispose();pixel?.Dispose();batch?.Dispose();}
+        if(disposing) {ReleaseSession();wordImage?.Dispose();flightRenderer?.Dispose();canvas?.Dispose();surface?.Dispose();composite?.Dispose();pixel?.Dispose();batch?.Dispose();}
         base.Dispose(disposing);
+    }
+    private void ResizeSurface()
+    {
+        var size=(Math.Clamp((int)(GraphicsDevice.PresentationParameters.BackBufferWidth*S.RenderScale),576,4096),Math.Clamp((int)(GraphicsDevice.PresentationParameters.BackBufferHeight*S.RenderScale),360,4096));
+        if(renderSize==size && renderSmooth==S.SmoothEdges)return;renderSmooth=S.SmoothEdges;surface?.Dispose();composite?.Dispose();renderSize=size;
+        surface=new(GraphicsDevice,size.Item1,size.Item2,false,SurfaceFormat.Color,DepthFormat.Depth24,S.SmoothEdges?4:0,RenderTargetUsage.DiscardContents);composite=new(GraphicsDevice,size.Item1,size.Item2);
     }
     private void SetWindowIcon()
     {

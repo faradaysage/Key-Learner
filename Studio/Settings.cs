@@ -3,12 +3,23 @@ namespace KeyLearner.Studio;
 
 public enum Backdrop { Aurora, Plasma, Vortex, Starfield, RotatingStars }
 public enum Mood { Aurora, Lagoon, Sunset, Candy, PrimaryColors, BlackAndWhite }
-public enum PlayMode { SmashGarden, WordAdventure, Counting }
+public enum PlayMode { SmashGarden, WordAdventure, Counting, BirdFlight }
 public enum Celebration { Confetti, Rain, Orbit, Bubbles, Embers }
 public enum LetterFont { Fredoka, Classic, Baloo }
 
 public sealed class Settings
 {
+    public bool ToonAssets {get;set;}=true;
+    public bool UseGestureCalibration {get;set;}
+    public bool SmoothEdges {get;set;}=true;
+    public bool FlightAssist {get;set;}=true;
+    public double RenderScale {get;set;}=1;
+    public double LiquidScale {get;set;}=1;
+    public bool GlassShader {get;set;}=true;
+    public bool ExtrudedAssets {get;set;}=true;
+    public bool VSync {get;set;}=true;
+    public int TerrainDetail {get;set;}=64;
+    public double MouseTrailSize {get;set;}=1;
     public int DefaultsVersion { get; set; }
     public double BalloonPopSize { get; set; } = 3;
     public double BalloonDeflateSeconds { get; set; } = 3;
@@ -19,6 +30,11 @@ public sealed class Settings
     public Mood Theme { get; set; } = Mood.PrimaryColors;
     public PlayMode Mode { get; set; }
     public LetterFont Font { get; set; }
+    public bool GestureEffects {get;set;} = true;
+    public bool EffectsSound {get;set;} = true;
+    public int EffectsVolume {get;set;} = 30;
+    public bool MousePlay {get;set;} = true;
+    public bool GrowingFire {get;set;} = true;
     public bool Sound { get; set; } = true;
     public bool SpeakLetters { get; set; } = true;
     public bool GentleMotion { get; set; }
@@ -44,8 +60,10 @@ public sealed class Settings
     public string PiperModel { get; set; } = "";
     public void Normalize()
     {
+        RenderScale=Finite(RenderScale,.5,1.5,1);LiquidScale=Finite(LiquidScale,.25,1,1);MouseTrailSize=Finite(MouseTrailSize,.3,3,1);TerrainDetail=Math.Clamp(TerrainDetail,24,100);
         BalloonPopSize=Finite(BalloonPopSize,1.5,6,3); BalloonDeflateSeconds=Finite(BalloonDeflateSeconds,.3,15,3); StarCount=Math.Clamp(StarCount,100,2400); StarSpeed=Finite(StarSpeed,.1,3,1);
         KeyIcons ??= new(); KeyVoiceChannels=Math.Clamp(KeyVoiceChannels,1,5); WordVoiceChannels=Math.Clamp(WordVoiceChannels,1,3);
+        EffectsVolume=Math.Clamp(EffectsVolume,0,100);
         Volume = Math.Clamp(Volume, 0, 100); SpeechRate = Math.Clamp(SpeechRate, -10, 10);
         ParticleLimit = Math.Clamp(ParticleLimit, 50, 2000);
         WordPause = Finite(WordPause, .4, 5, 1.1); PrefixPause = Finite(PrefixPause, .6, 6, 1.8);
@@ -76,13 +94,18 @@ public sealed class Profile
     public Dictionary<string, int> WordCounts { get; set; } = new();
     public Dictionary<string, double> PrefixHabits { get; set; } = new();
     public double TypingInterval { get; set; } = .4;
-    public TinyNetwork Network { get; set; } = new();
+}
+public sealed class GestureTraining
+{
+    public int SchemaVersion {get;set;}=1;
+    public TinyNetwork Network {get;set;}=new();
 }
 public sealed class Store
 {
     public string Root { get; }
     public string Status { get; private set; } = "Saved locally. No accounts or uploads.";
     public Settings Settings { get; }
+    public GestureTraining Gestures {get;private set;}=new();
     public Profile Profile { get; private set; }
     public List<WordEntry> Words { get; }
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
@@ -102,7 +125,10 @@ public sealed class Store
         Profile = Read<Profile>("profile.json") ?? new();
         Profile.PrefixHabits ??= new();
         foreach(var key in Profile.PrefixHabits.Keys.ToArray()) Profile.PrefixHabits[key]=double.IsFinite(Profile.PrefixHabits[key])?Math.Clamp(Profile.PrefixHabits[key],0,8):0;
-        Profile.WordCounts ??= new(); Profile.Network ??= new(); Profile.Network.Validate();
+        Profile.WordCounts ??= new();
+        Gestures=Read<GestureTraining>("gesture-training.json")??new();
+        if(Gestures.SchemaVersion!=1)Gestures=new();
+        Gestures.Network??=new();Gestures.Network.Validate();
         if (!double.IsFinite(Profile.TypingInterval)) Profile.TypingInterval = .4;
         Words = Read<List<WordEntry>>("words.json") ?? ImportWords();
         Words.RemoveAll(w => w is null || !ValidWord(w.Word));
@@ -129,7 +155,7 @@ public sealed class Store
         Settings.Normalize();
         try
         {
-            Write("settings.json",Settings); Write("words.json",Words); Write("profile.json",Profile);
+            Write("settings.json",Settings); Write("words.json",Words); Write("profile.json",Profile);Write("gesture-training.json",Gestures);
             Status = "Saved locally. No accounts or uploads."; return true;
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { Status = "Save failed: " + e.Message; return false; }
@@ -141,7 +167,9 @@ public sealed class Store
         if (File.Exists(path)) File.Copy(path,path + ".bak",true);
         File.Move(path + ".tmp",path,true);
     }
-    public void ResetLearning() => Profile = new();
+    public void ResetWordLearning()=>Profile=new();
+    public void ResetGestureTraining()=>Gestures=new();
+    public void ResetLearning(){ResetWordLearning();ResetGestureTraining();}
     private static List<WordEntry> ImportWords()
     {
         string[] seeds = ["milk","mom","mommy","dad","daddy","cat","dog","sun","moon","star","rain","fish","bird","bear","tree","apple","happy","love","ball","book","blue","red","green","yellow"];

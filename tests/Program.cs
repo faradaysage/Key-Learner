@@ -108,22 +108,22 @@ Check(counter.Pending=="1" && counter.Expected==10,"ten retains pending first di
 Check(counter.Add('0',10.4)==10,"ten commits as one number");
 Check(counter.Add('1',11)==null && counter.Add('1',11.3)==11,"eleven follows ten");
 var analyzer=new GestureAnalyzer();
-foreach(var key in new[]{81,87,69,82}) analyzer.Add(key,key*.05,1,store.Profile,false);
+foreach(var key in new[]{81,87,69,82}) analyzer.Add(key,key*.05,1,store.Gestures.Network,false);
 Check(analyzer.Current.Gesture==Gesture.Sweep,"horizontal keyboard sweep");
 analyzer.Reset();
-foreach(var pair in new[]{(65,1),(76,2),(81,3),(80,4),(77,5)}) analyzer.Add(pair.Item1,.01*pair.Item2,pair.Item2,store.Profile,false);
+foreach(var pair in new[]{(65,1),(76,2),(81,3),(80,4),(77,5)}) analyzer.Add(pair.Item1,.01*pair.Item2,pair.Item2,store.Gestures.Network,false);
 Check(analyzer.Current.Gesture==Gesture.BroadMash,"broad simultaneous mashing");
 var network=new TinyNetwork();
 for(var i=0;i<1000;i++) {network.Train([0,0,0,0,0,0],0);network.Train([1,1,1,0,0,0],3);}
 Check(network.Predict([0,0,0,0,0,0]).Label==0 && network.Predict([1,1,1,0,0,0]).Label==3,"tiny neural model learns labeled examples");
-store.Settings.Theme=Mood.Lagoon;store.Settings.Gravity=double.NaN;store.Profile.Network=network;
+store.Settings.Theme=Mood.Lagoon;store.Settings.Gravity=double.NaN;store.Gestures.Network=network;
 Check(store.Save(),"atomic store save");
 var restored=new Store(root);
 Check(restored.Settings.KeyIcons.GetValueOrDefault(112)=="cat","parent icon remapping persists");
 Check(restored.Settings.Theme==Mood.Lagoon && double.IsFinite(restored.Settings.Gravity),"settings roundtrip and validation");
 Check(restored.Profile.PrefixHabits.Count>0,"prefix habits persist across launches");
 Check(restored.Words.Any(w=>w.Word=="milk"),"dictionary roundtrip");
-Check(restored.Profile.Network.Samples==network.Samples,"neural weights persist");
+Check(restored.Gestures.Network.Samples==network.Samples,"neural weights persist");
 File.WriteAllText(Path.Combine(root,"settings.json"),"{broken");
 Check(new Store(root).Settings.Theme==Mood.PrimaryColors,"corrupt settings recover");
 var switched=new ParentChord();
@@ -157,3 +157,49 @@ migrated.Settings.Theme=Mood.Aurora;migrated.Settings.Backdrop=Backdrop.Plasma;m
 var chosen=new Store(root);
 Check(chosen.Settings.Theme==Mood.Aurora && chosen.Settings.Backdrop==Backdrop.Plasma,"later explicit theme choice survives restart");
 Console.WriteLine($"All {checks} checks passed. Test data: {root}");
+var exitTaps=new EscapeExit();for(int i=0;i<9;i++){Check(!exitTaps.Feed(new(27,true,i)),"Escape down cannot quit");Check(!exitTaps.Feed(new(27,false,i)),"fewer than ten taps cannot quit");}exitTaps.Feed(new(27,true,10));Check(exitTaps.Feed(new(27,false,10)),"ten released Escape taps quit");
+exitTaps.Reset();for(int i=0;i<100;i++)exitTaps.Feed(new(27,true,i));exitTaps.Feed(new(27,false,101));Check(exitTaps.Count==1,"held Escape repeats count once");exitTaps.Feed(new(65,true,102));Check(exitTaps.Count==0,"another key resets emergency exit");
+var transitions=new KeyTransitionBuffer();for(int i=0;i<50000;i++)transitions.Push(new(65,true,i));Check(transitions.Pending==1 && transitions.Recoveries==0,"autorepeat storm stays bounded");transitions.Push(new(65,false,50001));while(transitions.TryRead(out _)){}
+for(int i=0;i<2000;i++){transitions.Push(new(65,true,i));transitions.Push(new(65,false,i));}transitions.Push(new(162,true,2001));Check(transitions.TryRead(out var recovered)&&recovered.Key==-1,"overflow emits state reset instead of exiting");Check(transitions.TryRead(out recovered)&&recovered.Key==162&&recovered.Down,"overflow rebuilds current held keys");Check(!transitions.TryRead(out _),"released storm keys do not stick");transitions.Push(new(162,false,2002));Check(transitions.TryRead(out recovered)&&!recovered.Down,"release after recovery survives");
+foreach(int n in new[]{1,2,10,50,100}){var schedule=new FireworkSchedule();schedule.Add(n,10);Check(schedule.Due(9)==0,"rockets never launch before count");int launched=0;for(double t=10;t<=15.1;t+=.017)launched+=schedule.Due(t);Check(launched==n&&schedule.Pending==0,"exact rocket count within five seconds: "+n);}
+var overlapping=new FireworkSchedule();overlapping.Add(10,0);overlapping.Add(20,1);Check(overlapping.Due(6)==30,"new count preserves earlier scheduled rockets");
+var rewardsTest=new BalloonReward();rewardsTest.Start(5);for(int i=0;i<4;i++)Check(!rewardsTest.Pop(),"bonus waits for last balloon");Check(rewardsTest.Score==40&&rewardsTest.Pop()&&rewardsTest.Score==75,"last pop awards round bonus once");Check(!rewardsTest.Pop()&&rewardsTest.Score==75,"empty round cannot score again");
+var glassTest=new GlassDamage();glassTest.Hit(1);for(int i=0;i<180;i++)glassTest.Step(1f/60);Check(glassTest.Amount==0,"quiet heals glass");int broken=0;for(int i=0;i<16;i++){if(glassTest.Hit(1))broken++;glassTest.Step(.02f);}Check(broken==1,"sustained mash shatters once, with cooldown");
+var gestureTest=new GestureAnalyzer();var gp=new TinyNetwork();InputContext gc=default;int gi=0;foreach(var k in "ASDF")gc=gestureTest.Add(k,gi++*.03,3,gp,false);Check(gc.Gesture==Gesture.Cluster,"overlap produces paint cluster");gestureTest.Reset();gi=0;foreach(var k in "QAZPLM")gc=gestureTest.Add(k,gi++*.025,6,gp,false);Check(gc.Gesture==Gesture.BroadMash,"broad overlapping mash cracks glass");gestureTest.Reset();gi=0;foreach(var k in "QWERTY")gc=gestureTest.Add(k,gi++*.09,1,gp,false);Check(gc.Gesture==Gesture.Sweep,"straight trace produces liquid");gc=gestureTest.Add(65,3,1,gp,false);Check(gc.Gesture==Gesture.Deliberate,"quiet restores deliberate typing");
+Console.WriteLine($"All {checks} checks passed including gesture playground regressions.");
+Check(Attempt([162,164,79],.04)==ParentAction.Options,"options opens on quick exact chord release");
+Check(Attempt([162,164,79],.04,160)==ParentAction.None,"quick options chord still rejects extra Shift");
+var rollover=new KeyTransitionBuffer();for(int i=65;i<85;i++)rollover.Push(new(i,true,0));int simultaneous=0;while(rollover.TryRead(out var transition)){if(transition.Down)simultaneous++;}Check(simultaneous==20,"all twenty distinct held keys survive transport");for(int i=65;i<85;i++)rollover.Push(new(i,false,1));int releases=0;while(rollover.TryRead(out var transition)){if(!transition.Down)releases++;}Check(releases==20,"all twenty releases survive transport");
+var biased=new TinyNetwork();for(int i=0;i<1000;i++)biased.Train(new double[]{.4,.1,.5,.4,.2,.3},2);var typing=new GestureAnalyzer();for(int i=0;i<100;i++){var intent=typing.Add("MILK"[i%4],i*.13,1,biased,true);Check(intent.Gesture is Gesture.Deliberate or Gesture.Rapid or Gesture.Sweep,"single-key typing cannot become learned Cluster");}
+var paneTest=new GlassSheet();float sheetArea=1440*900;for(int i=0;i<12;i++){paneTest.Hit(new(300+i*50,300),1);Check(Math.Abs(paneTest.Panes.Sum(p=>p.Area)-sheetArea)<2,"fracture conserves sheet area");Check(paneTest.Panes.All(p=>p.Area>0 && p.Points.All(v=>v.X>=-.01f && v.Y>=-.01f&&v.X<=1440.01f&&v.Y<=900.01f)),"fractures stay within sheet");}
+var paneVertices=paneTest.Panes.SelectMany(p=>p.Points).ToArray();int attempts=0;while(!paneTest.Falling&&attempts++<100)paneTest.Hit(new(720,450),1);Check(paneTest.Falling,"distributed pressure eventually compromises sheet");var atBreak=paneTest.Panes.Select(p=>p.Points.ToArray()).ToArray();paneTest.Step(.1f,false);Check(atBreak.SelectMany(p=>p).SequenceEqual(paneTest.Panes.SelectMany(p=>p.Points)),"falling shards preserve exact fracture vertices");
+var quietSheet=new GlassSheet();quietSheet.Hit(new(100,100),1);for(int i=0;i<120;i++)quietSheet.Step(1f/60,false);Check(quietSheet.Panes.Count==1,"quiet pressure heals sheet");
+var flying=new FlightModel();float startZ=flying.Position.Z;for(int i=0;i<60;i++)flying.Step(1f/60,0,0,false);Check(flying.Position.Z<startZ-20,"bird flies continuously without input");var downBird=new FlightModel();for(int i=0;i<60;i++)downBird.Step(1f/60,0,-1,true);Check(downBird.Pitch<0&&downBird.Speed>flying.Speed,"dive and boost increase speed");var spellBird=new FlightModel();for(int i=0;i<3600&&spellBird.Completed==0;i++)spellBird.Step(1f/60,0,0,false,true);Check(spellBird.Completed==1 && spellBird.Score==60,"assisted flight collects cat and awards word bonus");
+Console.WriteLine($"All {checks} checks passed including native-resolution 3D regressions.");
+var partition=new GlassSheet();for(int i=0;i<14;i++)partition.Hit(new(320+i*11,350),1);
+var segments=partition.Panes.SelectMany(p=>p.Points.Select((a,i)=>(A:a,B:p.Points[(i+1)%p.Points.Length]))).ToArray();
+float Cross(System.Numerics.Vector2 a,System.Numerics.Vector2 b)=>a.X*b.Y-a.Y*b.X;
+bool crossed=false;foreach(var a in segments)foreach(var b in segments){float c1=Cross(a.B-a.A,b.A-a.A),c2=Cross(a.B-a.A,b.B-a.A),c3=Cross(b.B-b.A,a.A-b.A),c4=Cross(b.B-b.A,a.B-b.A);float ea=(a.B-a.A).Length()*.001f,eb=(b.B-b.A).Length()*.001f;if(((c1>ea&&c2< -ea)||(c1< -ea&&c2>ea))&&((c3>eb&&c4< -eb)||(c3< -eb&&c4>eb)))crossed=true;}
+Check(!crossed,"fractures stop at existing edges without crossing");
+Console.WriteLine($"All {checks} checks passed.");
+// Reproduce the old failure with translated keypad releases, Pause, and an overrun packet.
+var nativeQueue=new KeyTransitionBuffer();var physical=new PhysicalKeyboard(nativeQueue);var nativeHeld=new HashSet<int>();var nativeChord=new ParentChord();
+void DrainPhysical(){while(nativeQueue.TryRead(out var e)){if(e.Key==-1){nativeHeld.Clear();nativeChord.Reset();continue;}if(e.Down)nativeHeld.Add(e.Key);else nativeHeld.Remove(e.Key);nativeChord.Feed(e);}}
+foreach(var entry in new[]{(96,82,45),(97,79,35),(98,80,40),(99,81,34),(100,75,37)}){physical.Feed(entry.Item1,entry.Item2,false,true,false,0);physical.Feed(entry.Item3,entry.Item2,false,false,false,.1);}
+physical.Feed(19,69,false,true,false,.2);physical.Feed(255,255,false,true,false,.3);DrainPhysical();
+Check(physical.Held==0&&nativeHeld.Count==0,"translated releases, Pause and overrun never leave phantom held keys");Check(physical.RemappedReleases==5,"changed virtual-key labels are repaired by scan identity");
+physical.Feed(16,42,true,true,false,.4);DrainPhysical();Check(nativeHeld.Count==0,"extended synthetic Shift never poisons chords");
+var mapperChord=new ParentChord();ParentAction repairedAction=ParentAction.None;foreach(var e in new[]{(17,29,true,1d),(18,56,true,1.01),(79,24,true,1.02),(79,24,false,1.03),(18,56,false,1.04),(17,29,false,1.05)}){physical.Feed(e.Item1,e.Item2,false,e.Item3,false,e.Item4);while(nativeQueue.TryRead(out var k)){var action=mapperChord.Feed(k);if(action!=ParentAction.None)repairedAction=action;}}
+Check(repairedAction==ParentAction.Options,"exact options chord works immediately after scan-code mash regression");
+physical.Feed(13,28,false,true,false,2);physical.Feed(13,28,true,true,false,2);physical.Feed(13,28,true,false,false,2.1);DrainPhysical();Check(nativeHeld.Contains(13),"keypad/main Enter share a label without losing held reference");physical.Feed(13,28,false,false,false,2.2);DrainPhysical();Check(nativeHeld.Count==0,"last physical Enter releases its virtual label");
+physical.Feed(162,29,false,true,false,3);DrainPhysical();physical.Feed(162,29,false,false,true,3.1);Check(nativeQueue.TryRead(out var repair)&&repair.Key==-1,"injected release repairs state through reset, never authorizes a chord");
+var tenO=new TapSequence(79);for(int i=0;i<9;i++){tenO.Feed(new(79,true,i));Check(!tenO.Feed(new(79,false,i)),"nine O taps do not open options");}tenO.Feed(new(79,true,10));Check(tenO.Feed(new(79,false,10)),"ten complete O taps open options");tenO.Reset();for(int i=0;i<99;i++)tenO.Feed(new(79,true,i));tenO.Feed(new(79,false,100));Check(tenO.Count==1,"holding O counts only once");tenO.Feed(new(65,true,101));Check(tenO.Count==0,"another key resets O shortcut");
+var separateRoot=Path.Combine(root,"separate-learning");var separate=new Store(separateRoot);separate.Profile.WordCounts["mommy"]=12;separate.Profile.PrefixHabits["mom"]=6;separate.Gestures.Network.Train(new double[6],2);separate.Save();separate.ResetGestureTraining();Check(separate.Profile.WordCounts["mommy"]==12&&separate.Profile.PrefixHabits["mom"]==6,"reset gesture training preserves word habits");separate.Gestures.Network.Train(new double[6],3);separate.ResetWordLearning();Check(separate.Gestures.Network.Samples==1&&separate.Profile.WordCounts.Count==0,"reset word learning preserves gesture calibration");separate.Save();Check(!File.ReadAllText(Path.Combine(separateRoot,"profile.json")).Contains("Network")&&File.Exists(Path.Combine(separateRoot,"gesture-training.json")),"gesture weights persist separately from word model");
+var wordOnly=new Store(Path.Combine(root,"word-only"));var weightBefore=System.Text.Json.JsonSerializer.Serialize(wordOnly.Gestures);var wordOnlyRecognizer=new WordRecognizer(wordOnly);for(int i=0;i<40;i++){double t=i*5;foreach(char c in "mommy"){wordOnlyRecognizer.Add(c,t,context);t+=.2;}wordOnlyRecognizer.Update(t+4);}Check(weightBefore==System.Text.Json.JsonSerializer.Serialize(wordOnly.Gestures),"in-game spelling never trains gesture weights");
+var staleGesture=new GestureAnalyzer();InputContext typed=default;for(int i=0;i<10;i++)typed=staleGesture.Add("MILK"[i%4],i*.25,9,null,false);Check(typed.Gesture==Gesture.Deliberate,"old held keys alone cannot turn paced typing into clusters");
+Console.WriteLine($"All {checks} checks passed.");
+
+var legacyRoot=Path.Combine(root,"legacy-learning");Directory.CreateDirectory(legacyRoot);
+File.WriteAllText(Path.Combine(legacyRoot,"profile.json"),"""{"WordCounts":{"mommy":7},"PrefixHabits":{"mom":3},"Network":{"Samples":999}}""");
+var legacyLearning=new Store(legacyRoot);Check(legacyLearning.Profile.WordCounts["mommy"]==7 && legacyLearning.Profile.PrefixHabits["mom"]==3 && legacyLearning.Gestures.Network.Samples==0,"legacy word habits survive while embedded gesture weights are retired");
+Console.WriteLine($"All {checks} checks passed.");

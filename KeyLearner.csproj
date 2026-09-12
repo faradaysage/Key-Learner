@@ -16,6 +16,7 @@
     <PackageReference Include="System.Speech" Version="9.0.0" />
 
     <MonoGameContentReference Include="Content/Content.mgcb" />
+    <None Update="Content/Sounds/*" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Content/Voice/*" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Content/Branding/*" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Content/Fonts/*-OFL.txt" CopyToOutputDirectory="PreserveNewest" />

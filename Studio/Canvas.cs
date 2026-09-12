@@ -2,10 +2,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 namespace KeyLearner.Studio;
 
-public sealed class Canvas : IDisposable
+public sealed partial class Canvas : IDisposable
 {
     private sealed class Mote { public Vector2 P,V; public float Age,Life,Size,Spin; public Color Color; public Celebration Effect; public float Curl,Gravity=1,Trail; }
-    private sealed class Glyph { public string Text=""; public Vector2 P,V; public float Age,Life,Rotation; public Color Color; public SpriteFont? Font; public BalloonMotion Balloon=new(); }
+    private sealed class Glyph { public string Text=""; public Vector2 P,V; public float Age,Life,Rotation,Burn; public Color Color; public SpriteFont? Font; public BalloonMotion Balloon=new(); }
     private readonly List<Mote> motes=new();
     private readonly List<Glyph> letters=new();
     private Glyph? activeGlyph;
@@ -18,13 +18,15 @@ public sealed class Canvas : IDisposable
     private readonly Random random=new(73);
     private readonly Texture2D pixel,glow,disc;
     private readonly SpriteFont[] fonts;
+    private readonly GlyphMeshes meshes;
+    public Effect? ToonShader {set=>meshes.ToonShader=value;}
     private readonly Settings settings;
     public LivingFields Fields {get;}
     private float emberClock;
     private readonly DemosceneBackdrop backdrop;
     public int GlyphCount=>letters.Count;
     public float LargestGlyph=>letters.Count==0?0:letters.Max(g=>g.Balloon.Size);
-    public void Prepare()=>Fields.Prepare(Palette);
+    public void Prepare()=>Fields.Prepare(Palette,settings);
     public Color[] Palette => settings.Theme switch {
         Mood.PrimaryColors => [new(255,38,50),new(255,215,0),new(25,100,255),new(255,215,0)],
         Mood.BlackAndWhite => [Color.White,new(210,210,210),Color.White,new(160,160,160)],
@@ -36,7 +38,7 @@ public sealed class Canvas : IDisposable
     public int ParticleCount=>motes.Count+Fields.Blobs.Drops.Count+Fields.Fire.Count;
     public Canvas(GraphicsDevice device,SpriteFont[] fonts,Settings settings)
     {
-        this.fonts=fonts; this.settings=settings; Fields=new(device); backdrop=new(device);
+        this.fonts=fonts;meshes=new(device); this.settings=settings; Fields=new(device); backdrop=new(device);
         pixel=new(device,1,1); pixel.SetData(new[]{Color.White});
         glow=MakeDisc(device,true); disc=MakeDisc(device,false);
     }
@@ -94,6 +96,7 @@ public sealed class Canvas : IDisposable
     {
         Fields.Update(elapsed,settings,width,height,settings.ParticleLimit-motes.Count);
         backdrop.Update(Math.Clamp(elapsed,0,.1f),settings,Palette);
+        UpdateInteractions(Math.Clamp(elapsed,0,.1f),width,height);
         emberClock+=Math.Clamp(elapsed,0,.1f)*Fields.FireLevel*(settings.GentleMotion?10:45);
         while(emberClock>=1)
         {
@@ -118,12 +121,12 @@ public sealed class Canvas : IDisposable
             }
             foreach(var g in letters)
             {
-                if(g.Balloon.Popped)continue;
+                if(g.Balloon.Popped || g.Age>=g.Life)continue;
                 g.Age+=h;g.Balloon.Step(h,(float)settings.BalloonDeflateSeconds,(float)settings.BalloonPopSize);
                 if(g.Balloon.Size>1.03f)g.Age=Math.Min(g.Age,Math.Max(0,g.Life-1.3f));
                 if(g.Balloon.Popped)
                 {
-                    PoppedCount++;g.Age=g.Life;if(activeGlyph==g)activeGlyph=null;
+                    sounds.Play("pop",settings);PoppedCount++;g.Age=g.Life;if(activeGlyph==g)activeGlyph=null;
                     if(rings.Count>=12)rings.RemoveAt(0);
                     rings.Add(new(){Position=g.P,Radius=25*g.Balloon.Size,Color=g.Color});
                     var keep=Math.Max(0,settings.ParticleLimit-120);
@@ -138,7 +141,7 @@ public sealed class Canvas : IDisposable
                 else g.V.Y+=(float)settings.Gravity*h;
                 g.P+=g.V*h*(settings.GentleMotion?.45f:1);
                 var radius=Math.Min(45*g.Balloon.Size*(float)settings.FontScale,(height-100)*.45f);
-                Bounce(ref g.P,ref g.V,radius,width,height-100);
+                Bounce(ref g.P,ref g.V,radius,width,height);
                 if(inflated && g.P.Y<=radius+.1f)g.V.Y=0;
                 g.Rotation=settings.GentleMotion?0:MathF.Sin(g.Age*1.4f)*.09f;
             }
@@ -207,11 +210,14 @@ public sealed class Canvas : IDisposable
             var glyphFont=g.Font??font;
             var origin=glyphFont.MeasureString(g.Text)/2;
             b.Draw(glow,g.P,null,g.Color*(alpha*.35f),0,new(32),3f*g.Balloon.Size,SpriteEffects.None,0);
+            if(settings.ExtrudedAssets)continue;
             b.DrawString(glyphFont,g.Text,g.P+new Vector2(0,5),new Color(0,0,0)*alpha,g.Rotation,origin,scale,SpriteEffects.None,0);
             b.DrawString(glyphFont,g.Text,g.P,g.Color*alpha,g.Rotation,origin,scale,SpriteEffects.None,0);
             b.DrawString(glyphFont,g.Text,g.P-new Vector2(1,2)*g.Balloon.Size,Color.Lerp(g.Color,Color.White,.65f)*(alpha*.32f),g.Rotation,origin,scale*.985f,SpriteEffects.None,0);
         }
+        if(settings.ExtrudedAssets){meshes.UseToon=settings.ToonAssets;b.End();foreach(var g in letters){if(g.Text.Length!=1)continue;float scale=(float)settings.FontScale*(g.Font==null?.7f:1.4f)*g.Balloon.Size;var world=Matrix.CreateScale(scale)*Matrix.CreateRotationX(settings.GentleMotion?0:MathF.Sin(g.Age*.8f)*.22f)*Matrix.CreateRotationY(settings.GentleMotion?0:MathF.Sin(g.Age*.6f)*.35f)*Matrix.CreateRotationZ(g.Rotation)*Matrix.CreateTranslation(g.P.X,g.P.Y,0);meshes.Draw(g.Font??font,g.Text[0],world,Matrix.Identity,Matrix.CreateOrthographicOffCenter(0,width,height,0,-500,500),g.Color,Math.Clamp((g.Life-g.Age)/1.2f,0,1));}RenderSpace.Begin(b);}
+        DrawInteractions(b,time,width,height);
     }
-    public void Clear() { activeGlyph=null;activeKey=null;rings.Clear();letters.Clear(); motes.Clear(); Fields.Clear(); }
-    public void Dispose() { Fields.Dispose(); backdrop.Dispose(); pixel.Dispose(); glow.Dispose(); disc.Dispose(); }
+    public void Clear() { ClearInteractions(); activeGlyph=null;activeKey=null;rings.Clear();letters.Clear(); motes.Clear(); Fields.Clear(); }
+    public void Dispose() { meshes.Dispose();sounds.Dispose(); Fields.Dispose(); backdrop.Dispose(); pixel.Dispose(); glow.Dispose(); disc.Dispose(); }
 }
