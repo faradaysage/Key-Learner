@@ -51,7 +51,7 @@ public sealed class AccessibilitySession : IDisposable
         try
         {
             using var parent=Process.GetProcessById(int.Parse(args[2]));
-            if(parent.StartTime.ToUniversalTime().Ticks==long.Parse(args[3]))parent.WaitForExit();
+            if(parent.StartTime.ToUniversalTime().Ticks==long.Parse(args[3]))while(File.Exists(args[1]) && !parent.WaitForExit(1000)){}
         }
         catch(ArgumentException){}catch(InvalidOperationException){}
         RestoreFile(args[1]);

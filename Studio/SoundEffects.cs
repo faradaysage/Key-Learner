@@ -9,6 +9,7 @@ public sealed class SoundEffects : IDisposable
     SoundEffectInstance? fire;
     public SoundEffects(){try{
         var pcm=new byte[22050/4*2];for(int i=0;i<pcm.Length/2;i++){double t=i/22050d;short v=(short)(Math.Sin(t*Math.PI*2*(t<.12?170:125))*Math.Min(1,t*40)*Math.Max(0,1-t*4)*5000);pcm[i*2]=(byte)v;pcm[i*2+1]=(byte)(v>>8);}clips["retry"]=new SoundEffect(pcm,22050,AudioChannels.Mono);
+        clips["powerup"]=Tone(.8,t=>{int note=Math.Min(3,(int)(t/.14));double phase=t-note*.14,duration=note==3?.38:.14,hz=new[]{523.25,659.25,783.99,1046.5}[note];return (Math.Sin(Math.PI*2*hz*phase)+.25*Math.Sin(Math.PI*4*hz*phase))*Math.Sin(Math.PI*phase/duration)*.55;});
         clips["sonar"]=Tone(.45,t=>Math.Sin(Math.PI*2*(880*t-300*t*t))*Math.Exp(-8*t));
         clips["horn"]=Tone(.28,t=>(Math.Sin(Math.PI*2*220*t)+.25*Math.Sin(Math.PI*2*440*t))*Math.Sin(Math.PI*t/.28));
         foreach(var name in new[]{"pop","paint","crack","shatter","cannon","fire","squawk"}){using var s=File.OpenRead(Path.Combine(AppContext.BaseDirectory,"Content","Sounds",name+".wav"));clips[name]=SoundEffect.FromStream(s);}fire=clips["fire"].CreateInstance();fire.IsLooped=true;}catch(Exception e) when(e is IOException or NoAudioHardwareException or InvalidOperationException){}}

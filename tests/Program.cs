@@ -232,7 +232,7 @@ var loopBird=new FlightModel();loopBird.Position=new(0,350,0);float minForward=1
 var boostBird=new FlightModel();for(int i=0;i<180;i++)boostBird.Step(1f/60,0,0,true);Check(boostBird.Speed>120,"space boost exceeds old speed cap");boostBird.TapTurn(-1);boostBird.Step(.15f,0,0,false);boostBird.TapTurn(-1);Check(boostBird.Rolls==1,"double tap initiates one barrel roll");boostBird.TapTurn(-1);Check(boostBird.Rolls==1,"extra tap cannot stack active rolls");
 var callBird=new FlightModel();float initialDistance=System.Numerics.Vector3.Distance(callBird.Position,callBird.Gate);Check(callBird.Signal()&&!callBird.Signal(),"squawk magnet has a cooldown");callBird.Step(.1f,0,0,false);Check(System.Numerics.Vector3.Distance(callBird.Position,callBird.Gate)<initialDistance-10,"squawk pulls next letter toward child");
 Check(Enumerable.Range(0,7).Select(i=>ExplorerWorld.Area(-i*950-400)).Distinct().Count()==7,"journey visits seven distinct regions");for(int i=1;i<7;i++)Check(Math.Abs(ExplorerWorld.Height(200,-i*950-.01f)-ExplorerWorld.Height(200,-i*950+.01f))<.1,"terrain boundaries are continuous");
-var racer=new FlightModel();racer.Configure(ExplorerKind.Racer);for(int i=0;i<300;i++)racer.Step(1f/60,1,0,true);Check(racer.Position.Z< -300&&Math.Abs(racer.Position.X-ExplorerWorld.Road(racer.Position.Z))<=27.1,"racer accelerates and stays alongside winding road");
+var racer=new FlightModel();racer.Configure(ExplorerKind.Racer);for(int i=0;i<300;i++)racer.Step(1f/60,1,0,true);Check(racer.Position.Z< -100&&racer.OffRoad>0 && racer.OffRoad<55,"racer accelerates and can push through the soft shoulder");
 var dolphin=new FlightModel();dolphin.Configure(ExplorerKind.Dolphin);for(int i=0;i<240;i++)dolphin.Step(1f/60,0,-1,true);Check(dolphin.Position.Y<=-4&&dolphin.Position.Y>=ExplorerWorld.Bed(dolphin.Position.X,dolphin.Position.Z)+6.9,"dolphin stays between seafloor and surface");
 Console.WriteLine($"All {checks} checks passed including explorer and patient spelling regressions.");
 
@@ -241,4 +241,39 @@ Check(ProjectileMath.HitFraction(new(30,50),10,new(0,100),new(0,0))==null,"canno
 Console.WriteLine($"All {checks} checks passed.");
 
 foreach(var kind in new[]{ExplorerKind.Racer,ExplorerKind.Dolphin}){var traveler=new FlightModel();traveler.Configure(kind);for(int i=0;i<3600&&traveler.Completed==0;i++)traveler.Step(1f/60,0,0,false,true);Check(traveler.Completed==1&&traveler.Score==60,"assisted "+kind+" collects all word letters and bonus");}
+Console.WriteLine($"All {checks} checks passed.");
+
+// Native callback focus policy: missing key-up on the desktop cannot poison the next session.
+var focusQueue=new KeyTransitionBuffer();var focusPhysical=new PhysicalKeyboard(focusQueue);var focusLease=new InputFocus(123,focusPhysical.Clear);
+Check(!focusLease.Accepts(123),"keyboard capture starts disarmed");focusLease.SetActive(true);
+if(focusLease.Accepts(123))focusPhysical.Feed(65,30,false,true,false,0);
+Check(focusQueue.Snapshot().IsDown(65),"focused physical down reaches current state");
+Check(!focusLease.Accepts(456)&&focusQueue.Pending==0&&focusQueue.Snapshot().Count==0,"desktop focus revokes capture and clears missing-release state");
+foreach(int key in new[]{20,65,80,162})if(focusLease.Accepts(456))focusPhysical.Feed(key,key,false,true,false,1);
+Check(focusQueue.Pending==0&&!focusLease.Accepts(123),"desktop Caps Lock and password input stay out of history, even before game reactivation");
+focusLease.SetActive(true);Check(!focusLease.Accepts(0),"secure desktop or unknown foreground immediately passes through");
+focusLease.SetActive(true);Check(focusLease.Accepts(123)&&focusQueue.Snapshot().Count==0,"explicit foreground resume starts with clean input");
+var unboundFocus=new InputFocus(0,()=>{});unboundFocus.SetActive(true);Check(!unboundFocus.Accepts(0),"unknown game HWND never captures keys");
+var gg=new GameShortcut();Check(!gg.Feed(new(71,true,0)),"first G press stays in play");for(int i=0;i<10;i++)gg.Feed(new(71,true,.1));Check(!gg.Feed(new(71,false,.2)),"G autorepeat only counts as one tap");gg.Feed(new(71,true,.4));Check(gg.Feed(new(71,false,.5)),"two released G taps open game picker");
+gg.Feed(new(71,true,1));gg.Feed(new(71,false,1.1));gg.Feed(new(65,true,1.2));gg.Feed(new(71,true,1.3));Check(!gg.Feed(new(71,false,1.4)),"other key interrupts GG command");gg.Reset();gg.Feed(new(71,true,2));gg.Feed(new(71,false,2.1));gg.Feed(new(71,true,4));Check(!gg.Feed(new(71,false,4.1)),"unrelated G taps do not open picker");
+Check(GameCatalog.All.Select(g=>g.Mode).Distinct().Count()==Enum.GetValues<PlayMode>().Length && GameCatalog.All.All(g=>g.Topics.Length>0&&g.MinimumAge>0),"every game advertises selection and filter metadata");
+var courseReward=new LetterCourse();courseReward.Start("a");courseReward.Collect();int rewardScore=courseReward.Score;Check(courseReward.RewardRemaining==2&&!courseReward.Collect()&&courseReward.Score==rewardScore,"completion bonus fires once with a two-second reward window");courseReward.Step(2);Check(courseReward.RewardRemaining==0,"completion interval ends on schedule");
+foreach(float pitch in new[]{0f,.8f,2.5f,3.14f,-2f}){var oriented=new FlightModel{Yaw=.7f,Pitch=pitch};var right=System.Numerics.Vector3.TransformNormal(System.Numerics.Vector3.UnitX,oriented.LetterFacing);Check(System.Numerics.Vector3.Dot(right,oriented.Right)>.999f,"glyph local right stays screen-right through loops");}
+var highBird=new FlightModel{Position=new(0,1500,0),Pitch=2.8f};for(int i=0;i<1200;i++){highBird.Step(1f/60,0,0,false,true);if(highBird.Collected==highBird.Word.Length&&highBird.RewardRemaining==0)highBird.SetWord("cat");}
+Check(Math.Abs(highBird.Position.Y-ExplorerWorld.Height(highBird.Position.X,highBird.Position.Z)-45)<35 && highBird.Up.Y>.8f,"idle inverted high bird returns to upright treetop flight");
+float valleyZ=-2350;float valleyX=ExplorerWorld.Valley(valleyZ);Check(ExplorerWorld.Height(valleyX+230,valleyZ)>ExplorerWorld.Height(valleyX,valleyZ)+100&&ExplorerWorld.Height(valleyX-230,valleyZ)>ExplorerWorld.Height(valleyX,valleyZ)+100,"mountain region has tall banks on both sides of flyable valley");
+foreach(int columns in new[]{12,50}){bool outside=true;for(float z=-2600;z<-1800;z+=10)foreach(int side in new[]{-1,1})for(int i=0;i<=columns;i++){var p=ExplorerWorld.RoadTerrainPoint(side,i,z,columns);outside&=(p.X-ExplorerWorld.Road(p.Z))*side>=19.999f;}Check(outside,"road terrain tessellation stops at shoulder for detail "+columns);}
+var shoreCar=new FlightModel();shoreCar.Configure(ExplorerKind.Racer);shoreCar.Position=new(ExplorerWorld.Road(-1200)+19,7,-1200);bool dry=true;for(int i=0;i<3000;i++){shoreCar.Step(1f/60,1,0,true);dry&=ExplorerWorld.Driveable(shoreCar.Position.X,shoreCar.Position.Z);}Check(dry,"sustained boosted off-road steering cannot enter lake or river water");
+Console.WriteLine($"All {checks} checks passed including focus isolation, game picker and explorer rewards.");
+
+foreach(var kind in Enum.GetValues<ExplorerKind>()){
+    var journey=new FlightModel();journey.Configure(kind);
+    for(int i=0;i<7200;i++){journey.Step(1f/60,0,0,false,true);if(journey.Collected==journey.Word.Length&&journey.RewardRemaining==0)journey.SetWord("cat");}
+    Console.WriteLine($"Journey {kind}: {journey.Completed} words at {journey.Position}");
+    Check(journey.Completed>=5,"hands-off "+kind+" sustains spelling across a two-minute journey");
+}
+Console.WriteLine($"All {checks} checks passed.");
+
+gg.Reset();gg.Feed(new(71,true,5),true);gg.Feed(new(71,false,5.1),true);gg.Feed(new(71,true,5.3),true);Check(!gg.Feed(new(71,false,5.4),true),"modified G taps never open child picker");
+var clearReward=new LetterCourse();clearReward.Start("a");clearReward.Collect();clearReward.DismissReward();Check(clearReward.RewardRemaining==0&&clearReward.Score==20,"resume clears completion effects without erasing earned points");
 Console.WriteLine($"All {checks} checks passed.");

@@ -20,7 +20,15 @@ public sealed class FlightRenderer : IDisposable
         int x=(int)MathF.Floor(f.Position.X/50),z=(int)MathF.Floor(f.Position.Z/50);if(x==cellX&&z==cellZ&&resolution==detail&&f.Kind==builtKind&&monochrome==builtMono)return;builtMono=monochrome;cellX=x;cellZ=z;detail=resolution;builtKind=f.Kind;vertices.Clear();
         bool ocean=f.Kind==ExplorerKind.Dolphin,race=f.Kind==ExplorerKind.Racer;float span=1300,step=span/resolution;
         Vector3 P(int i,int j){float px=x*50-span/2+i*step,pz=z*50-span/2+j*step;return new(px,ocean?ExplorerWorld.Bed(px,pz):ExplorerWorld.Land(px,pz,race),pz);}
-        for(int i=0;i<resolution;i++)for(int j=0;j<resolution;j++){var p=P(i,j);var color=ocean?new Color(192,176,112):Ground(ExplorerWorld.Area(p.Z));if(!ocean&&p.Y>75)color=new(232,238,243);Quad(p,P(i+1,j),P(i+1,j+1),P(i,j+1),color);}
+        if(race){
+            // Terrain strips share the road's longitudinal samples and stop at its shoulders.
+            // No coarse terrain triangle spans the asphalt, at any detail setting.
+            int columns=Math.Max(8,resolution/2);
+            foreach(int side in new[]{-1,1})for(int i=0;i<columns;i++)for(float rz=z*50-650;rz<z*50+650;rz+=10){
+                Vector3 T(int col,float pz)=>V(ExplorerWorld.RoadTerrainPoint(side,col,pz,columns));
+                var p=T(i,rz);Quad(p,T(i+1,rz),T(i+1,rz+10),T(i,rz+10),Ground(ExplorerWorld.Area(rz)));
+            }
+        }else for(int i=0;i<resolution;i++)for(int j=0;j<resolution;j++){var p=P(i,j);var color=ocean?new Color(192,176,112):Ground(ExplorerWorld.Area(p.Z));if(!ocean&&p.Y>75)color=new(232,238,243);Quad(p,P(i+1,j),P(i+1,j+1),P(i,j+1),color);}
         for(int i=-16;i<=16;i++)for(int j=-16;j<=16;j++){
             int gx=(int)MathF.Floor(x*50/32f)+i,gz=(int)MathF.Floor(z*50/32f)+j;float seed=MathF.Sin(gx*127.1f+gz*311.7f)*43758.5453f;seed-=MathF.Floor(seed);
             float px=gx*32+seed*17,pz=gz*32+seed*13,py=ocean?ExplorerWorld.Bed(px,pz):ExplorerWorld.Land(px,pz,race);var area=ExplorerWorld.Area(pz);
@@ -53,8 +61,8 @@ public sealed class FlightRenderer : IDisposable
         var view=Matrix.CreateLookAt(camera,pos+forward*35,up);var projection=Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(race?72:70),device.Viewport.AspectRatio,.3f,900);
         device.DepthStencilState=DepthStencilState.Default;device.RasterizerState=RasterizerState.CullNone;device.BlendState=BlendState.Opaque;
         effect.World=Matrix.Identity;effect.View=view;effect.Projection=projection;effect.FogColor=sky.ToVector3();effect.FogStart=ocean?80:240;effect.FogEnd=ocean?330:700;effect.DiffuseColor=Vector3.One;DrawMesh(scenery);
-        glyphs.UseToon=settings.ToonAssets;var gate=V(f.Gate);var face=Matrix.CreateWorld(Vector3.Zero,-forward,up);
-        glyphs.Draw(font,char.ToUpperInvariant(f.Letter),Matrix.CreateScale(.13f,-.13f,.13f)*face*Matrix.CreateTranslation(gate),view,projection,palette[f.Collected%4]);
+        glyphs.UseToon=settings.ToonAssets;var gate=V(f.Gate);var m=f.LetterFacing;var face=new Matrix(m.M11,m.M12,m.M13,m.M14,m.M21,m.M22,m.M23,m.M24,m.M31,m.M32,m.M33,m.M34,m.M41,m.M42,m.M43,m.M44);
+        if(f.Collected<f.Word.Length)glyphs.Draw(font,char.ToUpperInvariant(f.Letter),Matrix.CreateScale(.13f,-.13f,.13f)*face*Matrix.CreateTranslation(gate),view,projection,palette[f.Collected%4]);
         vertices.Clear();float flap=MathF.Sin(f.Time*(f.Speed>55?10:5))*.65f;
         if(race){Box(new(0,-.9f,0),new(3.4f,1.1f,6),new(235,51,66));Box(new(0,.2f,.1f),new(2.5f,.75f,2.4f),new(62,173,223));foreach(int side in new[]{-1,1})foreach(int wheel in new[]{-1,1})Box(new(side*1.8f,-1,wheel*1.7f),new(.7f,1,1.2f),new(22,25,36));Box(new(0,.3f,2.6f),new(4,.25f,.7f),new(252,211,54));}
         else if(ocean){
@@ -64,8 +72,32 @@ public sealed class FlightRenderer : IDisposable
             var color=palette[2];Tri(new(0,0,-3),new(-.8f,.4f,1),new(.8f,.4f,1),color);Tri(new(0,0,-3),new(.8f,.4f,1),new(0,-.65f,1),color);Tri(new(0,0,-3),new(0,-.65f,1),new(-.8f,.4f,1),color);Tri(new(-.4f,0,-.6f),new(-5,flap,1),new(-1.2f,.15f,1.6f),color);Tri(new(.4f,0,-.6f),new(1.2f,.15f,1.6f),new(5,flap,1),color);Tri(new(0,0,1),new(-1.4f,.2f,3),new(1.4f,.2f,3),color);Cone(new(0,0,-3),.4f,1,new(255,131,59));
         }
         effect.World=Matrix.CreateRotationZ(f.Roll)*Matrix.CreateRotationX(f.Pitch)*Matrix.CreateRotationY(-f.Yaw)*Matrix.CreateTranslation(pos);DrawMesh(vertices.ToArray());vertices.Clear();
-        float radius=8+(f.Pulse>0?MathF.Sin(f.Time*10):0);for(int i=0;i<48;i++){float a=i*MathF.Tau/48,b=(i+1)*MathF.Tau/48;Quad(new(MathF.Cos(a)*radius,MathF.Sin(a)*radius,0),new(MathF.Cos(b)*radius,MathF.Sin(b)*radius,0),new(MathF.Cos(b)*(radius+.35f),MathF.Sin(b)*(radius+.35f),0),new(MathF.Cos(a)*(radius+.35f),MathF.Sin(a)*(radius+.35f),0),f.Pulse>0?Color.White:palette[1]);}
+        if(f.Collected<f.Word.Length){
+        float radius=8+(f.Pulse>0?MathF.Sin(f.Time*10):0);for(int i=0;i<48;i++){float a=i*MathF.Tau/48,b=(i+1)*MathF.Tau/48;Quad(new(MathF.Cos(a)*radius,MathF.Sin(a)*radius,0),new(MathF.Cos(b)*radius,MathF.Sin(b)*radius,0),new(MathF.Cos(b)*(radius+.35f),MathF.Sin(b)*(radius+.35f),0),new(MathF.Cos(a)*(radius+.35f),MathF.Sin(a)*(radius+.35f),0),f.Pulse>0?Color.White:f.LastLetter?Color.Gold:f.FirstLetter?new Color(80,245,155):palette[1]);}
         effect.World=face*Matrix.CreateTranslation(gate);DrawMesh(vertices.ToArray());vertices.Clear();
+        if(f.LastLetter){for(int i=0;i<12;i++){float a=i*MathF.Tau/12;Cone(new(MathF.Cos(a)*10,MathF.Sin(a)*10,0),.6f,1.3f,Color.Gold);}effect.World=face*Matrix.CreateTranslation(gate);DrawMesh(vertices.ToArray());vertices.Clear();}
+        }
+        if(f.RewardRemaining>0){
+            float t=2-f.RewardRemaining;var center=pos+forward*46+up*12;
+            for(int i=0;i<f.Word.Length;i++){
+                float spread=(i-(f.Word.Length-1)*.5f)*(8+t*9);
+                var location=center+V(f.Right)*spread+up*(t*9-MathF.Abs(spread)*t*.12f);
+                glyphs.Draw(font,char.ToUpperInvariant(f.Word[i]),Matrix.CreateScale(.11f,-.11f,.11f)*face*Matrix.CreateTranslation(location),view,projection,palette[i%4],Math.Clamp(f.RewardRemaining,0,1));
+            }
+            for(int i=0;i<100;i++){
+                float angle=i*2.399963f,speed=9+i%13;var p=new Vector3(MathF.Cos(angle)*speed*t,MathF.Sin(angle)*speed*t+9*t-5*t*t,(i%9-4)*t);
+                float size=.35f+f.RewardRemaining*.25f;Tri(p+new Vector3(-size,0,0),p+new Vector3(size,0,0),p+new Vector3(0,size*2,0),palette[i%4]);
+            }
+            effect.World=face*Matrix.CreateTranslation(center);effect.Alpha=Math.Min(1,f.RewardRemaining);device.BlendState=BlendState.Additive;DrawMesh(vertices.ToArray());effect.Alpha=1;device.BlendState=BlendState.Opaque;vertices.Clear();
+        }
+        if(race && f.OffRoad>.5f){
+            for(int i=0;i<48;i++){
+                float age=(f.Time*1.7f+i*.618f)%1;int side=i%2==0?-1:1;
+                var p=pos-forward*(3+age*18)+V(f.Right)*(side*(1.7f+age*3))+Vector3.UnitY*(age*4-age*age*3-.8f);
+                float size=.12f+age*.55f;Tri(p,p+new Vector3(size,size,0),p+new Vector3(-size,size,0),new Color(164,111,64)*(1-age));
+            }
+            effect.World=Matrix.Identity;DrawMesh(vertices.ToArray());vertices.Clear();
+        }
         if(f.Pulse>0){
             float wave=4+(1-f.Pulse)*65;
             for(int i=0;i<48;i++){float a=i*MathF.Tau/48,b=(i+1)*MathF.Tau/48;Quad(new(MathF.Cos(a)*wave,MathF.Sin(a)*wave,0),new(MathF.Cos(b)*wave,MathF.Sin(b)*wave,0),new(MathF.Cos(b)*(wave+1),MathF.Sin(b)*(wave+1),0),new(MathF.Cos(a)*(wave+1),MathF.Sin(a)*(wave+1),0),ocean?new Color(99,230,255):palette[1]);}
