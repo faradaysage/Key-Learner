@@ -88,3 +88,25 @@ Settings, dictionary, learned word counts and neural weights live under %LOCALAP
 Tests cover the chord state machine, typing mistakes and prefixes, count transitions, neural learning, persistence, and deterministic game replay. Preview scenarios never install the keyboard hook. Physical OS shortcut testing is a separate, unfinished acceptance step described in the protection document.
 
 Generated previews and test profiles go in artifacts/ and are ignored by Git. No publishing, system policy changes, or commits are performed by the build.
+
+## Gesture playground
+
+Parent Studio > Play & safety toggles gesture effects, mouse play, growing fire, and the separate effects volume. Deliberate/rapid keys make letters and icons; overlapping clusters splat paint; broad mashing builds glass damage (quiet heals it); straight keyboard traces make larger deforming liquid drops. Gesture labels are estimates from timing, overlap and keyboard location, with optional parent-trained refinement.
+
+Move the pointer to repel letters/icons and reward balloons. Left click blasts nearby assets; right click launches a cannon toward the pointer. In Word Adventure both clicks launch the cannon. Effects particles are unaffected by repulsion. Holding Space grows the themed fireplace; assets in its depth ignite.
+
+Counting launches one rocket per number over a four-second launch window, with approximately 0.75-second flights. Concurrent number shows overlap. Word Adventure releases 2–16 balloons based on word length and difficult letters. Each pop earns 10 points; clearing a round adds 5 points per balloon and a short screen shake (disabled by Gentle Motion). Finish the balloon round to get the next word. Scores last for the current game session.
+
+### Windows session protection
+
+Key transitions are deduplicated before queuing. If the bounded queue overflows, the game rebuilds held state instead of exiting or discarding releases. The keyboard hook renews periodically because Windows can silently remove a timed-out low-level hook. A single protected instance prevents competing hooks.
+
+**Emergency exit:** tap and release Escape ten times, without pressing another key. Holding Escape does not count repeatedly. This works independently of stale modifier state. The original exact Ctrl+Alt+Escape / Ctrl+Alt+O chords still require a 0.7-second hold followed by full release.
+
+During protected play, Sticky Keys, Filter Keys and Toggle Keys activation shortcuts and their confirmation dialogs are disabled for the session. Existing accessibility feature enablement is preserved. A separate helper restores the shortcut flags on normal exit or process termination. Preview mode does not change accessibility settings.
+
+This is not Windows kiosk isolation: secure desktop and OS touchpad gestures cannot be blocked by this keyboard hook. Before play, set Windows three- and four-finger touchpad actions to Nothing (or disable the touchpad when using an external mouse). Parent Studio has a Touchpad setup & quit button. Use a dedicated child Windows account for containment; do not leave sensitive applications open behind protected play.
+
+Effects recordings and their CC0 sources are documented in Content/Sounds/ATTRIBUTION.md. Effects playback is independent of speech and defaults to a quiet 30% level.
+
+Additional replay scenarios: `cluster`, `glass`, `swipe`, `fireworks`, `word-balloons`, `word-pop`. Use `--preview --scenario word-pop --seconds 5 --screenshot <path>` for an integrated cannon/scoring test. `scripts/test-accessibility.ps1` explicitly tests real Windows shortcut flags and guardian restoration after killing its own probe process; it does not capture the keyboard.

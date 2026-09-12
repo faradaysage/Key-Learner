@@ -9,7 +9,8 @@ public sealed class LivingFields : IDisposable
     public BlobWorld Blobs {get;}=new();
     public bool SpaceHeld {get;set;}
     public float FireLevel {get;private set;}
-    private float pulse;
+    private float pulse,holdTime;
+    public float FireDepth {get;private set;}
     public ParticleFire Fire {get;}
     private const int BW=360,BH=225;
     private readonly float[] density=new float[BW*BH];
@@ -19,11 +20,14 @@ public sealed class LivingFields : IDisposable
     private readonly Random random=new(421);
     public LivingFields(GraphicsDevice device) {blobTexture=new(device,BW,BH);Fire=new(device);}
     public void Ignite()=>pulse=.7f;
-    public void Clear(){Blobs.Clear();SpaceHeld=false;pulse=0;FireLevel=0;Fire.Clear();}
+    public void Clear(){Blobs.Clear();SpaceHeld=false;pulse=0;FireLevel=0;holdTime=0;FireDepth=0;Fire.Clear();}
     public void Update(float dt,Settings settings,int width,int height,int blobBudget)
     {
         dt=Math.Clamp(dt,0,.1f);pulse=Math.Max(0,pulse-dt);
         FireLevel=MathHelper.Lerp(FireLevel,SpaceHeld||pulse>0?1:0,1-MathF.Exp(-dt*5));
+        holdTime=SpaceHeld?Math.Min(15,holdTime+dt):Math.Max(0,holdTime-dt*5);
+        FireDepth=Math.Min(height*.82f,220+(settings.GrowingFire?holdTime*42:0))*FireLevel;
+        Fire.DepthScale=Math.Max(1,FireDepth/220);
         var steps=Math.Max(1,(int)Math.Ceiling(dt*120));
         for(var i=0;i<steps;i++)Blobs.Step(dt/steps,width,height,(float)settings.Gravity*.55f,(float)settings.Bounce,Math.Clamp(blobBudget,0,180));
         Fire.Update(dt,FireLevel,settings,width,height,Math.Max(0,blobBudget-Blobs.Drops.Count));
@@ -43,6 +47,9 @@ public sealed class LivingFields : IDisposable
                 for(var x=Math.Max(0,(int)(p.X-radius));x<Math.Min(BW,(int)(p.X+radius+1));x++)
                 {
                     var d2=(new Vector2(x+.5f,y+.5f)-new Vector2(p.X,p.Y)).LengthSquared()/(radius*radius);
+                    var angle=MathF.Atan2(y-p.Y,x-p.X);
+                    var shape=1+drop.Wobble*(.13f*MathF.Sin(angle*3+drop.Age*2)+.09f*MathF.Sin(angle*5-drop.Age*3));
+                    d2/=shape*shape;
                     if(d2>=1)continue;
                     var contribution=(1-d2)*(1-d2)*fade;var index=y*BW+x;
                     edges[index]+=edgeColor*contribution;density[index]+=contribution;tint[index]+=new Vector3(drop.Tint.X,drop.Tint.Y,drop.Tint.Z)*contribution;

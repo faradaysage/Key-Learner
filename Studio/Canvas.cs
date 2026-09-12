@@ -2,10 +2,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 namespace KeyLearner.Studio;
 
-public sealed class Canvas : IDisposable
+public sealed partial class Canvas : IDisposable
 {
     private sealed class Mote { public Vector2 P,V; public float Age,Life,Size,Spin; public Color Color; public Celebration Effect; public float Curl,Gravity=1,Trail; }
-    private sealed class Glyph { public string Text=""; public Vector2 P,V; public float Age,Life,Rotation; public Color Color; public SpriteFont? Font; public BalloonMotion Balloon=new(); }
+    private sealed class Glyph { public string Text=""; public Vector2 P,V; public float Age,Life,Rotation,Burn; public Color Color; public SpriteFont? Font; public BalloonMotion Balloon=new(); }
     private readonly List<Mote> motes=new();
     private readonly List<Glyph> letters=new();
     private Glyph? activeGlyph;
@@ -94,6 +94,7 @@ public sealed class Canvas : IDisposable
     {
         Fields.Update(elapsed,settings,width,height,settings.ParticleLimit-motes.Count);
         backdrop.Update(Math.Clamp(elapsed,0,.1f),settings,Palette);
+        UpdateInteractions(Math.Clamp(elapsed,0,.1f),width,height);
         emberClock+=Math.Clamp(elapsed,0,.1f)*Fields.FireLevel*(settings.GentleMotion?10:45);
         while(emberClock>=1)
         {
@@ -118,12 +119,12 @@ public sealed class Canvas : IDisposable
             }
             foreach(var g in letters)
             {
-                if(g.Balloon.Popped)continue;
+                if(g.Balloon.Popped || g.Age>=g.Life)continue;
                 g.Age+=h;g.Balloon.Step(h,(float)settings.BalloonDeflateSeconds,(float)settings.BalloonPopSize);
                 if(g.Balloon.Size>1.03f)g.Age=Math.Min(g.Age,Math.Max(0,g.Life-1.3f));
                 if(g.Balloon.Popped)
                 {
-                    PoppedCount++;g.Age=g.Life;if(activeGlyph==g)activeGlyph=null;
+                    sounds.Play("pop",settings);PoppedCount++;g.Age=g.Life;if(activeGlyph==g)activeGlyph=null;
                     if(rings.Count>=12)rings.RemoveAt(0);
                     rings.Add(new(){Position=g.P,Radius=25*g.Balloon.Size,Color=g.Color});
                     var keep=Math.Max(0,settings.ParticleLimit-120);
@@ -211,7 +212,8 @@ public sealed class Canvas : IDisposable
             b.DrawString(glyphFont,g.Text,g.P,g.Color*alpha,g.Rotation,origin,scale,SpriteEffects.None,0);
             b.DrawString(glyphFont,g.Text,g.P-new Vector2(1,2)*g.Balloon.Size,Color.Lerp(g.Color,Color.White,.65f)*(alpha*.32f),g.Rotation,origin,scale*.985f,SpriteEffects.None,0);
         }
+        DrawInteractions(b,time,width,height);
     }
-    public void Clear() { activeGlyph=null;activeKey=null;rings.Clear();letters.Clear(); motes.Clear(); Fields.Clear(); }
-    public void Dispose() { Fields.Dispose(); backdrop.Dispose(); pixel.Dispose(); glow.Dispose(); disc.Dispose(); }
+    public void Clear() { ClearInteractions(); activeGlyph=null;activeKey=null;rings.Clear();letters.Clear(); motes.Clear(); Fields.Clear(); }
+    public void Dispose() { sounds.Dispose(); Fields.Dispose(); backdrop.Dispose(); pixel.Dispose(); glow.Dispose(); disc.Dispose(); }
 }

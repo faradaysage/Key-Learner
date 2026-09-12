@@ -83,9 +83,9 @@ public sealed class GestureAnalyzer
         double path=0;
         for(var i=1;i<positions.Length;i++) path+=Math.Sqrt(Math.Pow(positions[i].X-positions[i-1].X,2)+Math.Pow(positions[i].Y-positions[i-1].Y,2));
         var straight=path>.01 ? Math.Sqrt(dx*dx+dy*dy)/path : 0;
-        var peak=samples.Max(s=>s.Held);
+        var peak=samples.Where(s=>time-s.Time<.22).Max(s=>s.Held);
         var features=new[]{Math.Min(rate/16,1),Math.Min(peak/8.0,1),spread,straight,Math.Abs(dx),Math.Abs(dy)};
-        var gesture=peak>=5 && spread>.45 ? Gesture.BroadMash :
+        var gesture=(peak>=5 && spread>.45 || samples.Length>=8 && rate>14 && spread>.55 && straight<.4) ? Gesture.BroadMash :
             peak>=3 ? Gesture.Cluster :
             samples.Length>=4 && straight>.82 && path>.25 && elapsed<1 ? Gesture.Sweep :
             rate>6 ? Gesture.Rapid : Gesture.Deliberate;
@@ -94,7 +94,7 @@ public sealed class GestureAnalyzer
         {
             var prediction=profile.Network.Predict(features);
             // Physical overlap always overrides the learned deliberate label.
-            if(prediction.Confidence>.7 && !(prediction.Label==0 && (peak>2 || rate>6)))
+            if(gesture is Gesture.Deliberate or Gesture.Rapid && prediction.Confidence>.7 && !(prediction.Label==0 && (peak>2 || rate>6)))
             { gesture=(Gesture)prediction.Label; confidence=prediction.Confidence; }
         }
         Current=new(gesture,confidence,p.X,p.Y,dx,dy,Math.Clamp(rate/12+peak*.08,.15,1),held,features);

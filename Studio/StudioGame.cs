@@ -14,6 +14,10 @@ public static class Program
     {
         try
         {
+            if(args.Length>=4 && args[0]=="--restore-accessibility"){AccessibilitySession.Watch(args);return;}
+            if(args.Contains("--probe-accessibility")){Directory.CreateDirectory(Path.Combine(Path.GetTempPath(),"KeyLearner-accessibility-probe"));using var session=new AccessibilitySession(Path.Combine(Path.GetTempPath(),"KeyLearner-accessibility-probe"));Thread.Sleep(args.Contains("--wait")?30000:500);return;}
+            using var single=new System.Threading.Mutex(false,"Local\\KeyLearner.ProtectedSession");
+            if(!args.Contains("--preview") && !args.Contains("--probe-guard")){try{if(!single.WaitOne(0))return;}catch(System.Threading.AbandonedMutexException){}}
             if(OperatingSystem.IsWindows())SetCurrentProcessExplicitAppUserModelID("KeyLearner.Desktop");
             if(args.Contains("--probe-guard"))
             {
@@ -42,6 +46,8 @@ public sealed class StudioGame : Game
     private readonly bool preview,demo,startStudio;
     private readonly string? screenshot;
     private readonly string scenario;
+    private readonly double replaySeconds;
+    private double replayClickAt;
     private readonly Queue<KeyEvent> replay=new();
     private bool captured;
     private double renderSeconds; private int renderFrames;
@@ -51,18 +57,21 @@ public sealed class StudioGame : Game
     private List<EffectRecipe> recipes=[];
     private readonly GestureAnalyzer analyzer=new();
     private readonly ParentChord chord=new();
+    private readonly EscapeExit escapeExit=new();
+    private bool recoveringInput;
     private readonly CountingRecognizer counting=new();
     private readonly HashSet<int> held=new();
     private readonly List<(Rectangle Rect,Action Click)> buttons=new();
     private readonly Dictionary<int,double> keyGlow=new();
     private WordRecognizer recognizer;
     private KeyboardGuard? guard;
+    private AccessibilitySession? accessibility;
     private Voice? voice;
     private Canvas canvas=null!;
     private SpriteBatch batch=null!;
     private SpriteFont ui=null!,title=null!,iconFont=null!;
     private IconLibrary icons=null!;
-    private bool playStarted;
+    private bool playStarted,awaitingBalloons;
     private int selectedIconKey=112,iconPage;
     private string iconQuery="";
     private Texture2D pixel=null!;
@@ -79,13 +88,14 @@ public sealed class StudioGame : Game
     private string editLabel="";
     private readonly Random random=new();
     private Texture2D? wordImage;
-    private string[] Tabs=>["Experience","Voice","Learning","Dictionary","Developer","Key icons","Balloons"];
+    private string[] Tabs=>["Experience","Voice","Learning","Dictionary","Developer","Key icons","Balloons","Play & safety"];
     private Settings S=>store.Settings;
     private List<WordEntry> Filtered=>store.Words.Where(w=>w.Word.Contains(query,StringComparison.OrdinalIgnoreCase)).OrderBy(w=>w.Word).ToList();
 
     public StudioGame(string[] args)
     {
         scenario=ReadArg(args,"--scenario");
+        replaySeconds=double.TryParse(ReadArg(args,"--seconds"),out var seconds)?Math.Clamp(seconds,3,30):3;
         preview=args.Contains("--preview"); demo=args.Contains("--demo"); startStudio=args.Contains("--studio");
         var capture=Array.IndexOf(args,"--screenshot"); if(capture>=0 && capture+1<args.Length) screenshot=Path.GetFullPath(args[capture+1]);
         if((demo || startStudio || screenshot!=null || scenario.Length>0) && !preview) throw new ArgumentException("Demo, studio inspection and screenshots require --preview.");
@@ -110,9 +120,12 @@ public sealed class StudioGame : Game
         iconFont=Content.Load<SpriteFont>("Fonts/StudioIcons");icons=new();
         canvas=new(GraphicsDevice,fonts,S); voice=new(store.Root);
         parent=startStudio; recipes=EffectRecipe.Load(store.Root); ChooseTarget();
+        if(scenario is "word-balloons" or "word-pop"){S.Mode=PlayMode.WordAdventure;target="cat";Celebrate(store.Words.First(w=>w.Word=="cat"));}
+        if(scenario=="fireworks")canvas.CountFireworks(10);
         if(scenario=="guided-mommy"){S.Mode=PlayMode.WordAdventure;target="mommy";}
         if(!preview)
         {
+            accessibility=new(store.Root);
             guard=new KeyboardGuard();
             SDL_SetWindowGrab(Window.Handle,1);
             SDL_SetWindowAlwaysOnTop(Window.Handle,1);
@@ -126,8 +139,9 @@ public sealed class StudioGame : Game
         while(replay.Count>0 && gameTime.TotalGameTime.TotalSeconds>=replay.Peek().Time) {var item=replay.Dequeue();Handle(item with {Time=now});}
         if(guard!=null)
         {
-            if(guard.Overflow) throw new InvalidOperationException("Input queue overflow. Session ended safely.");
+
             while(guard.TryRead(out var e)) Handle(e);
+            if(recoveringInput && held.Count==0)recoveringInput=false;
             if(!IsActive) { SDL_RestoreWindow(Window.Handle); SDL_RaiseWindow(Window.Handle); }
         }
         else
@@ -143,12 +157,15 @@ public sealed class StudioGame : Game
             var p=new Point(mouse.X*W/GraphicsDevice.Viewport.Width,mouse.Y*H/GraphicsDevice.Viewport.Height);
             var button=buttons.LastOrDefault(b=>b.Rect.Contains(p)); button.Click?.Invoke();
         }
+        if(!parent)canvas.Pointer(new Vector2(mouse.X*W/(float)GraphicsDevice.Viewport.Width,mouse.Y*H/(float)GraphicsDevice.Viewport.Height),IsActive,mouse.X!=previousMouse.X || mouse.Y!=previousMouse.Y,mouse.LeftButton==ButtonState.Pressed && previousMouse.LeftButton==ButtonState.Released,mouse.RightButton==ButtonState.Pressed && previousMouse.RightButton==ButtonState.Released,W,H);
+        if(scenario=="word-pop" && gameTime.TotalGameTime.TotalSeconds>replayClickAt+.85 && canvas.FirstRewardPosition is {} balloonPoint){canvas.Pointer(balloonPoint,true,false,true,false,W,H);replayClickAt=gameTime.TotalGameTime.TotalSeconds;}
         previousMouse=mouse;
         if(calibration>=0 && now>calibrateUntil) { calibration=-1; parent=true; store.Save(); notice="Calibration saved. Add samples for each pattern for a balanced model."; held.Clear(); chord.Reset(); }
         if(!parent)
         {
-            if(calibration<0) { var word=recognizer.Update(now,S.Mode==PlayMode.WordAdventure?target:null); if(word!=null) Celebrate(word); }
+            if(calibration<0 && !awaitingBalloons) { var word=recognizer.Update(now,S.Mode==PlayMode.WordAdventure?target:null); if(word!=null) Celebrate(word); }
 
+            if(awaitingBalloons && canvas.RewardRemaining==0){awaitingBalloons=false;recognizer.Reset();ChooseTarget();}
             counting.Update(now);
             canvas.Fields.SpaceHeld=held.Contains(32);
             canvas.Update((float)gameTime.ElapsedGameTime.TotalSeconds,W,H);
@@ -159,13 +176,16 @@ public sealed class StudioGame : Game
             canvas.Emit(c.ToString(),new(Gesture.Sweep,.9,random.NextDouble(),random.NextDouble(),.4,-.1,.8,1,[]),W,H);
             hero="wonder"; celebrateUntil=now+5;
         }
-        if(screenshot!=null && gameTime.TotalGameTime.TotalSeconds>3) { VerifyReplay(); allowExit=true; Exit(); }
+        if(screenshot!=null && gameTime.TotalGameTime.TotalSeconds>replaySeconds) { VerifyReplay(); allowExit=true; Exit(); }
         voice?.Update();
         base.Update(gameTime);
     }
     private void Handle(KeyEvent e)
     {
+        if(e.Key==-1){held.Clear();chord.Reset();escapeExit.Reset();analyzer.Reset();recoveringInput=true;return;}
+        if(escapeExit.Feed(e)){allowExit=true;Exit();return;}
         if(e.Down) { if(!held.Add(e.Key)) return; } else held.Remove(e.Key);
+        if(recoveringInput){if(held.Count==0){recoveringInput=false;chord.Reset();}return;}
         var action=chord.Feed(e);
         if(action==ParentAction.Exit) { allowExit=true; Exit(); return; }
         if(action==ParentAction.Options) { ToggleParent(); return; }
@@ -183,26 +203,27 @@ public sealed class StudioGame : Game
         keyGlow[e.Key]=now;
         if(calibration>=0) { store.Profile.Network.Train(context.Features,calibration); canvas.Emit(KeyboardMap.Character(e.Key)?.ToString()??"",context,W,H); return; }
         var character=KeyboardMap.Character(e.Key);
+        var gestured=canvas.GestureEffect(context,W,H);
                 if(e.Key==32) canvas.Fields.Ignite();
-        else if(character!=null) canvas.Emit(character.ToString()!,context,W,H);
-        else canvas.Emit(icons.Glyph(icons.NameFor(e.Key,S)),context,W,H,iconFont);
+        else if(!gestured && character!=null) canvas.Emit(character.ToString()!,context,W,H);
+        else if(!gestured) canvas.Emit(icons.Glyph(icons.NameFor(e.Key,S)),context,W,H,iconFont);
         if(ParentChord.IsModifier(e.Key))return;
         if(e.Key==8) { recognizer.Backspace(); return; }
         if(e.Key is 32 or 13) { var done=recognizer.Flush(S.Mode==PlayMode.WordAdventure?target:null); if(done!=null) Celebrate(done); return; }
-        if(character==null) { if(S.SpeakLetters)voice?.Say(icons.NameFor(e.Key,S).Replace("face-", "").Replace("-", " "),S,key:true); return; }
+        if(character==null) { if(S.SpeakLetters && !gestured)voice?.Say(icons.NameFor(e.Key,S).Replace("face-", "").Replace("-", " "),S,key:true); return; }
         if(char.IsAsciiDigit(character.Value))
         {
             recognizer.Reset();
             var number=counting.Add(character.Value,e.Time);
-            if(number!=null) { hero=number.Value.ToString(); celebrateUntil=now+2.5; lastWordAt=now;  canvas.Celebrate(Celebration.Orbit,W,H); voice?.Say(hero,S); }
+            if(number!=null) { hero=number.Value.ToString(); celebrateUntil=now+2.5; lastWordAt=now;  canvas.CountFireworks(number.Value); voice?.Say(hero,S); }
             if(number==null && counting.Pending.Length==0 && S.SpeakLetters)voice?.Say(character.ToString()!,S,key:true);
             return; // Keep the first digit of a pending multi-digit count quiet.
         }
-        if(S.Mode==PlayMode.Counting) return;
+        if(S.Mode==PlayMode.Counting || awaitingBalloons) return;
         if(S.Mode==PlayMode.WordAdventure)celebrateUntil=0;
         lastLetterInput=now;
         var word=recognizer.Add(character.Value,e.Time,context,S.Mode==PlayMode.WordAdventure?target:null); if(word!=null) Celebrate(word);
-        if(word==null && S.SpeakLetters) voice?.Say(character.ToString()!,S,key:true);
+        if(word==null && S.SpeakLetters && !gestured) voice?.Say(character.ToString()!,S,key:true);
     }
     private void Celebrate(WordEntry word)
     {
@@ -216,7 +237,7 @@ public sealed class StudioGame : Game
             try { using var stream=File.OpenRead(word.Image); if(stream.Length>8_000_000) throw new IOException("Image must be smaller than 8 MB."); wordImage=Texture2D.FromStream(GraphicsDevice,stream); }
             catch(Exception e) when(e is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException) { notice="Image unavailable: "+e.Message; }
         }
-        if(S.Mode==PlayMode.WordAdventure && word.Word==target) ChooseTarget();
+        if(S.Mode==PlayMode.WordAdventure && word.Word==target){canvas.ReleaseWordBalloons(word.Word,W,H);awaitingBalloons=true;recognizer.Reset();}
     }
     private void ChooseTarget()
     {
@@ -226,7 +247,7 @@ public sealed class StudioGame : Game
     private void ToggleParent()
     {
         if(parent && !store.Save()) { notice=store.Status; return; }
-        parent=!parent; editValue=null; editCommit=null; calibration=-1;
+        awaitingBalloons=false;parent=!parent; editValue=null; editCommit=null; calibration=-1;
         recognizer.Reset(); recognizer.RefreshDictionary(); analyzer.Reset();  voice?.Stop(); canvas.Clear();playStarted=false;
         if(!parent) { ChooseTarget(); counting.Reset(); }
         notice=store.Status; recipes=EffectRecipe.Load(store.Root);
@@ -243,15 +264,20 @@ public sealed class StudioGame : Game
         if(editValue!=null) DrawEdit();
         batch.End();
         GraphicsDevice.SetRenderTarget(null); GraphicsDevice.Clear(canvas.Background);
-        batch.Begin(samplerState:SamplerState.LinearClamp); batch.Draw(surface,GraphicsDevice.Viewport.Bounds,Color.White); batch.End();
+        batch.Begin(samplerState:SamplerState.LinearClamp); var destination=GraphicsDevice.Viewport.Bounds;if(!parent){destination.X+=(int)canvas.Shake.X;destination.Y+=(int)canvas.Shake.Y;}batch.Draw(surface,destination,Color.White); batch.End();
         renderSeconds+=System.Diagnostics.Stopwatch.GetElapsedTime(renderStart).TotalSeconds;renderFrames++;
-        if(!captured && screenshot!=null && gameTime.TotalGameTime.TotalSeconds>2.9)
+        if(!captured && screenshot!=null && gameTime.TotalGameTime.TotalSeconds>replaySeconds-.1)
         { using var file=File.Create(screenshot); surface.SaveAsPng(file,W,H); captured=true; }
         base.Draw(gameTime);
     }
         private static string ReadArg(string[] args,string name) {var i=Array.IndexOf(args,name);return i>=0 && i+1<args.Length?args[i+1]:"";}
     private void PrepareReplay()
     {
+        if(scenario is "cluster" or "glass" or "swipe")
+        {
+            var keys=scenario=="swipe"?"QWERTYUIOP":scenario=="glass"?"QAZPLMWSXOKNEDC":"ASDF";
+            double t=.2;for(int round=0;round<(scenario=="glass"?4:1);round++){foreach(var c in keys){replay.Enqueue(new(c,true,t));if(scenario=="swipe")replay.Enqueue(new(c,false,t+.03));t+=.055;}if(scenario!="swipe")foreach(var c in keys){replay.Enqueue(new(c,false,t));t+=.001;}t+=.04;}
+        }
         if(scenario is "milk" or "mommy" or "rapid-milk" or "guided-mommy")
         {
             var word=scenario=="milk"?"miolk":scenario=="rapid-milk"?"milk":"mommy";double time=.15;
@@ -287,7 +313,7 @@ public sealed class StudioGame : Game
     }
     private void VerifyReplay()
     {
-        var success=scenario switch {"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
+        var success=scenario switch {"cluster"=>canvas.PaintCount>0,"glass"=>canvas.ShatterCount>0,"swipe"=>canvas.Fields.Blobs.Drops.Any(d=>d.Wobble>0),"fireworks"=>canvas.RocketsLaunched==(replaySeconds>=5?10:8),"word-balloons"=>canvas.RewardRemaining==3,"word-pop"=>canvas.Score==45 && canvas.RewardRemaining==0,"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
         if(scenario is "rapid-milk" or "mommy" or "balloon" && S.Sound)success=success && voice!=null && voice.Started==voice.Requested && voice.Completed==voice.Requested && voice.Overflow==0;
         if(!success) throw new InvalidOperationException("Preview scenario failed: "+scenario+"; hero="+hero+"; parent="+parent);
         if(screenshot!=null && voice!=null) File.WriteAllLines(screenshot+".audio.txt",new[]{ $"requested={voice.Requested}; started={voice.Started}; completed={voice.Completed}; overflow={voice.Overflow}; peak={voice.PeakOverlap}; max delay={voice.MaximumStartDelay:0.000}s"}.Concat(voice.Trace));
@@ -315,6 +341,11 @@ public sealed class StudioGame : Game
                 batch.Draw(wordImage,new Rectangle((int)(W/2-wordImage.Width*scale/2),470,(int)(wordImage.Width*scale),(int)(wordImage.Height*scale)),Color.White);
             }
         }
+        else if(awaitingBalloons)
+        {
+            Center("Pop the balloons!",170,Color.White,.9f,title);
+            Center("Click to fire. Move the mouse to bounce them.",235,canvas.Palette[0],.55f);
+        }
         else if(S.Mode==PlayMode.WordAdventure)
         {
             Center(target.Length>0?"Can you find these letters?":"Choose adventure words in the parent dictionary.",220,Color.White*.7f,.62f);
@@ -329,9 +360,10 @@ public sealed class StudioGame : Game
         }
         else if(!quiet && recognizer.Buffer.Length>0) Center(recognizer.Buffer,150,Color.White*.6f,.7f);
         else if(!quiet && canvas.ParticleCount==0) { Center("A little touch. A little wonder.",305,Color.White*.9f,1.04f,title); Center("Press a key and see what grows.",390,canvas.Palette[0],.7f); }
+        if(S.Mode==PlayMode.WordAdventure)Text("Score  "+canvas.Score+"     Balloons  "+canvas.RewardRemaining,50,130,canvas.Palette[2],.55f);
         if(S.ShowKeyboard && !quiet) DrawKeyboard();
         if(S.ShowContext && !quiet) Text($"{analyzer.Current.Gesture} / confidence {analyzer.Current.Confidence:P0} / {canvas.ParticleCount} particles",45,680,Color.White*.55f,.46f);
-        if(now<hintUntil) Text("Hold exactly Ctrl + Alt + Esc for 0.7s, then release to close. Ctrl + Alt + O: parents.",28,8,Color.White*.8f,.42f);
+        if(now<hintUntil) Text("Close: exact Ctrl + Alt + Esc (hold 0.7s, release), or 10 Escape taps. Ctrl + Alt + O: parents.",28,8,Color.White*.8f,.42f);
         if(!quiet) Text("Every little discovery counts.",50,850,Color.White*.3f,.42f);
     }
     private void DrawKeyboard()
@@ -351,7 +383,7 @@ public sealed class StudioGame : Game
         Text("THE PARENT STUDIO",55,32,canvas.Palette[0],.45f);
         Text("Make room for wonder.",55,74,Color.White,.96f,title);
         Text("A little world, tuned to your child.",56,137,Color.White*.5f,.55f);
-        for(var i=0;i<Tabs.Length;i++) { var index=i; Button(new(55+i*190,193,178,53),Tabs[i],()=>{tab=index;row=0;},tab==i); }
+        for(var i=0;i<Tabs.Length;i++) { var index=i; Button(new(55+i*165,193,157,53),Tabs[i],()=>{tab=index;row=0;},tab==i); }
         if(tab==3) DrawDictionary(); else if(tab==5) DrawIcons(); else DrawSettings();
         Fill(new(0,795,W,105),new Color(15,22,38));
         Text(notice,55,810,Color.White*.6f,.43f,maxWidth:1020);
@@ -362,6 +394,7 @@ public sealed class StudioGame : Game
         0=>["Mode","Theme","Font","Sound","GentleMotion","ShowKeyboard","FontScale","Backdrop"],
         1=>["WindowsVoice","SpeechRate","Volume","SpeakLetters","PiperExecutable","PiperModel","KeyVoiceChannels","WordVoiceChannels"],
         2=>["ForgivingSpelling","AdaptiveLearning","WordPause","PrefixPause"],
+        7=>["GestureEffects","MousePlay","GrowingFire","EffectsSound","EffectsVolume"],
         6=>["BalloonPopSize","BalloonDeflateSeconds"],
         _=>["ParticleLimit","Gravity","Bounce","EffectStrength","LetterLifetime","ShowContext","StarCount","StarSpeed"] };
     private void DrawSettings()
@@ -381,6 +414,7 @@ public sealed class StudioGame : Game
             var y=374+i*49;
             Button(new(55,y,1050,42),Nice(property.Name)+"   /   "+Display(property),()=>{row=index;ChangeProperty(property,1);},row==i);
         }
+        if(tab==7){Button(new(1130,620,245,48),"Touchpad setup & quit",()=>{allowExit=true;ReleaseSession();System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("ms-settings:devices-touchpad"){UseShellExecute=true});Exit();});Text("Clusters paint / mashing cracks glass / swipes make liquid trails.",55,638,Color.White*.6f,.43f);Text("Escape: tap 10 times with no other key to quit, even after a stuck chord.",55,674,canvas.Palette[0],.43f);Text("Windows touchpad: set three/four-finger actions to Nothing before play.",55,710,Color.White*.6f,.43f);Text("Guard cannot block secure desktop or guarantee isolation. Use a dedicated child account.",55,746,Color.White*.5f,.4f);}
         if(tab==6){Text("Switching keys retires the old balloon. Return to that key to start a fresh one.",55,500,Color.White*.6f,.45f);Text("Inflated balloons float upward; a steady rhythm earns a sparkling pop.",55,535,Color.White*.6f,.45f);}
         if(tab==1)
         {
@@ -549,7 +583,7 @@ public sealed class StudioGame : Game
     private void ReleaseSession()
     {
         if(cleaned)return;cleaned=true;
-        guard?.Dispose(); guard=null;
+        guard?.Dispose(); guard=null;accessibility?.Dispose();accessibility=null;
         if(!preview) {SDL_SetWindowGrab(Window.Handle,0);SDL_SetWindowAlwaysOnTop(Window.Handle,0);}
         voice?.Dispose();store.Save();
     }

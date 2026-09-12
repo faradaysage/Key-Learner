@@ -19,6 +19,11 @@ public sealed class Settings
     public Mood Theme { get; set; } = Mood.PrimaryColors;
     public PlayMode Mode { get; set; }
     public LetterFont Font { get; set; }
+    public bool GestureEffects {get;set;} = true;
+    public bool EffectsSound {get;set;} = true;
+    public int EffectsVolume {get;set;} = 30;
+    public bool MousePlay {get;set;} = true;
+    public bool GrowingFire {get;set;} = true;
     public bool Sound { get; set; } = true;
     public bool SpeakLetters { get; set; } = true;
     public bool GentleMotion { get; set; }
@@ -46,6 +51,7 @@ public sealed class Settings
     {
         BalloonPopSize=Finite(BalloonPopSize,1.5,6,3); BalloonDeflateSeconds=Finite(BalloonDeflateSeconds,.3,15,3); StarCount=Math.Clamp(StarCount,100,2400); StarSpeed=Finite(StarSpeed,.1,3,1);
         KeyIcons ??= new(); KeyVoiceChannels=Math.Clamp(KeyVoiceChannels,1,5); WordVoiceChannels=Math.Clamp(WordVoiceChannels,1,3);
+        EffectsVolume=Math.Clamp(EffectsVolume,0,100);
         Volume = Math.Clamp(Volume, 0, 100); SpeechRate = Math.Clamp(SpeechRate, -10, 10);
         ParticleLimit = Math.Clamp(ParticleLimit, 50, 2000);
         WordPause = Finite(WordPause, .4, 5, 1.1); PrefixPause = Finite(PrefixPause, .6, 6, 1.8);

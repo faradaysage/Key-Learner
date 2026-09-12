@@ -10,7 +10,7 @@ public sealed class KeyboardGuard : IDisposable
 {
     private delegate nint HookProc(int code,nint w,nint l);
     private readonly HookProc callback;
-    private readonly ConcurrentQueue<KeyEvent> events=new();
+    private readonly KeyTransitionBuffer events=new();
     private readonly ManualResetEventSlim ready=new();
     private readonly Thread thread;
     private nint hook;
@@ -18,7 +18,7 @@ public sealed class KeyboardGuard : IDisposable
     private Exception? error;
     private volatile bool disposed;
     private readonly bool suppress;
-    public bool Overflow { get; private set; }
+    public int Recoveries=>events.Recoveries;
     public KeyboardGuard(bool suppress=true)
     {
         if(!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Protected play requires Windows.");
@@ -29,7 +29,7 @@ public sealed class KeyboardGuard : IDisposable
         if(!ready.Wait(TimeSpan.FromSeconds(5))) { Dispose(); throw new TimeoutException("Keyboard protection did not start."); }
         if(error!=null) { Dispose(); throw new InvalidOperationException("Keyboard protection could not start.",error); }
     }
-    public bool TryRead(out KeyEvent e) => events.TryDequeue(out e);
+    public bool TryRead(out KeyEvent e) => events.TryRead(out e);
     public static double Now => Stopwatch.GetTimestamp()/(double)Stopwatch.Frequency;
     private void Pump()
     {
@@ -39,11 +39,22 @@ public sealed class KeyboardGuard : IDisposable
         {
             // Track already-held physical keys so startup cannot manufacture a clean chord.
             for(var k=8;k<256;k++)
-                if(k is not (16 or 17 or 18) && (GetAsyncKeyState(k)&0x8000)!=0) events.Enqueue(new(k,true,Now));
+                if(k is not (16 or 17 or 18) && (GetAsyncKeyState(k)&0x8000)!=0) events.Push(new(k,true,Now));
             hook=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
             if(hook==0) throw new Win32Exception(Marshal.GetLastWin32Error());
+            SetTimer(0,1,1000,0);
             ready.Set();
-            while(!disposed && GetMessage(out var message,0,0,0)>0) { TranslateMessage(ref message); DispatchMessage(ref message); }
+            while(!disposed && GetMessage(out var message,0,0,0)>0)
+            {
+                if(message.Id==0x113)
+                {
+                    // Windows may silently remove a timed-out low-level hook. Replace it
+                    // with overlap, never deliberately leave a gap between installations.
+                    var fresh=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
+                    if(fresh!=0){var old=hook;hook=fresh;UnhookWindowsHookEx(old);}
+                }
+                TranslateMessage(ref message);DispatchMessage(ref message);
+            }
         }
         catch(Exception e) { error=e; ready.Set(); }
         finally { if(hook!=0) { UnhookWindowsHookEx(hook); hook=0; } }
@@ -61,8 +72,7 @@ public sealed class KeyboardGuard : IDisposable
                 if(key==16) key=data.Scan==0x36?161:160;
                 if(key==17) key=(data.Flags&1)!=0?163:162;
                 if(key==18) key=(data.Flags&1)!=0?165:164;
-                if(events.Count<4096) events.Enqueue(new(key,msg is 0x100 or 0x104,Now));
-                else Overflow=true;
+                events.Push(new(key,msg is 0x100 or 0x104,Now));
             }
             return suppress ? 1 : CallNextHookEx(hook,code,w,l); // Probe mode never intercepts input.
         }
@@ -76,6 +86,7 @@ public sealed class KeyboardGuard : IDisposable
     }
     [StructLayout(LayoutKind.Sequential)] private struct HookData { public uint Key,Scan,Flags,Time; public nuint Extra; }
     [StructLayout(LayoutKind.Sequential)] private struct Message { public nint Window; public uint Id; public nuint W; public nint L; public uint Time; public int X,Y; public uint Private; }
+    [DllImport("user32.dll")] private static extern nuint SetTimer(nint window,nuint id,uint ms,nint callback);
     [DllImport("user32.dll",SetLastError=true)] private static extern nint SetWindowsHookEx(int id,HookProc proc,nint module,uint thread);
     [DllImport("user32.dll")] private static extern bool UnhookWindowsHookEx(nint hook);
     [DllImport("user32.dll")] private static extern nint CallNextHookEx(nint hook,int code,nint w,nint l);
