@@ -47,6 +47,9 @@ jobs:
             $version = $Matches[1]
           }
           ./scripts/build-installer.ps1 -Version $version -Compiler $env:INNO_COMPILER
+          $probe = Start-Process "artifacts/publish-$version/KeyLearner.exe" -ArgumentList '--probe-guard' -WindowStyle Hidden -Wait -PassThru
+          if ($probe.ExitCode -ne 0) { throw 'Native focus/keyboard probe failed' }
+          Get-Content "artifacts/publish-$version/guard-probe.txt"
       - name: Verify install and reinstall identity
         shell: pwsh
         run: |
