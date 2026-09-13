@@ -189,19 +189,18 @@ jobs:
             Unity-Library-${{ runner.os }}-${{ needs.unity-preflight.outputs.editor }}-${{ hashFiles('UnityPort/Packages/**') }}-
       - name: Unity EditMode and PlayMode tests
         id: unity-tests
-        # v4.4.0: Personal-license support, coverage opt-out, Unity 6.6 shared-memory fix.
-        uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213
+        # v4.3.2: maintained Unity 6.6 shared-memory backport; avoids v4.4 CLI flag mismatch.
+        uses: game-ci/unity-test-runner@fa6ced25861c16ef56187828c43f76d00df43a23
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          cliVersion: v0.1.63
           projectPath: UnityPort
           unityVersion: auto
           customImage: unityci/editor:ubuntu-6000.6.0f1-windows-mono-3.2.2@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71
           testMode: all
-          coverageEnabled: false
+          coverageOptions: ''
           artifactsPath: artifacts/unity-tests
           githubToken: ''
       - name: Require actual passing Unity test results
