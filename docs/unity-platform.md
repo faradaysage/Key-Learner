@@ -24,7 +24,7 @@ Windows speech uses eight warmed reusable `System.Speech` synthesizers in the he
 
 ## Profiles and launch contract
 
-`LaunchOptions` keeps `%LOCALAPPDATA%\KeyLearner` for normal play. `--data <directory>` explicitly selects a writable profile. `--preview` without `--data` creates a unique temporary directory; Editor runs also isolate themselves. `--studio` alone is an unprotected real-profile editor. Installer Parent Studio shortcuts explicitly pass `--preview --studio --data <LocalAppData>\KeyLearner`, fixing the old shortcut/isolation regression while retaining QA isolation.
+`LaunchOptions` keeps `%LOCALAPPDATA%\KeyLearner` for normal play. `--data <directory>` explicitly selects a writable profile. `--preview` without `--data` creates a unique temporary directory; Editor runs also isolate themselves. `--studio` alone is an unprotected real-profile editor. Unity installer Parent Studio shortcuts explicitly pass `-screen-fullscreen 0 --studio --data <LocalAppData>\KeyLearner` and request maximized startup. Studio is independently unprotected; omitting the preview flag prevents the deliberate fixed-size QA resize. Ordinary preview launches retain their isolated profiles and capture dimensions.
 
 All settings/property names, numeric game IDs, dictionaries, word habits, gesture training, math progression, original-file read fallback, and `.bak` replacement behavior remain in the shared `Store`. Unity does not use `JsonUtility` or PlayerPrefs to migrate these files. Custom image/WAV paths remain parent-owned external references.
 

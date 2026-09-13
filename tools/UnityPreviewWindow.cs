@@ -26,6 +26,7 @@ public static class UnityPreviewWindow
     [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr window);
     [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr window,int command);
+    [DllImport("user32.dll")] static extern bool IsZoomed(IntPtr window);
     [DllImport("user32.dll")] static extern bool GetClientRect(IntPtr window,out Rect rect);
     [DllImport("user32.dll")] static extern bool ClientToScreen(IntPtr window,ref Point point);
     [DllImport("user32.dll")] static extern bool GetCursorPos(out Point point);
@@ -55,6 +56,7 @@ public static class UnityPreviewWindow
         }
     }
     public static bool Focus(int processId){var window=Window(processId);ShowWindow(window,9);SetForegroundWindow(window);return GetForegroundWindow()==window;}
+    public static bool IsMaximized(int processId)=>IsZoomed(Window(processId));
     public static void Minimize(int processId){ShowWindow(Window(processId),6);}
     public static void Restore(int processId){var window=Window(processId);ShowWindow(window,9);SetForegroundWindow(window);}
     // The only synthetic key accepted by this test helper is the right arrow.
