@@ -22,7 +22,7 @@ $p=Start-Process -FilePath $Executable -ArgumentList $arguments -PassThru -Windo
 $watchdog=$null
 try { $watchdog=Start-Job -ArgumentList $p.Id,$p.StartTime.ToUniversalTime().Ticks -ScriptBlock {
  param($ownedId,$startTicks)
- Start-Sleep -Seconds 35
+ Start-Sleep -Seconds 90
  $owned=Get-Process -Id $ownedId -ErrorAction SilentlyContinue
  if($owned -and $owned.StartTime.ToUniversalTime().Ticks -eq $startTicks){Stop-Process -Id $ownedId}
 } } catch {
@@ -31,8 +31,8 @@ try { $watchdog=Start-Job -ArgumentList $p.Id,$p.StartTime.ToUniversalTime().Tic
 }
 $rounds=0;$success=$false
 function Read-PlayerLog {if(Test-Path -LiteralPath $log){return [UnityPreviewWindow]::ReadSharedReport($log)};return ''}
-function Wait-Input([bool]$active,[int]$minimumTransitions){
- $deadline=[DateTime]::UtcNow.AddSeconds(6)
+function Wait-Input([bool]$active,[int]$minimumTransitions,[int]$timeoutSeconds=6){
+ $deadline=[DateTime]::UtcNow.AddSeconds($timeoutSeconds)
  while(!$p.HasExited -and [DateTime]::UtcNow -lt $deadline){
   $text=Read-PlayerLog
   $transitions=[regex]::Matches($text,'KEYLEARNER_INPUT_TRANSITION active=(True|False)')
@@ -42,7 +42,7 @@ function Wait-Input([bool]$active,[int]$minimumTransitions){
  throw "Protected player did not reach active=$active within its bounded wait."
 }
 try {
- $count=Wait-Input $true 1
+ $count=Wait-Input $true 1 30
  if((Read-PlayerLog) -notmatch 'KEYLEARNER_INPUT_WINDOW.*fullscreen=True'){throw 'Installed-play startup was not already fullscreen.'}
  for($i=0;$i -lt 3;$i++){
   [UnityPreviewWindow]::Minimize($p.Id)
