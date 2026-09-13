@@ -3,7 +3,7 @@ namespace KeyLearner.Studio;
 
 public enum Backdrop { Aurora, Plasma, Vortex, Starfield, RotatingStars }
 public enum Mood { Aurora, Lagoon, Sunset, Candy, PrimaryColors, BlackAndWhite }
-public enum PlayMode { SmashGarden, WordAdventure, Counting, BirdFlight, Racing, Dolphin }
+public enum PlayMode { SmashGarden, WordAdventure, Counting, BirdFlight, Racing, Dolphin, Subitizing }
 public enum Celebration { Confetti, Rain, Orbit, Bubbles, Embers }
 public enum LetterFont { Fredoka, Classic, Baloo }
 
