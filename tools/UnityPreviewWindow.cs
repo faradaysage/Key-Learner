@@ -90,6 +90,3 @@ public static class UnityPreviewWindow
         }finally{if(saved)SetCursorPos(previous.X,previous.Y);if(dpi!=IntPtr.Zero)SetThreadDpiAwarenessContext(dpi);}
     }
 }
-
-
-

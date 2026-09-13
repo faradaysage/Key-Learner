@@ -78,4 +78,3 @@ internal static class Program
         finally {foreach(var synth in synths){synth?.SpeakAsyncCancelAll();synth?.Dispose();}}
     }
 }
-

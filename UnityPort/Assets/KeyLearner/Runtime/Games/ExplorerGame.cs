@@ -538,11 +538,3 @@ namespace KeyLearner.Unity
         public override string DiagnosticState => "explorer=" + kind + " letters=" + model.Collected + " score=" + model.Score + " words=" + model.Completed + " position=" + model.Position + " segments=" + segments.Count + " swimmers=" + swimmers.Count;
     }
 }
-
-
-
-
-
-
-
-

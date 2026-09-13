@@ -52,6 +52,3 @@ try{
   if($before[$name] -ne $after){throw "The real parent save changed: $name"}
  }
 }
-
-
-

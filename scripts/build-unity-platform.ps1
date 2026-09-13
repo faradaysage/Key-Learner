@@ -28,5 +28,3 @@ foreach($folder in @('Voice','Sounds','Branding','Icons')){
  Get-ChildItem -LiteralPath (Join-Path $sourceContent $folder) -File | Where-Object {$_.Extension -ne '.xnb'} | Copy-Item -Destination $destination -Force
 }
 Write-Output "Windows speech/accessibility helper and licensed offline audio staged at $output"
-
-

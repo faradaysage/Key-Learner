@@ -42,4 +42,3 @@ if(done!="DONE\t0\t42")throw new InvalidOperationException("Speech completion ti
 writer.WriteLine("CANCEL");writer.WriteLine("QUIT");
 if(!helper.WaitForExit(5000)||helper.ExitCode!=0)throw new InvalidOperationException("Speech helper failed clean shutdown.");
 Console.WriteLine($"PASS: {voices} offline Windows voices; local current-user pipe; zero-volume synthesis completion; clean shutdown.");
-

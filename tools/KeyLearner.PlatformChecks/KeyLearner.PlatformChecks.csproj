@@ -10,4 +10,3 @@
  </ItemGroup>
  <Target Name="ValidateUnityEditor" BeforeTargets="ResolveReferences"><Error Condition="'$(UnityEditor)' == ''" Text="Pass -p:UnityEditor=&lt;discovered Unity Editor directory&gt;."/></Target>
 </Project>
-

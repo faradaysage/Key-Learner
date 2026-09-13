@@ -197,5 +197,3 @@ namespace KeyLearner.Studio
     }
 
 }
-
-

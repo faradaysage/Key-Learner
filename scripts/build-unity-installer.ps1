@@ -22,4 +22,3 @@ $setup=Join-Path $output "KeyLearner-$Version-win-x64-setup.exe"
 $hash=Get-FileHash -LiteralPath $setup -Algorithm SHA256
 "$($hash.Hash.ToLowerInvariant())  $([IO.Path]::GetFileName($setup))" | Set-Content -LiteralPath "$setup.sha256" -Encoding ascii
 Write-Output "Unity installer: $setup"
-

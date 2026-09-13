@@ -63,6 +63,3 @@ try{
  if(!$process.HasExited){$process.Kill()};$process.Dispose()
  foreach($name in $before.Keys){$path=Join-Path $parentRoot $name;$after=if(Test-Path -LiteralPath $path){(Get-FileHash -LiteralPath $path).Hash}else{''};if($before[$name] -ne $after){throw "The real parent save changed: $name"}}
 }
-
-
-

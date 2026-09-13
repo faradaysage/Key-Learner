@@ -114,12 +114,3 @@ $results | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $Output
 Write-Output "Evidence: $Output"
 if(@($results | Where-Object {!$_.passed}).Count){throw 'One or more Unity gameplay previews failed. Inspect results.json and individual player logs.'}
 Write-Output "PASS: $($results.Count) actual player captures; existing parent save files unchanged. Physical keyboard/touchpad containment is not exercised by this preview runner."
-
-
-
-
-
-
-
-
-

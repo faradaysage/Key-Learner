@@ -102,5 +102,3 @@ finally{
  finally{[pscustomobject]@{passed=(!$failure);installVersion=$first;upgradeVersion=$second;uninstalled=$uninstalled;error=$failure;profileFilesUnchanged=$profilesUnchanged;obsoleteFilesRemoved=$obsoleteRemoved;unlistedCustomFilePreserved=$customPreserved;destination=$destination} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $Output 'result.json')}
 }
 Write-Output "PASS temporary installation removed; all five real parent profile files unchanged. Evidence: $Output"
-
-

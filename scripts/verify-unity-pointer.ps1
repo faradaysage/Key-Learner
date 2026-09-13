@@ -89,10 +89,3 @@ try{
 }
 Write-Output "Evidence: $Output"
 if(@($results | Where-Object {!$_.passed}).Count){throw 'One or more actual native pointer checks failed.'}
-
-
-
-
-
-
-
