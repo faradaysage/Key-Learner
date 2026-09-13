@@ -113,6 +113,26 @@ namespace KeyLearner.Unity.Platform
         uint previousWindowState;
         long reportedPackets;
         double reportAfter;
+        long polls, activePolls, dispatchedEvents, staleEvents, resets;
+        double maximumEventAge;
+        public object DiagnosticSnapshot()
+        {
+            var foreground = window == IntPtr.Zero ? IntPtr.Zero : GetForegroundWindow();
+            uint foregroundPid = 0, boundPid = 0;
+            if (foreground != IntPtr.Zero) GetWindowThreadProcessId(foreground, out foregroundPid);
+            if (window != IntPtr.Zero) GetWindowThreadProcessId(window, out boundPid);
+            bool desktopInput = false;
+            bool desktopRead = guard != null && guard.TryReadDesktopInput(out desktopInput);
+            return new {
+                protectedPlay = !unprotected, active, disarmed, unityFocused = Application.isFocused,
+                boundWindow = window.ToInt64(), foregroundWindow = foreground.ToInt64(), boundPid, foregroundPid,
+                windowVisible = window != IntPtr.Zero && IsWindowVisible(window),
+                minimized = window != IntPtr.Zero && IsIconic(window),
+                maximized = window != IntPtr.Zero && IsZoomed(window),
+                desktopRead, desktopInput, polls, activePolls, dispatchedEvents, staleEvents, maximumEventAge, resets,
+                guard = guard?.DiagnosticSnapshot()
+            };
+        }
         public bool Protected => !unprotected;
         public string Status => unprotected ? "Preview / Parent Studio: keyboard protection is disabled." : guard.Diagnostics;
         public WindowsInputSession(bool previewOrStudio, string profileRoot)
@@ -194,6 +214,7 @@ namespace KeyLearner.Unity.Platform
         }
         public InputFrame Poll(bool visible)
         {
+            polls++;
             events.Clear();
             frame.Reset = false;
             frame.ParentAction = ParentAction.None;
@@ -204,6 +225,7 @@ namespace KeyLearner.Unity.Platform
             previousWindowState = state;
             if (changed)
             {
+                resets++;
                 Disarm();
                 hold.Reset();
                 escape.Reset();
@@ -241,6 +263,7 @@ namespace KeyLearner.Unity.Platform
                 frame.Reset = true;
             }
             active = next;
+            if (next) activePolls++;
             frame.Active = next;
             if (changed)
                 UnityEngine.Debug.Log("KEYLEARNER_INPUT_TRANSITION active=" + next + " bound=" + window + " foreground=" + GetForegroundWindow() + " visibleState=" + state + " unityFocus=" + Application.isFocused + " nativeFocus=" + (guard?.OwnsForeground ?? false));
@@ -281,9 +304,14 @@ namespace KeyLearner.Unity.Platform
                         events.Add(e);
                         continue;
                     }
+                    maximumEventAge = Math.Max(maximumEventAge, now - e.Time);
                     if (now - e.Time > .25)
+                    {
+                        staleEvents++;
                         continue;
+                    }
                     Consume(e);
+                    dispatchedEvents++;
                 }
                 frame.Snapshot = guard.Snapshot();
             }
@@ -300,6 +328,7 @@ namespace KeyLearner.Unity.Platform
                     else
                         previewHeld.Remove(mapping.Key);
                     Consume(new KeyEvent(mapping.Key, down, now));
+                    dispatchedEvents++;
                 }
                 frame.Snapshot = KeySnapshot.From(previewHeld);
             }

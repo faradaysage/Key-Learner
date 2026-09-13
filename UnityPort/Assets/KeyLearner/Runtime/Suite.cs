@@ -42,6 +42,38 @@ namespace KeyLearner.Unity
         readonly List<string> runtimeErrors = new List<string>();
         double captureAt, reminderUntil; float activeSeconds; bool captured;
         ParentStudio parent;
+        SessionDiagnostics diagnostics;
+        StartupIntroduction introduction;
+        Texture2D brandIcon;
+        bool introductionCaptured;
+        double nextDiagnostic;
+        long pickerKeyEvents, gameKeyEvents, parentKeyEvents, introKeyEvents, guiKeyEvents;
+        string buildLabel;
+        string BuildLabel => buildLabel ?? (buildLabel = "Version " + Application.version + "  /  Build " +
+            (string.IsNullOrEmpty(Application.buildGUID) ? "Editor" : Application.buildGUID.Substring(0, Math.Min(12, Application.buildGUID.Length))));
+        void DiagnosticState(string kind)
+        {
+            diagnostics?.Write(kind, new {
+                elapsedSeconds = Time.realtimeSinceStartupAsDouble, frame = Time.frameCount,
+                screen = new { width = Screen.width, height = Screen.height, fullscreen = Screen.fullScreen },
+                view = error.Length > 0 ? "error" : introduction?.Active == true ? "splash" : studio ? "studio" : picker ? "picker" : "game",
+                selected, page, filter, mode = game == null ? -1 : (int)services.Settings.Mode,
+                pickerKeyEvents, gameKeyEvents, parentKeyEvents, introKeyEvents, guiKeyEvents,
+                input = input?.DiagnosticSnapshot()
+            });
+        }
+        void OpenDiagnosticsAndQuit()
+        {
+            input?.AuthorizeExit();
+            DiagnosticState("open-folder-and-close");
+            try
+            {
+                if (diagnostics != null && Directory.Exists(diagnostics.DirectoryPath))
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(diagnostics.DirectoryPath) { UseShellExecute = true });
+            }
+            catch (Exception e) { diagnostics?.Write("folder-open-failed", new { errorType = e.GetType().Name }); }
+            Quit();
+        }
         public GameServices Services => services;
         public Minigame CurrentGame => game;
         public bool Picking => picker;
@@ -120,6 +152,16 @@ namespace KeyLearner.Unity
                     return;
                 }
                 var options = LaunchOptions.Parse(Environment.GetCommandLineArgs());
+                diagnostics = new SessionDiagnostics(options.DataRoot);
+                diagnostics.Write("session", new {
+                    version = Application.version, buildGuid = Application.buildGUID, unity = Application.unityVersion,
+                    os = SystemInfo.operatingSystem, gpu = SystemInfo.graphicsDeviceName,
+                    protectedPlay = !options.Unprotected, preview = options.Preview, studio = options.Studio,
+                    remoteSession = System.Environment.GetEnvironmentVariable("SESSIONNAME")?.StartsWith("RDP-", StringComparison.OrdinalIgnoreCase) == true,
+                    processId = System.Diagnostics.Process.GetCurrentProcess().Id,
+                    privacy = "Aggregate counts and state only; no key identities, text, profile contents, device identifiers or window titles."
+                });
+                introduction = options.Preview && !options.Has("--show-intro") ? null : new StartupIntroduction();
                 Application.runInBackground = true;
                 Application.targetFrameRate = 60;
                 var camera = Camera.main;
@@ -162,7 +204,7 @@ namespace KeyLearner.Unity
                 PreviewSession.Attach(this);
                 Debug.Log("KEYLEARNER_READY modes=" + factories.Count + " preview=" + options.Preview + " profile=" + store.Root + " graphics=" + SystemInfo.graphicsDeviceName);
             }
-            catch (Exception e) { error = e.ToString(); Debug.LogException(e); input?.Dispose(); }
+            catch (Exception e) { error = e.ToString(); Debug.LogException(e); diagnostics?.Write("startup-error", new { errorType = e.GetType().Name }); input?.Dispose(); }
         }
         public void Select(PlayMode mode)
         {
@@ -217,6 +259,7 @@ namespace KeyLearner.Unity
         public void Quit()
         {
             input?.AuthorizeExit();
+            DiagnosticState("quit");
             services?.Store?.Save();
             Application.Quit();
         }
@@ -229,6 +272,11 @@ namespace KeyLearner.Unity
                 services.Feedback.Restore();
                 services.UpdateViewport();
                 var frame = input.Poll(true);
+                if (Time.realtimeSinceStartupAsDouble >= nextDiagnostic)
+                {
+                    DiagnosticState("heartbeat");
+                    nextDiagnostic = Time.realtimeSinceStartupAsDouble + (Time.realtimeSinceStartupAsDouble < 60 ? 1 : 5);
+                }
                 if (frame.Reset)
                     ResetInteraction();
                 services.Keys = frame.Snapshot;
@@ -237,6 +285,24 @@ namespace KeyLearner.Unity
                 if (frame.ParentAction == ParentAction.Exit)
                 {
                     Quit();
+                    return;
+                }
+                if (introduction?.Active == true)
+                {
+                    introKeyEvents += frame.Events.Count;
+                    services.Keys = default;
+                    if (services.Preview && !introductionCaptured && introduction.Progress(Time.realtimeSinceStartupAsDouble) >= .35 && services.Options.Value("--intro-screenshot").Length > 0)
+                    {
+                        introductionCaptured = true;
+                        StartCoroutine(CaptureIntroduction());
+                    }
+                    introduction.Tick(Time.realtimeSinceStartupAsDouble);
+                    if (!introduction.Active)
+                    {
+                        input.Suspend(); // Intro keystrokes must never leak into picker/gameplay.
+                        ResetInteraction();
+                        DiagnosticState("splash-finished");
+                    }
                     return;
                 }
                 if (frame.ParentAction == ParentAction.Options)
@@ -256,15 +322,18 @@ namespace KeyLearner.Unity
                         }
                         if (studio)
                         {
+                            parentKeyEvents++;
                             parent.Key(e);
                             continue;
                         }
                         if (picker)
                         {
+                            pickerKeyEvents++;
                             if (e.Down)
                                 PickerKey(e.Key);
                             continue;
                         }
+                        gameKeyEvents++;
                         DispatchGameKey(new KeyEvent(e.Key, e.Down, services.Now));
                     }
                     if (!picker && !studio)
@@ -287,7 +356,7 @@ namespace KeyLearner.Unity
                 if (services.Preview && captureAt > 0 && activeSeconds >= captureAt && !captured)
                     StartCoroutine(Capture());
             }
-            catch (Exception e) { error = e.ToString(); Debug.LogException(e); ready = false; input?.Dispose(); }
+            catch (Exception e) { error = e.ToString(); Debug.LogException(e); diagnostics?.Write("runtime-error", new { errorType = e.GetType().Name }); ready = false; input?.Dispose(); }
         }
         System.Collections.IEnumerator Capture()
         {
@@ -346,11 +415,14 @@ namespace KeyLearner.Unity
         }
         void OnGUI()
         {
+            if (Application.isFocused && (Event.current.type == EventType.KeyDown || Event.current.type == EventType.KeyUp)) guiKeyEvents++;
+            if (introduction?.Active == true) Ui.Panel(new Rect(0, 0, Screen.width, Screen.height), Style.Navy, 0);
             Ui.Begin();
             if (error.Length > 0)
             {
                 Ui.Panel(new Rect(100, 100, 1240, 700), Style.Navy);
-                Ui.Label(new Rect(130, 120, 1180, 630), error, 23, Color.white);
+                Ui.Label(new Rect(130, 120, 1180, 540), error, 23, Color.white);
+                Ui.Button(new Rect(450, 690, 540, 55), "Open diagnostics & close", OpenDiagnosticsAndQuit);
                 Ui.Button(new Rect(550, 760, 340, 70), "Close", Quit);
                 Ui.End();
                 return;
@@ -360,7 +432,9 @@ namespace KeyLearner.Unity
                 Ui.End();
                 return;
             }
-            if (studio)
+            if (introduction?.Active == true)
+                DrawIntroduction();
+            else if (studio)
                 parent.Draw();
             else if (picker)
                 DrawPicker();
@@ -372,6 +446,32 @@ namespace KeyLearner.Unity
                 Ui.Label(new Rect(98, 811, 1244, 66), "Parents: hold Ctrl + Alt + O (or Ctrl + Shift + O) for 2 seconds.\nHold Ctrl + Alt + Escape to close. Ten O / Escape taps also work. G, G opens games.", 19, Color.white);
             }
             Ui.End();
+        }
+        System.Collections.IEnumerator CaptureIntroduction()
+        {
+            yield return new WaitForEndOfFrame();
+            string path = Path.GetFullPath(services.Options.Value("--intro-screenshot"));
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            ScreenCapture.CaptureScreenshot(path);
+            File.WriteAllText(path + ".json", System.Text.Json.JsonSerializer.Serialize(new {
+                version = Application.version, buildGuid = Application.buildGUID,
+                unitySplashFinished = UnityEngine.Rendering.SplashScreen.isFinished,
+                introductionActive = introduction.Active, progress = introduction.Progress(Time.realtimeSinceStartupAsDouble)
+            }));
+        }
+        void DrawIntroduction()
+        {
+            double now = Time.realtimeSinceStartupAsDouble;
+            if (Event.current.type == EventType.Repaint) introduction.Painted(now, UnityEngine.Rendering.SplashScreen.isFinished);
+            if (!brandIcon) brandIcon = Resources.Load<Texture2D>("Branding/window-icon");
+            Ui.Panel(new Rect(564, 111, 312, 312), new Color(.035f, .07f, .14f), 36);
+            if (brandIcon) GUI.DrawTexture(new Rect(584, 125, 272, 272), brandIcon, ScaleMode.ScaleToFit);
+            Ui.Label(new Rect(200, 422, 1040, 100), "KeyLearner", 76, Color.white);
+            Ui.Label(new Rect(200, 522, 1040, 52), "A little world of discovery", 30, new Color(.65f, .79f, .94f));
+            Ui.Label(new Rect(200, 599, 1040, 44), BuildLabel, 25, new Color(.92f, .96f, 1));
+            Ui.Panel(new Rect(500, 696, 440, 7), Style.Panel, 3);
+            Ui.Panel(new Rect(500, 696, Mathf.Max(1, 440 * (float)introduction.Progress(now)), 7), Style.Dots, 3);
+            Ui.Label(new Rect(280, 729, 880, 42), "Your next discovery is nearly ready", 22, new Color(.57f, .7f, .84f));
         }
         void DrawPicker()
         {
@@ -419,11 +519,14 @@ namespace KeyLearner.Unity
                     Select(g.Mode);
             }
             Ui.Label(new Rect(80, 797, 1010, 48), "Arrow keys + Enter to choose   ·   Tab to explore categories   ·   G, G to return", 19, new Color(.50f, .62f, .77f), TextAnchor.MiddleLeft);
+            Ui.Label(new Rect(80, 854, 790, 36), BuildLabel, 17, new Color(.56f, .68f, .82f), TextAnchor.MiddleLeft);
+            Ui.Button(new Rect(1000, 858, 360, 34), "Open diagnostics & close", OpenDiagnosticsAndQuit);
             if (pages > 1)
                 Ui.Button(new Rect(1130, 798, 230, 54), page == 0 ? "More games →" : "← First games", () => { page = (page + 1) % pages; selected = page * 6; });
         }
         void OnApplicationFocus(bool focus)
         {
+            diagnostics?.Write("unity-focus", new { focus });
             if (!focus)
             {
                 input?.Suspend();
@@ -432,6 +535,7 @@ namespace KeyLearner.Unity
         }
         void OnApplicationPause(bool pause)
         {
+            diagnostics?.Write("unity-pause", new { pause });
             if (pause)
             {
                 input?.Suspend();
@@ -449,6 +553,8 @@ namespace KeyLearner.Unity
             ClearTransient();
             services?.Audio?.Dispose();
             input?.Dispose();
+            diagnostics?.Write("disposed", new { normalCleanup = true });
+            diagnostics?.Dispose();
         }
     }
 }

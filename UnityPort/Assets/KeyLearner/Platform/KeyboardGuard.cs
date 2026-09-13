@@ -46,6 +46,23 @@ namespace KeyLearner.Studio
         private readonly KeyTransitionBuffer events = new();
         private readonly PhysicalKeyboard physical;
         long physicalPackets, injectedPackets;
+        long callbacks, rejectedByGate, renewals, renewalFailures, pumpBeat;
+        int lastHookError;
+        public object DiagnosticSnapshot()
+        {
+            lock (stateGate)
+                return new {
+                    threadAlive = thread.IsAlive, capture = focus.Active,
+                    callbacks = Interlocked.Read(ref callbacks), rejectedByGate = Interlocked.Read(ref rejectedByGate),
+                    physicalPackets = Interlocked.Read(ref physicalPackets), syntheticPackets = Interlocked.Read(ref injectedPackets),
+                    heldCount = events.Snapshot().Count, ignoredPackets = physical.IgnoredPackets,
+                    repairs = physical.RepairedReleases, remappedReleases = physical.RemappedReleases,
+                    sessionResets = SessionResets, focusLosses = focus.Losses, queueRecoveries = events.Recoveries,
+                    renewals = Interlocked.Read(ref renewals), renewalFailures = Interlocked.Read(ref renewalFailures),
+                    pumpAgeSeconds = pumpBeat == 0 ? -1 : (Stopwatch.GetTimestamp() - Interlocked.Read(ref pumpBeat)) / (double)Stopwatch.Frequency,
+                    lastHookError = Volatile.Read(ref lastHookError)
+                };
+        }
         public long PacketCount => Interlocked.Read(ref physicalPackets) + Interlocked.Read(ref injectedPackets);
         public string Diagnostics => $"held {Snapshot().Count}; session resets {SessionResets}; repairs {physical.RemappedReleases + physical.RepairedReleases}; physical packets {Interlocked.Read(ref physicalPackets)}; synthetic packets {Interlocked.Read(ref injectedPackets)}";
         private readonly ManualResetEventSlim ready = new();
@@ -113,6 +130,7 @@ namespace KeyLearner.Studio
                 hook = SetWindowsHookEx(13, callback, GetModuleHandle(null), 0);
                 if (hook == 0)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
+                Interlocked.Exchange(ref pumpBeat, Stopwatch.GetTimestamp());
                 focusHook = SetWinEventHook(3, 3, 0, foregroundChanged, 0, 0, 0);
                 desktopHook = SetWinEventHook(0x20, 0x20, 0, foregroundChanged, 0, 0, 0);
                 if (focusHook == 0 || desktopHook == 0)
@@ -123,6 +141,7 @@ namespace KeyLearner.Studio
                 {
                     if (message.Id == 0x113)
                     {
+                        Interlocked.Exchange(ref pumpBeat, Stopwatch.GetTimestamp());
                         if (!OwnsForeground)
                             SetGameActive(false);
                         // Windows may silently remove a timed-out low-level hook. Replace it
@@ -130,10 +149,12 @@ namespace KeyLearner.Studio
                         var fresh = SetWindowsHookEx(13, callback, GetModuleHandle(null), 0);
                         if (fresh != 0)
                         {
+                            Interlocked.Increment(ref renewals);
                             var old = hook;
                             hook = fresh;
                             UnhookWindowsHookEx(old);
                         }
+                        else { Volatile.Write(ref lastHookError, Marshal.GetLastWin32Error()); Interlocked.Increment(ref renewalFailures); }
                     }
                     TranslateMessage(ref message);
                     DispatchMessage(ref message);
@@ -146,11 +167,15 @@ namespace KeyLearner.Studio
         {
             if (code < 0 || disposed)
                 return CallNextHookEx(hook, code, w, l);
+            Interlocked.Increment(ref callbacks); // No key data is read before the ownership gates.
             // Check the native foreground on EVERY callback, before even reading the key.
             // Also verify the desktop itself is receiving input; errors pass through.
             lock (stateGate)
                 if (!focus.Accepts(GetForegroundWindow(), DesktopReceivesInput))
+                {
+                    Interlocked.Increment(ref rejectedByGate);
                     return CallNextHookEx(hook, code, w, l);
+                }
             var data = Marshal.PtrToStructure<HookData>(l);
             var msg = (int)w;
             if (msg is 0x100 or 0x101 or 0x104 or 0x105)
@@ -158,7 +183,10 @@ namespace KeyLearner.Studio
                 lock (stateGate)
                 {
                     if (!focus.Accepts(GetForegroundWindow(), DesktopReceivesInput))
+                    {
+                        Interlocked.Increment(ref rejectedByGate);
                         return CallNextHookEx(hook, code, w, l);
+                    }
                     if ((data.Flags & 0x10) != 0) Interlocked.Increment(ref injectedPackets); else Interlocked.Increment(ref physicalPackets);
                     physical.Feed((int)data.Key, (int)data.Scan, (data.Flags & 1) != 0, msg is 0x100 or 0x104, (data.Flags & 0x10) != 0, Now);
                 }

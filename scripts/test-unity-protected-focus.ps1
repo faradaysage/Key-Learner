@@ -1,4 +1,4 @@
-param([string]$Executable='', [string]$Output='')
+param([string]$Executable='', [string]$Output='', [switch]$VerifyDiagnostics)
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 if(!$Executable){$Executable=Join-Path $root 'artifacts/unity-windows/KeyLearner.exe'}
@@ -44,6 +44,36 @@ function Wait-Input([bool]$active,[int]$minimumTransitions,[int]$timeoutSeconds=
 try {
  $count=Wait-Input $true 1 30
  if((Read-PlayerLog) -notmatch 'KEYLEARNER_INPUT_WINDOW.*fullscreen=True'){throw 'Installed-play startup was not already fullscreen.'}
+ $diagnosticVerified=$false
+ if($VerifyDiagnostics){
+  $diagnosticRoot=Join-Path $Output 'profile/diagnostics'
+  $diagnosticDeadline=[DateTime]::UtcNow.AddSeconds(15)
+  $baseline=$null
+  while([DateTime]::UtcNow -lt $diagnosticDeadline -and !$p.HasExited){
+   $diagnosticFile=Get-ChildItem -LiteralPath $diagnosticRoot -Filter 'input-session-*.jsonl' -ErrorAction SilentlyContinue | Select-Object -First 1
+   if($diagnosticFile){
+    $records=@([UnityPreviewWindow]::ReadSharedReport($diagnosticFile.FullName) -split '\r?\n' | Where-Object {$_} | ForEach-Object {$_ | ConvertFrom-Json})
+    $baseline=$records | Where-Object {$_.kind -eq 'heartbeat' -and $_.data.view -eq 'picker' -and $_.data.input.active} | Select-Object -Last 1
+    if($baseline){break}
+   }
+   Start-Sleep -Milliseconds 100
+  }
+  if(!$baseline){throw 'No flushed protected picker heartbeat after the introduction.'}
+  $beforeSynthetic=[long]$baseline.data.input.guard.syntheticPackets
+  [UnityPreviewWindow]::HoldRight($p.Id,500)
+  $diagnosticDeadline=[DateTime]::UtcNow.AddSeconds(6)
+  while([DateTime]::UtcNow -lt $diagnosticDeadline -and !$p.HasExited){
+   $diagnosticText=[UnityPreviewWindow]::ReadSharedReport($diagnosticFile.FullName)
+   $records=@($diagnosticText -split '\r?\n' | Where-Object {$_} | ForEach-Object {$_ | ConvertFrom-Json})
+   $observed=$records | Where-Object {$_.kind -eq 'heartbeat' -and $_.data.input.guard.syntheticPackets -ge ($beforeSynthetic+2)} | Select-Object -Last 1
+   if($observed){break}
+   Start-Sleep -Milliseconds 100
+  }
+  if(!$observed){throw 'Diagnostics did not acknowledge the OS-tagged synthetic press and release.'}
+  if($observed.data.pickerKeyEvents -ne $baseline.data.pickerKeyEvents -or $observed.data.input.guard.heldCount -ne 0){throw 'Synthetic input incorrectly entered protected gameplay.'}
+  if($diagnosticText -match '(?i)"(?:key|scan|heldKeys|text|password|arguments)"\s*:'){throw 'Unexpected sensitive input field in the diagnostic report.'}
+  $diagnosticVerified=$true
+ }
  for($i=0;$i -lt 3;$i++){
   [UnityPreviewWindow]::Minimize($p.Id)
   $count=Wait-Input $false ($count+1)
@@ -65,7 +95,7 @@ try {
  $restored=[UnityAccessibilityCheck]::Equal($before,[UnityAccessibilityCheck]::Read())
  if(!$restored){[UnityAccessibilityCheck]::RestoreOwned($before)}
  foreach($name in $hashes.Keys){$path=Join-Path $parentRoot $name;$after=if(Test-Path -LiteralPath $path){(Get-FileHash -LiteralPath $path).Hash}else{''};if($after -ne $hashes[$name]){throw "Parent profile changed: $name"}}
- [pscustomobject]@{passed=($success -and $restored);protectedFocusCycles=$rounds;accessibilityRestored=$restored;profilesUnchanged=$true;physicalKeyboardTested=$false} | ConvertTo-Json | Set-Content (Join-Path $Output 'result.json')
+ [pscustomobject]@{passed=($success -and $restored);protectedFocusCycles=$rounds;accessibilityRestored=$restored;profilesUnchanged=$true;physicalKeyboardTested=$false;diagnosticsVerified=($success -and $diagnosticVerified)} | ConvertTo-Json | Set-Content (Join-Path $Output 'result.json')
  if(!$restored){throw 'Final accessibility restoration required explicit cleanup.'}
 }
 Write-Output "PASS: $rounds protected focus cycles, background cursor/accessibility release, inactive close and profile preservation. Physical keystrokes are not synthesized by this test. Evidence: $Output"
