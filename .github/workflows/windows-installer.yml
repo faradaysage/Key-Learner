@@ -253,6 +253,12 @@ jobs:
           versioning: Custom
           version: ${{ needs.unity-preflight.outputs.version }}
           allowDirtyBuild: true
+      - name: Make custom player output writable
+        shell: bash
+        run: |
+          test -d artifacts/unity-windows
+          # GameCI's default ownership handling does not cover this custom output path.
+          sudo chown --recursive --no-dereference "$(id -u):$(id -g)" artifacts/unity-windows
       - name: Verify player payload and record provenance
         shell: bash
         env:
