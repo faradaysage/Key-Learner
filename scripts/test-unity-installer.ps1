@@ -58,8 +58,20 @@ function Install-Package([string]$file,[string]$label,[bool]$legacy=$false){
  $shortcut=@($allowedMenus | ForEach-Object {Join-Path $_ 'KeyLearner Parent Studio.lnk'} | Where-Object {Test-Path -LiteralPath $_}) | Select-Object -First 1
  if(!$shortcut){throw 'Parent Studio shortcut missing from the preflight-approved Start menu locations.'}
  $shell=New-Object -ComObject WScript.Shell
- try{$link=$shell.CreateShortcut($shortcut);if(!$legacy -and $link.Arguments -ne ('--preview --studio --data "'+$parentRoot+'"')){throw 'Parent shortcut does not explicitly select the real profile.'};if($link.TargetPath -ne (Join-Path $destination 'KeyLearner.exe')){throw 'Parent shortcut targets an unexpected executable.'}}
+ try{$link=$shell.CreateShortcut($shortcut);if(!$legacy -and $link.Arguments -ne ('-screen-fullscreen 0 --preview --studio --data "'+$parentRoot+'"')){throw 'Parent shortcut does not explicitly select the real profile.'};if($link.TargetPath -ne (Join-Path $destination 'KeyLearner.exe')){throw 'Parent shortcut targets an unexpected executable.'}}
  finally{if($link){[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($link)};[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($shell)}
+ if(!$legacy){
+  $playShortcut=Join-Path (Split-Path $shortcut -Parent) 'KeyLearner.lnk'
+  if(!(Test-Path -LiteralPath $playShortcut)){throw 'Play shortcut is missing.'}
+  $playShell=New-Object -ComObject WScript.Shell
+  try{
+   $playLink=$playShell.CreateShortcut($playShortcut)
+   if($playLink.Arguments -ne '-screen-fullscreen 1' -or $playLink.TargetPath -ne (Join-Path $destination 'KeyLearner.exe')){throw 'Play shortcut must start the installed Unity player fullscreen.'}
+  } finally{
+   if($playLink){[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($playLink)}
+   [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($playShell)
+  }
+ }
  return $entry.DisplayVersion
 }
 $first='';$second='';$failure='';$uninstalled=$false;$profilesUnchanged=$false;$obsoleteRemoved=0;$customPreserved=$false

@@ -43,7 +43,7 @@ jobs:
       - name: Upload prepared Unity inputs
         uses: actions/upload-artifact@v4
         with:
-          name: KeyLearner-Unity-prepared-inputs
+          name: CI-only-Unity-build-inputs
           path: |
             UnityPort/Assets/Plugins/KeyLearner/KeyLearner.Domain.dll
             UnityPort/Assets/Plugins/KeyLearner/KeyLearner.Domain.pdb
@@ -85,7 +85,7 @@ jobs:
       - name: Upload MonoGame compatibility installer
         uses: actions/upload-artifact@v4
         with:
-          name: KeyLearner-MonoGame-Windows-installer
+          name: CI-only-MonoGame-upgrade-baseline
           path: |
             artifacts/installer/*.exe
             artifacts/installer/*.sha256
@@ -178,7 +178,7 @@ jobs:
       - name: Restore prepared shared domain and Windows helper
         uses: actions/download-artifact@v4
         with:
-          name: KeyLearner-Unity-prepared-inputs
+          name: CI-only-Unity-build-inputs
           path: UnityPort/Assets
       - name: Restore Unity Library cache
         uses: actions/cache@v4
@@ -285,7 +285,7 @@ jobs:
       - name: Upload Windows Unity player
         uses: actions/upload-artifact@v4
         with:
-          name: KeyLearner-Unity-Windows-player-${{ needs.unity-preflight.outputs.version }}
+          name: Portable-Unity-Windows-player-${{ needs.unity-preflight.outputs.version }}
           path: |
             artifacts/unity-windows/**
             !artifacts/unity-windows/*_BackUpThisFolder_ButDontShipItWithYourGame/**
@@ -297,7 +297,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: KeyLearner-Unity-test-results-${{ github.run_number }}
+          name: CI-Unity-test-results-${{ github.run_number }}
           path: |
             artifacts/unity-tests/**/*.xml
             artifacts/unity-migration/build-result.txt
@@ -318,12 +318,12 @@ jobs:
       - name: Download Unity Windows player from this run
         uses: actions/download-artifact@v4
         with:
-          name: KeyLearner-Unity-Windows-player-${{ needs.unity-preflight.outputs.version }}
+          name: Portable-Unity-Windows-player-${{ needs.unity-preflight.outputs.version }}
           path: artifacts/unity-windows
       - name: Download MonoGame baseline installer from this run
         uses: actions/download-artifact@v4
         with:
-          name: KeyLearner-MonoGame-Windows-installer
+          name: CI-only-MonoGame-upgrade-baseline
           path: artifacts/unity-ci-baseline
       - name: Install pinned installer compiler
         shell: pwsh
@@ -361,20 +361,36 @@ jobs:
           $provenance | Add-Member -NotePropertyName installerAcceptance -NotePropertyValue $result
           $provenance | ConvertTo-Json -Depth 12 | Set-Content artifacts/installer/ci-provenance.json -Encoding utf8
       - name: Upload verified Unity laptop installer
+        id: laptop-installer
         uses: actions/upload-artifact@v4
         with:
-          name: KeyLearner-Unity-Windows-installer-${{ needs.unity-preflight.outputs.version }}
+          name: INSTALL-KeyLearner-Unity-Windows-${{ needs.unity-preflight.outputs.version }}
           path: |
             artifacts/installer/KeyLearner-${{ needs.unity-preflight.outputs.version }}-win-x64-setup.exe
             artifacts/installer/KeyLearner-${{ needs.unity-preflight.outputs.version }}-win-x64-setup.exe.sha256
             artifacts/installer/ci-provenance.json
           if-no-files-found: error
           retention-days: 30
+      - name: Show the laptop download
+        shell: pwsh
+        env:
+          INSTALLER_URL: ${{ steps.laptop-installer.outputs.artifact-url }}
+          BUILD_VERSION: ${{ needs.unity-preflight.outputs.version }}
+        run: |
+          @(
+            "## Install KeyLearner $env:BUILD_VERSION on Windows"
+            ""
+            "[Download the Unity installer]($env:INSTALLER_URL)"
+            ""
+            "Extract the ZIP and run the setup executable. This is the only download needed to install the game."
+            ""
+            "The Portable artifact runs without installation. CI-only artifacts are build inputs and the MonoGame upgrade-test baseline; CI reports are diagnostic evidence."
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
       - name: Upload installer acceptance reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: KeyLearner-Unity-installer-results-${{ github.run_number }}
+          name: CI-Unity-upgrade-test-results-${{ github.run_number }}
           path: |
             artifacts/unity-ci-installer-test/preflight.json
             artifacts/unity-ci-installer-test/result.json

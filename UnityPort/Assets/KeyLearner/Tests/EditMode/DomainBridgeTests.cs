@@ -52,6 +52,40 @@ namespace KeyLearner.Unity.Tests.EditMode
             Assert.That(clears, Is.EqualTo(4));
         }
 
+        [TestCase(false)]
+        [TestCase(true)]
+        public void LateNativeFocusLossIsRearmedWithoutLosingThePendingReset(bool afterApply)
+        {
+            var window = new IntPtr(42);
+            var queue = new KeyTransitionBuffer();
+            var physical = new PhysicalKeyboard(queue);
+            var focus = new InputFocus(window, physical.Clear);
+            bool nativeForeground = true;
+            var handoff = new KeyLearner.Unity.Platform.CaptureFocusHandoff(active => {
+                focus.SetActive(active && nativeForeground);
+                return focus.Losses;
+            });
+            handoff.Apply(true, true);
+            physical.Feed(65, 30, false, true, false, 1);
+            Assert.That(queue.Snapshot().IsDown(65), Is.True);
+            Assert.That(handoff.NeedsReset(focus.Losses), Is.False);
+            if (!afterApply) focus.SetActive(false);
+            handoff.Apply(true, false);
+            if (afterApply) focus.SetActive(false);
+            Assert.That(handoff.NeedsReset(focus.Losses), Is.True, "Do not swallow a loss the frame did not handle.");
+            Assert.That(queue.Snapshot().Count, Is.Zero, "Stale held keys must be cleared.");
+            handoff.Apply(true, true);
+            Assert.That(focus.Accepts(window), Is.True);
+            physical.Feed(13, 28, false, true, false, 2);
+            Assert.That(queue.TryRead(out var entered), Is.True);
+            Assert.That(entered.Key, Is.EqualTo(13), "Fresh input reaches the picker after recovery.");
+            Assert.That(handoff.NeedsReset(focus.Losses), Is.False);
+            nativeForeground = false;
+            handoff.Apply(true, false);
+            Assert.That(focus.Accepts(window), Is.False, "Native foreground still gates every rearm.");
+            Assert.That(queue.Snapshot().Count, Is.Zero);
+        }
+
         [Test]
         public void MultitouchAndEmulatedMouseCannotBecomeAnAnswer()
         {

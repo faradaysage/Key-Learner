@@ -54,3 +54,6 @@ _asset_downloads/
 _asset_inbox/
 
 UnityPort/Assets/StreamingAssets/Platform/
+
+# Private task attachments
+.codex-remote-attachments/

@@ -5,6 +5,14 @@ using System.Runtime.InteropServices;
 // the shortcut/confirmation bits still matching the lease's applied state.
 public static class UnityAccessibilityCheck
 {
+    [DllImport("user32.dll", SetLastError = true)]
+    static extern bool GetClipCursor([Out] int[] rect);
+    public static int[] ReadCursorClip()
+    {
+        var rect = new int[4];
+        if (!GetClipCursor(rect)) throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+        return rect;
+    }
     static readonly uint[] Gets = { 0x3A, 0x32, 0x34 };
     static readonly uint[] Sets = { 0x3B, 0x33, 0x35 };
     static readonly int[] Sizes = { 2, 6, 2 };

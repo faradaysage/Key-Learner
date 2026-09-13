@@ -24,13 +24,14 @@ Open **Actions → Windows installer → Run workflow**, select the desired repo
 
 A successful run contains:
 
-- `KeyLearner-Unity-Windows-installer-<version>`: the laptop setup executable, SHA-256 file, and provenance/upgrade result.
-- `KeyLearner-Unity-Windows-player-<version>`: the complete portable Unity player and source/build provenance.
-- `KeyLearner-Unity-test-results-<run>`: NUnit XML and the project build report.
-- `KeyLearner-Unity-installer-results-<run>`: installer preflight and acceptance JSON.
-- `KeyLearner-MonoGame-Windows-installer`: compatibility output, also used as the upgrade baseline.
+- `INSTALL-KeyLearner-Unity-Windows-<version>`: the laptop setup executable, SHA-256 file, and provenance/upgrade result.
+- `Portable-Unity-Windows-player-<version>`: the complete portable Unity player and source/build provenance.
+- `CI-Unity-test-results-<run>`: NUnit XML and the project build report.
+- `CI-Unity-upgrade-test-results-<run>`: installer preflight and acceptance JSON.
+- `CI-only-MonoGame-upgrade-baseline`: compatibility output, also used as the upgrade baseline.
+- `CI-only-Unity-build-inputs`: staged domain DLL and Windows helper consumed by the Unity job.
 
-Download the **Unity installer** artifact, extract it, then run the setup executable. The installed application keeps the existing per-user installation identity and parent profile. Artifacts are retained for 30 days. This workflow does not automatically create a GitHub Release; a release upload is a separate publication step.
+Only the **INSTALL-KeyLearner-Unity-Windows** artifact is needed to install the game. Extract it, then run the setup executable. The run summary links directly to it. The portable player is optional; the CI artifacts are pipeline inputs and test evidence. The installed application keeps the existing per-user installation identity and parent profile. Artifacts are retained for 30 days. This workflow does not automatically create a GitHub Release; a release upload is a separate publication step.
 
 Ordinary runs use `3.0.<workflow run number>`. Tags `unity-vMAJOR.MINOR.PATCH` and `unity-vMAJOR.MINOR.PATCH-preview.N` use the three-part version for both the Unity player and Inno installer. The preview suffix describes publication status, not the Windows numeric file version. Historical `vMAJOR.MINOR.PATCH` tags retain MonoGame packaging only.
 

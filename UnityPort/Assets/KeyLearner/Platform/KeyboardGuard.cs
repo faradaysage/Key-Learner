@@ -45,7 +45,9 @@ namespace KeyLearner.Studio
         private readonly HookProc callback;
         private readonly KeyTransitionBuffer events = new();
         private readonly PhysicalKeyboard physical;
-        public string Diagnostics => $"held {Snapshot().Count}; session resets {SessionResets}; repairs {physical.RemappedReleases + physical.RepairedReleases}";
+        long physicalPackets, injectedPackets;
+        public long PacketCount => Interlocked.Read(ref physicalPackets) + Interlocked.Read(ref injectedPackets);
+        public string Diagnostics => $"held {Snapshot().Count}; session resets {SessionResets}; repairs {physical.RemappedReleases + physical.RepairedReleases}; physical packets {Interlocked.Read(ref physicalPackets)}; synthetic packets {Interlocked.Read(ref injectedPackets)}";
         private readonly ManualResetEventSlim ready = new();
         private readonly Thread thread;
         private nint hook;
@@ -84,11 +86,15 @@ namespace KeyLearner.Studio
         public void DiscardEvents() => events.DiscardEvents();
         public KeySnapshot Snapshot() => events.Snapshot();
         // Inactive input belongs to Windows. Never retain it, including parent shortcuts.
-        public void SetGameActive(bool active)
+        public int SetGameActive(bool active)
         {
             lock (stateGate)
+            {
                 focus.SetActive(active && OwnsForeground);
+                return focus.Losses;
+            }
         }
+        public bool CaptureActive { get { lock (stateGate) return focus.Active; } }
         public void ResetInput()
         {
             lock (stateGate)
@@ -153,6 +159,7 @@ namespace KeyLearner.Studio
                 {
                     if (!focus.Accepts(GetForegroundWindow(), DesktopReceivesInput))
                         return CallNextHookEx(hook, code, w, l);
+                    if ((data.Flags & 0x10) != 0) Interlocked.Increment(ref injectedPackets); else Interlocked.Increment(ref physicalPackets);
                     physical.Feed((int)data.Key, (int)data.Scan, (data.Flags & 1) != 0, msg is 0x100 or 0x104, (data.Flags & 0x10) != 0, Now);
                 }
                 return suppress ? 1 : CallNextHookEx(hook, code, w, l);

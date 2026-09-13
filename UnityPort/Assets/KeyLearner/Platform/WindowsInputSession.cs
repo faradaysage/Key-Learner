@@ -77,6 +77,21 @@ namespace KeyLearner.Unity.Platform
         }
     }
 
+    // A callback can revoke capture after the frame's reset check. Never acknowledge
+    // that newer loss unless the frame actually reset its gameplay/parent state.
+    public sealed class CaptureFocusHandoff
+    {
+        readonly Func<bool, int> setActive;
+        int handledLosses;
+        public CaptureFocusHandoff(Func<bool, int> setActive) { this.setActive = setActive; }
+        public bool NeedsReset(int losses) => losses != handledLosses;
+        public void Apply(bool active, bool resetHandled)
+        {
+            int losses = setActive(active); // Refresh every frame, including stable foreground.
+            if (resetHandled) handledLosses = losses;
+        }
+    }
+
     /// <summary>One owner for physical state, focus and parent escape controls. Never samples background keys.</summary>
     public sealed class WindowsInputSession : IDisposable
     {
@@ -94,8 +109,10 @@ namespace KeyLearner.Unity.Platform
         readonly Mutex single;
         AccessibilityLease accessibility;
         bool active, disarmed = true, allowExit, disposed, mutexOwned;
-        int focusLosses;
+        readonly CaptureFocusHandoff capture;
         uint previousWindowState;
+        long reportedPackets;
+        double reportAfter;
         public bool Protected => !unprotected;
         public string Status => unprotected ? "Preview / Parent Studio: keyboard protection is disabled." : guard.Diagnostics;
         public WindowsInputSession(bool previewOrStudio, string profileRoot)
@@ -106,6 +123,7 @@ namespace KeyLearner.Unity.Platform
             {
                 SetCurrentProcessExplicitAppUserModelID("KeyLearner.Desktop");
                 window = FindPlayerWindow();
+                UnityEngine.Debug.Log("KEYLEARNER_INPUT_WINDOW bound=" + window + " foreground=" + GetForegroundWindow() + " focused=" + Application.isFocused + " fullscreen=" + Screen.fullScreen);
             }
             try
             {
@@ -122,6 +140,7 @@ namespace KeyLearner.Unity.Platform
                     if (!mutexOwned)
                         throw new InvalidOperationException("A protected KeyLearner session is already open.");
                     guard = new KeyboardGuard(window);
+                    capture = new CaptureFocusHandoff(guard.SetGameActive);
                     Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
                     Screen.fullScreen = true;
                 }
@@ -129,7 +148,7 @@ namespace KeyLearner.Unity.Platform
             }
             catch { Dispose(); throw; }
         }
-        bool CanQuit() => unprotected || allowExit;
+        bool CanQuit() => unprotected || allowExit || disposed || disarmed || !active || guard == null || !guard.CaptureActive || !guard.OwnsForeground;
         public void AuthorizeExit()
         {
             allowExit = true;
@@ -181,7 +200,7 @@ namespace KeyLearner.Unity.Platform
             frame.OpenPicker = false;
             var state = window == IntPtr.Zero ? 0u : ((IsWindowVisible(window) ? 1u : 0u) | (IsIconic(window) ? 2u : 0u) | (IsZoomed(window) ? 4u : 0u));
             bool next = visible && Application.isFocused && (window == IntPtr.Zero || (state & 3) == 1) && (guard == null || guard.OwnsForeground);
-            bool changed = next != active || disarmed || state != previousWindowState || (guard != null && guard.FocusLosses != focusLosses);
+            bool changed = next != active || disarmed || state != previousWindowState || (guard != null && capture.NeedsReset(guard.FocusLosses));
             previousWindowState = state;
             if (changed)
             {
@@ -210,14 +229,21 @@ namespace KeyLearner.Unity.Platform
                         SetWindowPos(window, new IntPtr(-1), 0, 0, 0, 0, 0x13);
                         Cursor.lockState = CursorLockMode.Confined;
                         Cursor.visible = true;
-                        guard.SetGameActive(true);
+                        // Capture is authorized below, after cursor/guardian setup.
                     }
                 }
             }
+            capture?.Apply(next, changed);
+            if (next && guard != null && !guard.CaptureActive)
+            {
+                Disarm();
+                next = false;
+                frame.Reset = true;
+            }
             active = next;
             frame.Active = next;
-            if (guard != null)
-                focusLosses = guard.FocusLosses;
+            if (changed)
+                UnityEngine.Debug.Log("KEYLEARNER_INPUT_TRANSITION active=" + next + " bound=" + window + " foreground=" + GetForegroundWindow() + " visibleState=" + state + " unityFocus=" + Application.isFocused + " nativeFocus=" + (guard?.OwnsForeground ?? false));
             if (!next)
             {
                 frame.Snapshot = default;
@@ -225,6 +251,12 @@ namespace KeyLearner.Unity.Platform
                 return frame;
             }
             double now = KeyboardGuard.Now;
+            if (guard != null && now >= reportAfter && guard.PacketCount != reportedPackets)
+            {
+                reportedPackets = guard.PacketCount;
+                reportAfter = now + 5;
+                UnityEngine.Debug.Log("KEYLEARNER_INPUT_COUNTS " + guard.Diagnostics);
+            }
             if (guard != null)
             {
                 while (guard.TryRead(out var e))
@@ -363,6 +395,7 @@ namespace KeyLearner.Unity.Platform
         delegate bool EnumWindow(IntPtr window, IntPtr parameter);
         [DllImport("user32.dll")] static extern bool EnumWindows(EnumWindow callback, IntPtr parameter);
         [DllImport("user32.dll")] static extern IntPtr GetActiveWindow();
+        [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll")] static extern IntPtr GetWindow(IntPtr window, uint command);
         [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr window, out uint process);
         [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr window);

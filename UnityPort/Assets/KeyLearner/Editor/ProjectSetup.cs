@@ -22,7 +22,7 @@ namespace KeyLearner.Unity.Editor
             PlayerSettings.SetApiCompatibilityLevel(UnityEditor.Build.NamedBuildTarget.Standalone, ApiCompatibilityLevel.NET_Standard);
             PlayerSettings.defaultScreenWidth = 1366;
             PlayerSettings.defaultScreenHeight = 768;
-            PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
             PlayerSettings.resizableWindow = true;
             PlayerSettings.runInBackground = true;
             PlayerSettings.usePlayerLog = true;
@@ -172,6 +172,7 @@ namespace KeyLearner.Unity.Editor
                 version.Split('.').Any(part => !int.TryParse(part, out int component) || component > 65535))
                 throw new ArgumentException("Windows build version must be MAJOR.MINOR.PATCH with components 0..65535.");
             PlayerSettings.bundleVersion = version;
+            PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
             PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
             string repository = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
             string output = Path.Combine(repository, "artifacts/unity-windows/KeyLearner.exe");

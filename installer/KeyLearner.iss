@@ -8,6 +8,14 @@
 #define InstallerDir "..\artifacts\installer"
 #endif
 
+#ifdef UnityPort
+#define PlayArguments "-screen-fullscreen 1"
+#define StudioDisplayArguments "-screen-fullscreen 0 "
+#else
+#define PlayArguments ""
+#define StudioDisplayArguments ""
+#endif
+
 [Setup]
 ; Permanent identity: never change this between releases.
 AppId={{D5C654D0-1B14-4479-B771-20BD264731A8}
@@ -48,12 +56,12 @@ Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 #endif
 
 [Icons]
-Name: "{group}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
-Name: "{group}\KeyLearner Parent Studio"; Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio --data ""{localappdata}\KeyLearner"""; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
-Name: "{autodesktop}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; WorkingDir: "{app}"; Tasks: desktopicon; AppUserModelID: "KeyLearner.Desktop"
+Name: "{group}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; Parameters: "{#PlayArguments}"; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
+Name: "{group}\KeyLearner Parent Studio"; Filename: "{app}\KeyLearner.exe"; Parameters: "{#StudioDisplayArguments}--preview --studio --data ""{localappdata}\KeyLearner"""; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
+Name: "{autodesktop}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; Parameters: "{#PlayArguments}"; WorkingDir: "{app}"; Tasks: desktopicon; AppUserModelID: "KeyLearner.Desktop"
 
 [Run]
-Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio --data ""{localappdata}\KeyLearner"""; Description: "Open the parent studio"; Flags: nowait postinstall skipifsilent unchecked
+Filename: "{app}\KeyLearner.exe"; Parameters: "{#StudioDisplayArguments}--preview --studio --data ""{localappdata}\KeyLearner"""; Description: "Open the parent studio"; Flags: nowait postinstall skipifsilent unchecked
 
 ; Profiles live separately under LocalAppData\KeyLearner. Neither upgrades nor
 ; uninstall remove dictionaries, recordings, settings, or learned preferences.
