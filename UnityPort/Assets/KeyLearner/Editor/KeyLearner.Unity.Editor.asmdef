@@ -1,0 +1,10 @@
+{
+  "name": "KeyLearner.Unity.Editor",
+  "rootNamespace": "KeyLearner.Unity.Editor",
+  "references": [
+    "KeyLearner.Unity",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": ["Editor"]
+}

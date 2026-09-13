@@ -158,21 +158,58 @@ namespace KeyLearner.Unity.Editor
         {
             if (!File.Exists("Assets/KeyLearner/Scenes/KeyLearner.unity"))
                 Configure();
-            string output = Path.GetFullPath("../artifacts/unity-windows/KeyLearner.exe");
+            string version = PlayerSettings.bundleVersion;
+            string[] arguments = Environment.GetCommandLineArgs();
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                if (arguments[i] != "-keyLearnerVersion")
+                    continue;
+                if (i + 1 >= arguments.Length || arguments.Skip(i + 1).Contains("-keyLearnerVersion"))
+                    throw new ArgumentException("Supply exactly one -keyLearnerVersion MAJOR.MINOR.PATCH.");
+                version = arguments[i + 1];
+            }
+            if (!System.Text.RegularExpressions.Regex.IsMatch(version ?? "", @"^\d+\.\d+\.\d+$") ||
+                version.Split('.').Any(part => !int.TryParse(part, out int component) || component > 65535))
+                throw new ArgumentException("Windows build version must be MAJOR.MINOR.PATCH with components 0..65535.");
+            PlayerSettings.bundleVersion = version;
+            PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+            string repository = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+            string output = Path.Combine(repository, "artifacts/unity-windows/KeyLearner.exe");
             Directory.CreateDirectory(Path.GetDirectoryName(output));
+            string manifest = Path.Combine(Path.GetDirectoryName(output), "build-manifest.json");
+            if (File.Exists(manifest))
+                File.Delete(manifest);
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { "Assets/KeyLearner/Scenes/KeyLearner.unity" }, locationPathName = output, target = BuildTarget.StandaloneWindows64, options = BuildOptions.None });
-            Directory.CreateDirectory("../artifacts/unity-migration");
-            File.WriteAllText("../artifacts/unity-migration/build-result.txt", report.summary.result + "\n" + report.summary.totalErrors + " errors\n" + report.summary.totalSize + " bytes\n" + report.summary.totalTime);
-            if (report.summary.result != BuildResult.Succeeded)
+            string diagnostics = Path.Combine(repository, "artifacts/unity-migration");
+            Directory.CreateDirectory(diagnostics);
+            File.WriteAllText(Path.Combine(diagnostics, "build-result.txt"), report.summary.result + "\n" + report.summary.totalErrors + " errors\n" + report.summary.totalSize + " bytes\n" + report.summary.totalTime);
+            if (report.summary.result != BuildResult.Succeeded || report.summary.totalErrors != 0 || !File.Exists(output))
                 throw new InvalidOperationException("Windows build failed: " + report.summary.result);
             string targetData = Path.Combine(Path.GetDirectoryName(output), "data");
             Directory.CreateDirectory(targetData);
-            foreach (var file in Directory.GetFiles("../data", "*_dictionary.csv").Where(f => !Path.GetFileName(f).Equals("private_dictionary.csv", StringComparison.OrdinalIgnoreCase)))
+            foreach (var file in Directory.GetFiles(Path.Combine(repository, "data"), "*_dictionary.csv").Where(f => !Path.GetFileName(f).Equals("private_dictionary.csv", StringComparison.OrdinalIgnoreCase)))
                 File.Copy(file, Path.Combine(targetData, Path.GetFileName(file)), true);
             foreach (string notice in new[] { "THIRD_PARTY_ASSETS.md", "LICENSE" })
-                if (File.Exists("../" + notice))
-                    File.Copy("../" + notice, Path.Combine(Path.GetDirectoryName(output), notice), true);
+                if (File.Exists(Path.Combine(repository, notice)))
+                    File.Copy(Path.Combine(repository, notice), Path.Combine(Path.GetDirectoryName(output), notice), true);
+            File.WriteAllText(manifest, JsonUtility.ToJson(new WindowsBuildManifest
+            {
+                version = version,
+                unityVersion = Application.unityVersion,
+                target = "StandaloneWindows64",
+                backend = "Mono",
+                result = report.summary.result.ToString(),
+                errors = (int)report.summary.totalErrors,
+                bytes = report.summary.totalSize.ToString(),
+                builtAtUtc = DateTime.UtcNow.ToString("O")
+            }, true));
             Debug.Log("KEYLEARNER_BUILD_SUCCEEDED " + output);
+        }
+        [Serializable]
+        private sealed class WindowsBuildManifest
+        {
+            public string version, unityVersion, target, backend, result, bytes, builtAtUtc;
+            public int errors;
         }
         public static void ConfigureAndBuild()
         {

@@ -1,0 +1,9 @@
+{
+  "name": "KeyLearner.Unity.PlayModeTests",
+  "rootNamespace": "KeyLearner.Unity.Tests.PlayMode",
+  "references": ["KeyLearner.Unity", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll", "KeyLearner.Domain.dll"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "autoReferenced": false
+}

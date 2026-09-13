@@ -2,6 +2,10 @@
 
 This Unity project sits alongside the preserved MonoGame implementation. The selected Editor version is recorded in `ProjectSettings/ProjectVersion.txt`; this checkout was created and compiled with the locally installed Unity 6000.6.0f1 and URP 17.6.0. Use the project version and the installed CLI's discovery output on another machine rather than assuming a drive or Editor path.
 
+## GitHub Actions
+
+The repository workflow [windows-installer.yml](../.github/workflows/windows-installer.yml) stages the shared DLL and Windows helper, runs actual Unity EditMode/PlayMode tests, builds the Windows Mono player with GameCI, and packages/tests the installer on GitHub-hosted runners. See [Unity CI setup](../docs/unity-ci.md) for Personal-license secrets, cache keys, versioning, downloadable artifacts, and fork behavior. Local verification and CI are complementary; a prior local build is never uploaded as the output of a new CI run.
+
 ## Build on Windows
 
 From the repository root, prepare the shared models, platform helper, and original offline audio:
@@ -91,7 +95,7 @@ Protected keyboard/touchpad mash and secure-desktop focus recovery still require
 
 ## Packaging and profiles
 
-The tested [Unity 3.0.0 prerelease](https://github.com/faradaysage/Key-Learner/releases/tag/unity-v3.0.0-preview.1) provides the Windows installer and checksum. It is separate from the preserved MonoGame Actions artifact. Review the native engine and target-device acceptance limits in the release notes.
+The tested [Unity 3.0.0 prerelease](https://github.com/faradaysage/Key-Learner/releases/tag/unity-v3.0.0-preview.1) provides the Windows installer and checksum. That release predates the GameCI pipeline; new Windows player and installer artifacts come from successful runs of windows-installer.yml. Review the native engine and target-device acceptance limits in the release notes.
 
 After the Windows build succeeds:
 

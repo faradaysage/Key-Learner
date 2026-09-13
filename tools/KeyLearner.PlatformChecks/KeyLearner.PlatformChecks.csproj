@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
  <PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><LangVersion>9.0</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems><DefineConstants>UNITY_EDITOR;UNITY_STANDALONE_WIN</DefineConstants></PropertyGroup>
  <ItemGroup>
-  <Compile Include="../../UnityPort/Assets/KeyLearner/**/*.cs"/>
+  <Compile Include="../../UnityPort/Assets/KeyLearner/**/*.cs" Exclude="../../UnityPort/Assets/KeyLearner/Tests/**/*.cs"/>
   <ProjectReference Include="../../Shared/KeyLearner.Domain.csproj"/>
   <Reference Include="$(UnityEditor)/Data/Managed/UnityEngine/*.dll"/>
 

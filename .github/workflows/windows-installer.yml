@@ -1,23 +1,30 @@
-name: MonoGame compatibility and installer
+name: Windows installer
 on:
   push:
     branches: [main]
-    tags: ['v*']
+    tags: ['v*', 'unity-v*']
   pull_request:
   workflow_dispatch:
 permissions:
   contents: read
+
 jobs:
   build:
+    name: MonoGame compatibility and prepared Unity inputs
     runs-on: windows-2022
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
             8.0.x
             9.0.x
+      - name: Verify licensed source asset integrity
+        shell: pwsh
+        run: ./scripts/verify-unity-assets.ps1
       - name: Regression tests
         shell: pwsh
         run: |
@@ -28,6 +35,21 @@ jobs:
         run: |
           dotnet run --project Shared/Tests/KeyLearner.Domain.Regression.csproj -c Release
           if ($LASTEXITCODE -ne 0) { throw 'Shared domain tests failed' }
+      - name: Prepare shared domain and Windows helper
+        shell: pwsh
+        run: |
+          ./scripts/build-unity-domain.ps1 -SkipTests
+          ./scripts/build-unity-platform.ps1
+      - name: Upload prepared Unity inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyLearner-Unity-prepared-inputs
+          path: |
+            UnityPort/Assets/Plugins/KeyLearner/KeyLearner.Domain.dll
+            UnityPort/Assets/Plugins/KeyLearner/KeyLearner.Domain.pdb
+            UnityPort/Assets/StreamingAssets/Platform/**
+          if-no-files-found: error
+          retention-days: 7
       - name: Install pinned installer compiler
         shell: pwsh
         run: |
@@ -39,7 +61,7 @@ jobs:
           $setup = Start-Process $destination -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/CURRENTUSER','/NOICONS',"/DIR=$compilerRoot") -Wait -PassThru -WindowStyle Hidden
           if ($setup.ExitCode -ne 0) { throw 'Compiler installation failed' }
           "INNO_COMPILER=$compilerRoot\ISCC.exe" >> $env:GITHUB_ENV
-      - name: Build self-contained installer
+      - name: Build preserved MonoGame installer
         shell: pwsh
         env:
           BUILD_NUMBER: ${{ github.run_number }}
@@ -47,20 +69,20 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: |
           $version = "2.0.$env:BUILD_NUMBER"
-          if ($env:REF_TYPE -eq 'tag') {
-            if ($env:REF_NAME -notmatch '^v(\d+\.\d+\.\d+)$') { throw 'Release tags must be vMAJOR.MINOR.PATCH' }
+          if ($env:REF_TYPE -eq 'tag' -and $env:REF_NAME.StartsWith('v')) {
+            if ($env:REF_NAME -notmatch '^v(\d+\.\d+\.\d+)$') { throw 'Legacy release tags must be vMAJOR.MINOR.PATCH' }
             $version = $Matches[1]
           }
           ./scripts/build-installer.ps1 -Version $version -Compiler $env:INNO_COMPILER
           $probe = Start-Process "artifacts/publish-$version/KeyLearner.exe" -ArgumentList '--probe-guard' -WindowStyle Hidden -Wait -PassThru
           if ($probe.ExitCode -ne 0) { throw 'Native focus/keyboard probe failed' }
           Get-Content "artifacts/publish-$version/guard-probe.txt"
-      - name: Verify install and reinstall identity
+      - name: Verify preserved install and reinstall identity
         shell: pwsh
         run: |
           $installer = Get-ChildItem artifacts/installer/*.exe | Select-Object -First 1
           ./scripts/test-installer.ps1 -Installer $installer.FullName
-      - name: Upload laptop installer
+      - name: Upload MonoGame compatibility installer
         uses: actions/upload-artifact@v4
         with:
           name: KeyLearner-MonoGame-Windows-installer
@@ -68,4 +90,288 @@ jobs:
             artifacts/installer/*.exe
             artifacts/installer/*.sha256
           if-no-files-found: error
+          retention-days: 30
+
+  unity-preflight:
+    name: Unity license and version preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      enabled: ${{ steps.scope.outputs.enabled }}
+      version: ${{ steps.version.outputs.version }}
+      editor: ${{ steps.version.outputs.editor }}
+    steps:
+      - name: Determine Unity build scope
+        id: scope
+        shell: bash
+        env:
+          IS_FORK: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+          IS_LEGACY_TAG: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'v') }}
+        run: |
+          if [[ "$IS_FORK" == 'true' ]]; then
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo '::notice::Fork PR: Unity tests/build are not run because license secrets are unavailable. MonoGame and shared-domain checks still run. A maintainer can run the reviewed branch through workflow_dispatch.'
+            echo 'Unity tests and installer were not built for this fork PR. License secrets are never exposed to forks.' >> "$GITHUB_STEP_SUMMARY"
+          elif [[ "$IS_LEGACY_TAG" == 'true' ]]; then
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'Legacy v* tag: MonoGame compatibility packaging only. Use unity-vMAJOR.MINOR.PATCH for Unity.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Require GameCI Personal activation secrets
+        if: steps.scope.outputs.enabled == 'true'
+        shell: bash
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          missing=()
+          [[ -n "$UNITY_LICENSE" ]] || missing+=(UNITY_LICENSE)
+          [[ -n "$UNITY_EMAIL" ]] || missing+=(UNITY_EMAIL)
+          [[ -n "$UNITY_PASSWORD" ]] || missing+=(UNITY_PASSWORD)
+          if (( ${#missing[@]} )); then
+            echo "::error::Unity CI cannot activate: add these repository Actions secrets: ${missing[*]}. Follow docs/unity-ci.md and GameCI's Personal activation instructions. Do not paste credentials into an issue or workflow."
+            exit 1
+          fi
+          echo 'Required GameCI secret names are configured; their values are never printed. Actual activation is verified by the Unity test/build steps.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/checkout@v4
+        if: steps.scope.outputs.enabled == 'true'
+        with:
+          persist-credentials: false
+      - name: Resolve player and installer version
+        if: steps.scope.outputs.enabled == 'true'
+        id: version
+        shell: bash
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, re
+          version = '3.0.' + os.environ['BUILD_NUMBER']
+          if os.environ['REF_TYPE'] == 'tag':
+              match = re.fullmatch(r'unity-v(\d+\.\d+\.\d+)(?:-preview\.\d+)?', os.environ['REF_NAME'])
+              if not match:
+                  raise SystemExit('Unity tags must be unity-vMAJOR.MINOR.PATCH or unity-vMAJOR.MINOR.PATCH-preview.N')
+              version = match.group(1)
+          text = pathlib.Path('UnityPort/ProjectSettings/ProjectVersion.txt').read_text(encoding='utf-8-sig')
+          editor = re.search(r'^m_EditorVersion: (.+)$', text, re.M).group(1).strip()
+          if editor != '6000.6.0f1':
+              raise SystemExit('Project Editor changed: update and verify the pinned GameCI image in windows-installer.yml before building.')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f'version={version}\neditor={editor}\n')
+          print(f'Unity {editor}; Windows player and installer {version}')
+          PY
+
+  unity:
+    name: Unity tests and Windows player
+    needs: [build, unity-preflight]
+    if: needs.unity-preflight.outputs.enabled == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Restore prepared shared domain and Windows helper
+        uses: actions/download-artifact@v4
+        with:
+          name: KeyLearner-Unity-prepared-inputs
+          path: UnityPort/Assets
+      - name: Restore Unity Library cache
+        uses: actions/cache@v4
+        with:
+          path: UnityPort/Library
+          key: Unity-Library-${{ runner.os }}-${{ needs.unity-preflight.outputs.editor }}-${{ hashFiles('UnityPort/Packages/**') }}-${{ hashFiles('UnityPort/Assets/**', 'Shared/**', 'Studio/**') }}
+          restore-keys: |
+            Unity-Library-${{ runner.os }}-${{ needs.unity-preflight.outputs.editor }}-${{ hashFiles('UnityPort/Packages/**') }}-
+      - name: Unity EditMode and PlayMode tests
+        id: unity-tests
+        # v4.4.0: Personal-license support, coverage opt-out, Unity 6.6 shared-memory fix.
+        uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          cliVersion: v0.1.63
+          projectPath: UnityPort
+          unityVersion: auto
+          customImage: unityci/editor:ubuntu-6000.6.0f1-windows-mono-3.2.2@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71
+          testMode: all
+          coverageEnabled: false
+          artifactsPath: artifacts/unity-tests
+          githubToken: ''
+      - name: Require actual passing Unity test results
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import pathlib, xml.etree.ElementTree as ET
+          reports = list(pathlib.Path('artifacts/unity-tests').rglob('*.xml'))
+          modes = {'EditMode': set(), 'PlayMode': set()}
+          def inspect(node, context):
+              context += ' ' + ' '.join(node.get(key, '') for key in ('name', 'fullname', 'classname'))
+              if node.tag == 'test-case':
+                  name = node.get('fullname', node.get('name', 'unnamed'))
+                  if node.get('result') != 'Passed':
+                      raise SystemExit(f'Unity test did not pass: {name}')
+                  for mode in modes:
+                      if mode.lower() in context.lower():
+                          modes[mode].add(name)
+              for child in node:
+                  inspect(child, context)
+          for report in reports:
+              try:
+                  root = ET.parse(report).getroot()
+              except ET.ParseError:
+                  continue
+              if root.tag != 'test-run':
+                  continue
+              if root.get('result') not in ('Passed', 'Success') or int(root.get('failed', '0')):
+                  raise SystemExit(f'Unity test report is not passing: {report}')
+              inspect(root, report.as_posix())
+          counts = {mode: len(cases) for mode, cases in modes.items()}
+          if any(count == 0 for count in counts.values()):
+              raise SystemExit(f'Expected nonzero passing EditMode and PlayMode tests, observed {counts}; reports: {reports}')
+          print(f'PASS actual Unity tests: {counts}')
+          PY
+      - name: Build Windows Mono player with Unity
+        # v4.8.2 includes the Unity 6.6 /dev/shm fix; no mutable action tag.
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: UnityPort
+          unityVersion: auto
+          customImage: unityci/editor:ubuntu-6000.6.0f1-windows-mono-3.2.2@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71
+          targetPlatform: StandaloneWindows64
+          buildMethod: KeyLearner.Unity.Editor.ProjectSetup.BuildWindows
+          customParameters: -keyLearnerVersion ${{ needs.unity-preflight.outputs.version }}
+          versioning: Custom
+          version: ${{ needs.unity-preflight.outputs.version }}
+          allowDirtyBuild: true
+      - name: Verify player payload and record provenance
+        shell: bash
+        env:
+          BUILD_VERSION: ${{ needs.unity-preflight.outputs.version }}
+          SOURCE_SHA: ${{ github.sha }}
+          SOURCE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          output = pathlib.Path('artifacts/unity-windows')
+          for name in ['KeyLearner.exe', 'UnityPlayer.dll', 'KeyLearner_Data/globalgamemanagers', 'KeyLearner_Data/StreamingAssets/Platform/KeyLearner.PlatformHelper.exe', 'build-manifest.json']:
+              if not (output / name).is_file():
+                  raise SystemExit(f'Missing Unity player build output: {name}')
+          manifest = json.loads((output / 'build-manifest.json').read_text(encoding='utf-8-sig'))
+          expected = {'version': os.environ['BUILD_VERSION'], 'unityVersion': '6000.6.0f1', 'target': 'StandaloneWindows64', 'backend': 'Mono', 'result': 'Succeeded', 'errors': 0}
+          for key, value in expected.items():
+              if manifest.get(key) != value:
+                  raise SystemExit(f'Unity build manifest mismatch: {key} expected {value!r}, observed {manifest.get(key)!r}')
+          provenance = {'schemaVersion': 1, 'sourceSha': os.environ['SOURCE_SHA'], 'sourceHeadSha': os.environ['SOURCE_HEAD_SHA'], 'version': os.environ['BUILD_VERSION'], 'runUrl': os.environ['RUN_URL'], 'unityVersion': '6000.6.0f1', 'target': 'StandaloneWindows64', 'backend': 'Mono', 'editorImage': 'unityci/editor@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71', 'playerSha256': hashlib.sha256((output / 'KeyLearner.exe').read_bytes()).hexdigest(), 'buildManifest': manifest}
+          (output / 'ci-provenance.json').write_text(json.dumps(provenance, indent=2) + '\n', encoding='utf-8')
+          print('PASS: actual Unity Windows player payload and source/run provenance exist.')
+          PY
+      - name: Upload Windows Unity player
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyLearner-Unity-Windows-player-${{ needs.unity-preflight.outputs.version }}
+          path: |
+            artifacts/unity-windows/**
+            !artifacts/unity-windows/*_BackUpThisFolder_ButDontShipItWithYourGame/**
+            !artifacts/unity-windows/*_BurstDebugInformation_DoNotShip/**
+            !artifacts/unity-windows/**/*.pdb
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload Unity test results and build report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyLearner-Unity-test-results-${{ github.run_number }}
+          path: |
+            artifacts/unity-tests/**/*.xml
+            artifacts/unity-migration/build-result.txt
+            artifacts/unity-windows/build-manifest.json
+            artifacts/unity-windows/ci-provenance.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  unity-installer:
+    name: Unity Windows installer and upgrade verification
+    needs: [build, unity-preflight, unity]
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download Unity Windows player from this run
+        uses: actions/download-artifact@v4
+        with:
+          name: KeyLearner-Unity-Windows-player-${{ needs.unity-preflight.outputs.version }}
+          path: artifacts/unity-windows
+      - name: Download MonoGame baseline installer from this run
+        uses: actions/download-artifact@v4
+        with:
+          name: KeyLearner-MonoGame-Windows-installer
+          path: artifacts/unity-ci-baseline
+      - name: Install pinned installer compiler
+        shell: pwsh
+        run: |
+          $destination = Join-Path $env:RUNNER_TEMP 'inno-setup.exe'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-7_1_0/innosetup-7.1.0-x64.exe' -OutFile $destination
+          $expected = '0362A383ED217D4C4239B5933866DD96D3EB2102737DA92F80F6057A4B40DF2F'
+          if ((Get-FileHash $destination -Algorithm SHA256).Hash -ne $expected) { throw 'Compiler checksum mismatch' }
+          $compilerRoot = Join-Path $env:RUNNER_TEMP 'inno'
+          $setup = Start-Process $destination -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/CURRENTUSER','/NOICONS',"/DIR=$compilerRoot") -Wait -PassThru -WindowStyle Hidden
+          if ($setup.ExitCode -ne 0) { throw 'Compiler installation failed' }
+          "INNO_COMPILER=$compilerRoot\ISCC.exe" >> $env:GITHUB_ENV
+      - name: Build Unity installer
+        shell: pwsh
+        env:
+          BUILD_VERSION: ${{ needs.unity-preflight.outputs.version }}
+        run: ./scripts/build-unity-installer.ps1 -Version $env:BUILD_VERSION -Compiler $env:INNO_COMPILER
+      - name: Verify MonoGame to Unity upgrade and cleanup
+        shell: pwsh
+        env:
+          BUILD_VERSION: ${{ needs.unity-preflight.outputs.version }}
+        run: |
+          $baseline = @(Get-ChildItem artifacts/unity-ci-baseline/*.exe)
+          if ($baseline.Count -ne 1) { throw 'Expected exactly one same-run MonoGame baseline installer.' }
+          $installer = "artifacts/installer/KeyLearner-$env:BUILD_VERSION-win-x64-setup.exe"
+          $output = Join-Path $PWD 'artifacts/unity-ci-installer-test'
+          ./scripts/test-unity-installer.ps1 -Installer $baseline[0].FullName -UpgradeInstaller $installer -BaselineIsMonoGame -Output $output
+          $report = Join-Path $output 'result.json'
+          if (!(Test-Path -LiteralPath $report)) { throw 'Unity installer acceptance did not run; a skipped preflight is not a passing CI test.' }
+          $result = Get-Content -LiteralPath $report -Raw | ConvertFrom-Json
+          if (!$result.passed -or !$result.uninstalled -or !$result.profileFilesUnchanged -or !$result.unlistedCustomFilePreserved -or $result.obsoleteFilesRemoved -le 0) { throw 'Unity installer upgrade or scoped cleanup did not pass.' }
+          Copy-Item artifacts/unity-windows/ci-provenance.json artifacts/installer/ci-provenance.json
+          $provenance = Get-Content artifacts/installer/ci-provenance.json -Raw | ConvertFrom-Json
+          $provenance | Add-Member -NotePropertyName installerSha256 -NotePropertyValue ((Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant())
+          $provenance | Add-Member -NotePropertyName installerAcceptance -NotePropertyValue $result
+          $provenance | ConvertTo-Json -Depth 12 | Set-Content artifacts/installer/ci-provenance.json -Encoding utf8
+      - name: Upload verified Unity laptop installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyLearner-Unity-Windows-installer-${{ needs.unity-preflight.outputs.version }}
+          path: |
+            artifacts/installer/KeyLearner-${{ needs.unity-preflight.outputs.version }}-win-x64-setup.exe
+            artifacts/installer/KeyLearner-${{ needs.unity-preflight.outputs.version }}-win-x64-setup.exe.sha256
+            artifacts/installer/ci-provenance.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload installer acceptance reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyLearner-Unity-installer-results-${{ github.run_number }}
+          path: |
+            artifacts/unity-ci-installer-test/preflight.json
+            artifacts/unity-ci-installer-test/result.json
+          if-no-files-found: warn
           retention-days: 30
