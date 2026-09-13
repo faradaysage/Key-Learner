@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><TargetFramework>netstandard2.1</TargetFramework><LangVersion>9.0</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems><DefineConstants>UNITY_EDITOR;UNITY_STANDALONE_WIN</DefineConstants></PropertyGroup>
+ <ItemGroup>
+  <Compile Include="../../UnityPort/Assets/KeyLearner/**/*.cs"/>
+  <ProjectReference Include="../../Shared/KeyLearner.Domain.csproj"/>
+  <Reference Include="$(UnityEditor)/Data/Managed/UnityEngine/*.dll"/>
+
+  <Reference Include="../../UnityPort/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll"/>
+  <Reference Include="../../UnityPort/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll"/>
+ </ItemGroup>
+ <Target Name="ValidateUnityEditor" BeforeTargets="ResolveReferences"><Error Condition="'$(UnityEditor)' == ''" Text="Pass -p:UnityEditor=&lt;discovered Unity Editor directory&gt;."/></Target>
+</Project>
+

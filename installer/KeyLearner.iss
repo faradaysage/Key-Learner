@@ -41,15 +41,24 @@ VersionInfoVersion={#AppVersion}
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Shortcuts:"; Flags: unchecked
 
 [Files]
+#ifdef UnityPort
+Source: "{#PublishDir}\*"; DestDir: "{app}"; Excludes: "*_BackUpThisFolder_ButDontShipItWithYourGame,*_BackUpThisFolder_ButDontShipItWithYourGame\*,*_BurstDebugInformation_DoNotShip,*_BurstDebugInformation_DoNotShip\*,*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
+#else
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+#endif
 
 [Icons]
 Name: "{group}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
-Name: "{group}\KeyLearner Parent Studio"; Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio"; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
+Name: "{group}\KeyLearner Parent Studio"; Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio --data ""{localappdata}\KeyLearner"""; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
 Name: "{autodesktop}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; WorkingDir: "{app}"; Tasks: desktopicon; AppUserModelID: "KeyLearner.Desktop"
 
 [Run]
-Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio"; Description: "Open the parent studio"; Flags: nowait postinstall skipifsilent unchecked
+Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio --data ""{localappdata}\KeyLearner"""; Description: "Open the parent studio"; Flags: nowait postinstall skipifsilent unchecked
 
 ; Profiles live separately under LocalAppData\KeyLearner. Neither upgrades nor
 ; uninstall remove dictionaries, recordings, settings, or learned preferences.
+
+
+#ifdef UnityPort
+#include "LegacyMonoGameFiles.iss"
+#endif

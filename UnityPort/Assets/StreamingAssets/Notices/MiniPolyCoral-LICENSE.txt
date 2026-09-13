@@ -1,0 +1,9 @@
+Coral Reef Kit by MiniPoly
+Creative Commons Attribution 3.0 Unported
+https://creativecommons.org/licenses/by/3.0/
+https://poly.pizza/bundle/Coral-Reef-Kit-ghN8EmbYa6
+Creator: https://poly.pizza/u/MiniPoly
+
+Six FBX models (CoralReefSet1 through CoralReefSet6) manually supplied by the user. Bundle attribution and exact license supplied directly by the user on 2026-09-13. No automated access to Poly Pizza was used.
+Changes: Unity URP material adaptation, scale/pivot normalization and scene composition. Source meshes preserved.
+Credit: Coral Reef Kit by MiniPoly, CC BY 3.0, via Poly Pizza.

@@ -1,0 +1,65 @@
+# Unity Windows, speech, and profile integration
+
+`UnityPort/Assets/KeyLearner/Platform` contains the engine-facing platform adapters. `KeyLearner.Domain` contains the original physical ledger, immutable snapshots, parent hold/tap recognition, input-focus policy, learning models, and save contract. A minigame receives `GameServices.Keys`, ordinary transitions, and lifecycle calls; it never owns a Windows hook or writes OS settings.
+
+## Input ownership
+
+`WindowsInputSession` identifies the Unity player HWND by native process/window ownership, acquires the same `Local\KeyLearner.ProtectedSession` mutex as MonoGame, and starts `KeyboardGuard` disarmed. The guard is a mechanical adaptation of `Studio/KeyboardGuard.cs` with an explicit player HWND and Unity-compatible language surface. Every callback checks actual foreground HWND plus desktop `UOI_IO` before reading key data, checks again before feeding the physical ledger, and passes through on failed ownership. Foreground/desktop events revoke capture; only the focused visible Unity update loop can rearm it. The hook renews on its original one-second message-pump timer.
+
+Physical scan/extended-key identity, modifier normalization, duplicate virtual-key references, Pause pulses, injected-packet handling, bounded transition overflow/rebuild, and immutable 256-key snapshots use the shared production domain implementation. Events older than 250 ms are discarded. Parent actions inspect live snapshots independently of word/gesture consumers. The options hold, exit hold, ten complete O/Escape taps, and unmodified double-G route retain their existing rules.
+
+`InputFrame.Reset` instructs the suite to stop speech/effects and reset the active game's transient state. Parent Studio cancels editing/calibration/benchmark transients. Foreground loss restores accessibility flags and removes topmost ownership. Protected play refuses ordinary application close requests; parent exit calls `AuthorizeExit` before quitting. This remains a Windows session guard with the existing secure-desktop, hardware, and touchpad limitations.
+
+## Temporary accessibility lease
+
+Only Sticky/Filter/Toggle Keys shortcut and confirmation bits (`0x0c`) are cleared; feature-enabled bits remain intact. Original/applied flags are recorded using the original JSON lease shape. A separate self-contained `KeyLearner.PlatformHelper.exe --restore-accessibility` observes the Unity process ID and start time, restoring the original shortcut bits after process exit. Normal focus loss/disposal restores the lease immediately. Restoration preserves unrelated flags and checks that the current shortcut bits still match this lease before changing them. Preview and standalone Parent Studio do not construct a lease, install hooks, or alter accessibility settings.
+
+The helper must exist before protected input can arm. The helper is built into `StreamingAssets/Platform` by `scripts/build-unity-platform.ps1`; it does not launch another Unity graphics process.
+
+## Speech and effects
+
+`UnityAudioService` maintains reserved bounded lanes: up to five key lanes and three word lanes (defaults four/two). New ordinary requests do not cancel current words. Family WAV recording, model prepared/cached WAV, and bundled WAV precede Windows speech. WAVs use Unity `AudioSource`s and the original global/effect volume policy. Effects use a separate eight-source bus, including procedural retry, sonar, horn, and power-up tones; fire has its own loop. Focus/parent transitions and obsolete serialized math prompts intentionally call `Stop`.
+
+Windows speech uses eight warmed reusable `System.Speech` synthesizers in the helper, isolated from Unity Mono's framework. Commands/completions travel over an unpredictable local named pipe restricted to the current Windows user. Completion tickets prevent canceled prompts completing a newer lane. No speech/key text is logged to files or sent to a service. A bounded wait prevents a failed speech completion freezing the math state machine. Optional parent-configured Piper prepares future WAVs in a bounded background worker; it never replays stale work. Piper itself and its model are not redistributed.
+
+## Profiles and launch contract
+
+`LaunchOptions` keeps `%LOCALAPPDATA%\KeyLearner` for normal play. `--data <directory>` explicitly selects a writable profile. `--preview` without `--data` creates a unique temporary directory; Editor runs also isolate themselves. `--studio` alone is an unprotected real-profile editor. Installer Parent Studio shortcuts explicitly pass `--preview --studio --data <LocalAppData>\KeyLearner`, fixing the old shortcut/isolation regression while retaining QA isolation.
+
+All settings/property names, numeric game IDs, dictionaries, word habits, gesture training, math progression, original-file read fallback, and `.bak` replacement behavior remain in the shared `Store`. Unity does not use `JsonUtility` or PlayerPrefs to migrate these files. Custom image/WAV paths remain parent-owned external references.
+
+## Verification
+
+```powershell
+./scripts/build-unity-platform.ps1
+./scripts/test-unity-scripts.ps1 -UnityEditor '<discovered Editor directory>'
+dotnet run --project tools/KeyLearner.PlatformProbe/KeyLearner.PlatformProbe.csproj -c Release -- UnityPort/Assets/StreamingAssets/Platform/KeyLearner.PlatformHelper.exe
+./scripts/verify-unity.ps1 -StaticOnly -Modes @(3,4,5)
+```
+
+The script compile smoke checks all Unity runtime and Editor C# against the selected Editor and imported URP assemblies. The native probe never arms capture or changes accessibility flags. It checks installation/release of pass-through native callbacks, desktop querying, empty disarmed input, helper warmup, zero-volume synthesis completion, and clean shutdown. It passed locally with two installed Windows voices. The original 1,193 shared model checks separately cover physical-key, progression, persistence, and regression rules.
+
+Actual protected keyboard/touchpad mash and focus recovery on secure desktops remain separate target-laptop acceptance checks. These must not be inferred from compilation or gameplay screenshots. Accessibility normal and crash restoration were subsequently verified by the dedicated native test below.
+
+The Windows player also has guarded `--preview --ux-verify <directory>` automation for picker/Parent Studio regressions. The separate native acceptance runners operate only on their own preview process. They exercise actual minimize/restore focus callbacks and mouse input mapped through the current logical canvas; these are separate from, and do not claim to verify, physical keyboard-hook authorization, secure-desktop containment, accessibility restoration, or laptop touchpad gestures.
+
+First actual Windows UX pass: `artifacts/unity-ux-visible/ux-state.json` records 21 passing interaction assertions and 14 screenshots, including nine Parent Studio tabs, credits, picker categories/pages, isolated setting persistence, and actual minimize/restore focus recovery. This pass exposed a separate white-panel rendering defect in shared UI, which is tracked and corrected in the subsequent visual build; interaction assertions alone are not visual acceptance.
+
+Native pointer acceptance on the first visible player passed all seven cases under `artifacts/unity-pointer-first`: Dot Pop at 1366×768 and 720×1080, plus each of the five math games. Each case independently checked logical-to-client coordinate mapping, rejected an actual right-button press, and reached reward using a native left-button press. Make a Number additionally rejected the rapid second press on its first cell and correctly built three dots. Each directory includes the accepted state and final screenshot. Test outputs are disposable; the real five parent save hashes were unchanged. The report's initial `rapidSecondPressIgnored: false` on non-MakeNumber cases means that extra check was not run for that mode; later runner output uses null for those cases.
+
+The separately invoked steering regression sends only a bounded right-arrow input to its own foreground preview, samples the player's reported right-key state and screen projection, and requires positive car-relative-to-road motion plus key release. This tests Unity-to-domain coordinate adaptation without changing domain movement rules or synthesizing parent authorization gestures.
+
+The platform publish also stages the exact restored .NET runtime and System.Speech MIT licenses and third-party notices under `StreamingAssets/Platform/Licenses`. Installer preflight requires these files. Their versions and package cache roots come from the selected runtime and restored project assets; private profile data and local Piper models are not included.
+
+The corrected visible-player pass in `artifacts/unity-ux-second` passed all 21 UX assertions and produced 14 screenshots. Visual inspection of Parent Experience, Learning (including Restart spelling), and Explore picker confirms the shared white-panel defect is fixed, controls are readable, and sections do not overlap. Native focus loss/return again canceled the unfinished editor.
+
+`artifacts/unity-pointer-second` passed all seven native answer cases with at least 18 active gameplay seconds per capture, right-button rejection, and Make a Number rapid-second-press suppression. `artifacts/unity-steering-second` passed the actual right-arrow adaptation test: 14 player reports acknowledged the 1.2-second hold, the car moved 467.92 pixels right relative to the projected road center, and release was acknowledged. Each run verified the real parent save hashes remained unchanged. These checks cover the preview's actual mouse/arrow and focus paths; physical parent-chord authorization, secure desktops, and touchpad isolation retain their separate acceptance scope. The dedicated accessibility test below covers actual normal and crash restoration.
+
+Preview interaction reports are an observation channel, not part of gameplay state. Native QA reads use `FileShare.ReadWrite | FileShare.Delete`, allowing the player to atomically replace a report while an earlier snapshot is being read. Quantity preview writers commit the last-reported signature only after a successful write, and retry on a later tick after transient IO/access errors. The pointer runner's optional `-HoldReportReadLock` fixture deliberately denies replacement for 500 ms across an actual answer click, then checks the reward, continued gameplay and absence of runtime errors. These report files and controls are enabled only in isolated preview sessions.
+
+The final reporting patch passed all seven native pointer cases in `artifacts/unity-pointer-acceptance`, including the forced report lock in both Dot Pop orientations. Make Number retained rapid-double-press rejection, and all modes ignored right-click answers. `artifacts/unity-steering-acceptance` measured an actual 1.2-second right hold moving the car 463.96 pixels right relative to the road across 14 acknowledged samples; key release was observed. Ten further independent Dot Pop landscape launches passed in `artifacts/unity-dot-stability`, with per-run captures, diagnostics and a combined `summary.json`.
+
+An earlier Dot Pop launch had a native UnityPlayer access violation before answering (`0xc0000005`, module offset `0x0109CD3F`). Its crash dump, Windows events and log remain in `artifacts/unity-pointer-final/mode-6-1366x768`. This was separate from the reproduced and fixed preview report-sharing exception. The native crash did not recur in the later ten-run check; those passes do not establish a root-cause fix for it.
+
+`artifacts/unity-accessibility-acceptance/result.json` records a successful actual Unity lease and packaged-helper test. `scripts/test-unity-accessibility.ps1` ran early `--probe-accessibility` diagnostics in batch/no-graphics mode, without a keyboard hook or parent profile. All original SPI fields were snapshotted: shortcut flags changed 510→498, 126→114 and 62→50 (only `0x0c`), while feature-enabled flags and FilterKeys timing values stayed unchanged. Normal disposal restored the complete structures. The test then identified the exact packaged guardian process, terminated only its diagnostic owner after checking PID/start time/executable, and observed the guardian restore every original value and remove its own lease. Final cleanup and all five real parent profile hashes also matched. This verifies accessibility restoration itself; it does not verify physical parent chords, secure desktops or laptop touchpad behavior.
+Installer acceptance also completed: `artifacts/unity-installer-acceptance-final/result.json` verifies the real 2.0.27-to-3.0.0 engine upgrade in an isolated application directory, stable identity, corrected real-profile Parent Studio shortcut, 300 obsolete shipped files removed, unlisted custom content preserved, and unchanged real save hashes. Its scoped uninstall and a fresh read-only preflight both passed. See `docs/installer.md` for the final package digest and the retained earlier test-assumption failure.

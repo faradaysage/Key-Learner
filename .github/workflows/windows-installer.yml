@@ -1,4 +1,4 @@
-name: Windows installer
+name: MonoGame compatibility and installer
 on:
   push:
     branches: [main]
@@ -23,6 +23,11 @@ jobs:
         run: |
           dotnet run --project tests/KeyLearner.Tests.csproj -c Release
           if ($LASTEXITCODE -ne 0) { throw 'Tests failed' }
+      - name: Shared Unity domain regression tests
+        shell: pwsh
+        run: |
+          dotnet run --project Shared/Tests/KeyLearner.Domain.Regression.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Shared domain tests failed' }
       - name: Install pinned installer compiler
         shell: pwsh
         run: |
@@ -58,7 +63,7 @@ jobs:
       - name: Upload laptop installer
         uses: actions/upload-artifact@v4
         with:
-          name: KeyLearner-Windows-installer
+          name: KeyLearner-MonoGame-Windows-installer
           path: |
             artifacts/installer/*.exe
             artifacts/installer/*.sha256

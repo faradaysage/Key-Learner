@@ -50,7 +50,7 @@ public sealed class WordRecognizer
     private WordEntry? Pop()=>output.TryDequeue(out var word)?word:null;
     public WordEntry? Add(char c,double now,InputContext context,string? target=null)
     {
-        if(!char.IsAsciiLetter(c)) {Close(target);return Pop();}
+        if(!(c is >= 'a' and <= 'z' or >= 'A' and <= 'Z')) {Close(target);return Pop();}
         // Concurrent key clusters are not spelling. Rate or a learned gesture label alone
         // must never erase an exact word (adult typing is often >6 characters/second).
         if(context.Held>=3) {Reset();return null;}
@@ -124,7 +124,7 @@ public sealed class CountingRecognizer
     public void Reset() { Expected=1; Pending=""; }
     public int? Add(char digit,double now)
     {
-        if(!char.IsAsciiDigit(digit)) return null;
+        if(!(digit is >= '0' and <= '9')) return null;
         if(now-last>4) Pending="";
         last=now; Pending+=digit;
         var expected=Expected.ToString(System.Globalization.CultureInfo.InvariantCulture);

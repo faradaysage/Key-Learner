@@ -88,7 +88,7 @@ public sealed class MathRounds(int seed)
         var round=candidates[random.Next(candidates.Count)];
         if(activity==MathActivity.Duel){bool fewer=random.Next(2)==0;round=round with{Fewer=fewer,Answer=round.A==round.B?2:(fewer?round.A<round.B:round.A>round.B)?0:1,Choices=[0,1,2]};}
         else{
-            var options=Enumerable.Range(d.Level==1?1:0,d.Limit+(d.Level==1?0:1)).Where(n=>n!=round.Answer).OrderBy(_=>random.Next()).Take(d.Choices-1).Append(round.Answer).Order().ToArray();
+            var options=Enumerable.Range(d.Level==1?1:0,d.Limit+(d.Level==1?0:1)).Where(n=>n!=round.Answer).OrderBy(_=>random.Next()).Take(d.Choices-1).Append(round.Answer).OrderBy(n=>n).ToArray();
             round=round with{Choices=options};
         }
         previous=round;return round;

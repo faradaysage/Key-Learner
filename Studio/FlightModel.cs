@@ -50,7 +50,7 @@ public sealed class FlightModel
         for(int i=0;i<steps;i++){
             Time+=h;course.Step(h);Pulse=Math.Max(0,Pulse-h*.7f);pulseCooldown=Math.Max(0,pulseCooldown-h);
             movement.Step(this,h,turn,pitch,accelerate,assist);
-            if(rollTime>0){rollTime=Math.Max(0,rollTime-h);float t=1-rollTime/.8f;Roll+=rollDirection*MathF.Tau*(t*t*(3-2*t));}
+            if(rollTime>0){rollTime=Math.Max(0,rollTime-h);float t=1-rollTime/.8f;Roll+=rollDirection*(2*MathF.PI)*(t*t*(3-2*t));}
             if(Collected>=Word.Length)continue;
             if(Pulse>0){var d=Position+Forward*18-Gate;Gate+=d*(1-MathF.Exp(-h*1.4f))*Pulse;}
             if(Vector3.Distance(Position,Gate)<(Pulse>0?17:Kind==ExplorerKind.Racer?12:10)){

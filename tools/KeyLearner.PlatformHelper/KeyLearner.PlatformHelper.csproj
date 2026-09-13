@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net8.0-windows</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><ApplicationIcon>../../Content/Branding/KeyLearner.ico</ApplicationIcon></PropertyGroup>
+  <ItemGroup><PackageReference Include="System.Speech" Version="9.0.0"/><Compile Include="../../Studio/AccessibilitySession.cs" Link="AccessibilitySession.cs"/></ItemGroup>
+</Project>

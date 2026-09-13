@@ -75,10 +75,10 @@ public sealed class Settings
         Bounce = Finite(Bounce, 0, .95, .65); EffectStrength = Finite(EffectStrength, .1, 2, 1);
         FontScale = Finite(FontScale, .5, 1.8, 1);
         WindowsVoice ??= ""; PiperExecutable ??= ""; PiperModel ??= "";
-        if (!Enum.IsDefined(Backdrop)) Backdrop=Backdrop.Starfield;
-        if (!Enum.IsDefined(Theme)) Theme = Mood.PrimaryColors;
-        if (!Enum.IsDefined(Mode)) Mode = PlayMode.SmashGarden;
-        if (!Enum.IsDefined(Font)) Font = LetterFont.Fredoka;
+        if (!Enum.IsDefined(typeof(Backdrop),Backdrop)) Backdrop=Backdrop.Starfield;
+        if (!Enum.IsDefined(typeof(Mood),Theme)) Theme = Mood.PrimaryColors;
+        if (!Enum.IsDefined(typeof(PlayMode),Mode)) Mode = PlayMode.SmashGarden;
+        if (!Enum.IsDefined(typeof(LetterFont),Font)) Font = LetterFont.Fredoka;
     }
     private static double Finite(double n, double min, double max, double fallback) => double.IsFinite(n) ? Math.Clamp(n,min,max) : fallback;
 }
@@ -114,7 +114,7 @@ public sealed class Store
     public MathProgress MathLearning {get;private set;}=new();
     public List<WordEntry> Words { get; }
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
-    public Store(string? root = null)
+    public Store(string? root = null,string? contentRoot = null)
     {
         Root = root ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KeyLearner");
         Directory.CreateDirectory(Root);
@@ -136,7 +136,7 @@ public sealed class Store
         if(Gestures.SchemaVersion!=1)Gestures=new();
         Gestures.Network??=new();Gestures.Network.Validate();
         if (!double.IsFinite(Profile.TypingInterval)) Profile.TypingInterval = .4;
-        Words = Read<List<WordEntry>>("words.json") ?? ImportWords();
+        Words = Read<List<WordEntry>>("words.json") ?? ImportWords(contentRoot??AppContext.BaseDirectory);
         Words.RemoveAll(w => w is null || !ValidWord(w.Word));
         if(Settings.EffectsVersion<1) {foreach(var w in Words.Where(w=>w.Effect==Celebration.Confetti && string.IsNullOrEmpty(w.EffectPreset)))w.Effect=Celebration.Embers;Settings.EffectsVersion=1;}
         foreach (var w in Words) { w.Word = w.Word.ToLowerInvariant(); w.Spoken ??= ""; w.Recording ??= ""; w.Image ??= ""; }
@@ -171,24 +171,30 @@ public sealed class Store
         var path = Path.Combine(Root,name);
         File.WriteAllText(path + ".tmp",JsonSerializer.Serialize(value,Json));
         if (File.Exists(path)) File.Copy(path,path + ".bak",true);
+#if NETSTANDARD2_1
+        // Unity's API has no overwrite Move. Replace is atomic and keeps the same .bak policy.
+        if (File.Exists(path)) File.Replace(path + ".tmp",path,null);
+        else File.Move(path + ".tmp",path);
+#else
         File.Move(path + ".tmp",path,true);
+#endif
     }
     public void ResetWordLearning()=>Profile=new();
     public void ResetGestureTraining()=>Gestures=new();
     public void ResetLearning(){ResetWordLearning();ResetGestureTraining();}
-    private static List<WordEntry> ImportWords()
+    private static List<WordEntry> ImportWords(string contentRoot)
     {
         string[] seeds = ["milk","mom","mommy","dad","daddy","cat","dog","sun","moon","star","rain","fish","bird","bear","tree","apple","happy","love","ball","book","blue","red","green","yellow"];
         var words = seeds.ToDictionary(w => w, w => new WordEntry { Word=w, Adventure=w.Length <= 5, Effect = w == "rain" ? Celebration.Rain : w == "moon" ? Celebration.Orbit : Celebration.Embers });
-        var dir = Path.Combine(AppContext.BaseDirectory,"data");
-        if (Directory.Exists(dir)) foreach (var file in Directory.GetFiles(dir,"*_dictionary.csv").Order())
+        var dir = Path.Combine(contentRoot,"data");
+        if (Directory.Exists(dir)) foreach (var file in Directory.GetFiles(dir,"*_dictionary.csv").OrderBy(path=>path))
             foreach (var line in File.ReadLines(file).Skip(1))
             {
                 var parts = line.Split(','); var word = parts[0].Trim().ToLowerInvariant();
                 if (!ValidWord(word)) continue;
                 if (!words.TryGetValue(word,out var entry)) words[word] = entry = new() { Word=word };
-                if (parts.Length > 1 && parts[1].Trim().Length > 0) entry.Image = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,parts[1].Trim()));
-                if (parts.Length > 2 && parts[2].Trim().Length > 0) entry.Recording = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,parts[2].Trim()));
+                if (parts.Length > 1 && parts[1].Trim().Length > 0) entry.Image = Path.GetFullPath(Path.Combine(contentRoot,parts[1].Trim()));
+                if (parts.Length > 2 && parts[2].Trim().Length > 0) entry.Recording = Path.GetFullPath(Path.Combine(contentRoot,parts[2].Trim()));
             }
         return words.Values.OrderBy(w=>w.Word).ToList();
     }

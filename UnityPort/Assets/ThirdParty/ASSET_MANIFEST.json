@@ -1,0 +1,2503 @@
+{
+  "verified_date": "2026-09-13",
+  "source_archives": {
+    "QuaterniusNature": {
+      "archive": "stylized_nature_megakitstandard.zip",
+      "sha256": "298f6732b872e4cf7b30e6e7abf9641c7f6dc6b326df37ac089533ed7e3d58c9",
+      "imported": [
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Bush_Common.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Bush_Common_Flowers.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Clover_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Clover_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_4.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_5.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_4.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_5.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Fern_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_3_Group.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_3_Single.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_4_Group.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_4_Single.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Common_Short.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Common_Tall.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Wispy_Short.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Wispy_Tall.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Mushroom_Common.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Mushroom_Laetiporus.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_4.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_5.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_4.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_5.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_6.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_4.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_5.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_4.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_5.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_1_Big.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_7.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_7_Big.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Small_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Small_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Small_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Thin.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Wide.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Small_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Small_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Small_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Thin.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Wide.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Rock_Medium_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Rock_Medium_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Rock_Medium_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_4.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_5.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/License_Standard.txt",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_DeadTree.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_DeadTree_Normal.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_NormalTree.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_NormalTree_Normal.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_TwistedTree.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_TwistedTree_Normal.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Flowers.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Grass.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaf_Pine.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaf_Pine_C.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_GiantPine_C.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_NormalTree.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_NormalTree_C.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_TwistedTree.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_TwistedTree_C.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Mushrooms.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/PathRocks_Diffuse.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Rocks_Desert_Diffuse.png",
+        "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Rocks_Diffuse.png"
+      ]
+    },
+    "QuaterniusFish": {
+      "archive": "animated_fish_quaternius.zip",
+      "sha256": "c56a4bf3468e900ed9d881037334152dc203f93b656373347c8a7fc3dedb1855",
+      "imported": [
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Dolphin.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Fish1.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Fish2.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Fish3.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Manta ray.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Shark.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Whale.fbx",
+        "UnityPort/Assets/ThirdParty/QuaterniusFish/License.txt"
+      ]
+    },
+    "KenneyCars": {
+      "archive": "kenney_car-kit.zip",
+      "sha256": "fac7dacac5c7874348cf19729af3ef205f3d366493edaf0a827d93f4fdf3d0c4",
+      "imported": [
+        "UnityPort/Assets/ThirdParty/KenneyCars/License.txt",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/ambulance.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/box.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/cone-flat.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/cone.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-bolt.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-bumper.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-door-window.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-door.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-drivetrain-axle.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-drivetrain.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-nut.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-small-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-small-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-spoiler-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-spoiler-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-tire.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/delivery-flat.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/delivery.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/firetruck.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/garbage-truck.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/hatchback-sports.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oobi.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oodi.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-ooli.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oopi.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oozi.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/police.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/race-future.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/race.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/sedan-sports.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/sedan.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/suv-luxury.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/suv.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/taxi.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/Textures/colormap.png",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/tractor-police.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/tractor-shovel.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/tractor.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/truck-flat.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/truck.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/van.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-dark.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-default.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-racing.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-back.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-dark-back.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-dark-front.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-front.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-truck.fbx"
+      ]
+    },
+    "KenneySuburban": {
+      "archive": "kenney_city-kit-suburban_20.zip",
+      "sha256": "5869c35cf30b1c87bdb2d197b6d325eebadd2ef08ea27f04797e8e08d77a9a39",
+      "imported": [
+        "UnityPort/Assets/ThirdParty/KenneySuburban/License.txt",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-c.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-d.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-e.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-f.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-g.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-h.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-i.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-j.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-k.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-l.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-m.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-n.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-o.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-p.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-q.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-r.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-s.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-t.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-u.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/driveway-long.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/driveway-short.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-1x2.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-1x3.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-1x4.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-2x2.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-2x3.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-3x2.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-3x3.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-low.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-long.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-short.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-stones-long.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-stones-messy.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-stones-short.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/planter.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/Textures/colormap.png",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/tree-large.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/Models/tree-small.fbx",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/PaletteVariants/variation-a.png",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/PaletteVariants/variation-b.png",
+        "UnityPort/Assets/ThirdParty/KenneySuburban/PaletteVariants/variation-c.png"
+      ]
+    },
+    "KenneyCommercial": {
+      "archive": "kenney_city-kit-commercial_2.1.zip",
+      "sha256": "f8b09b081c2bb88bcc126e2dec1cb40fd0dad7e7e591b6c26aaefe96fb35276b",
+      "imported": [
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/License.txt",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-c.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-d.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-e.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-f.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-g.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-h.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-i.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-j.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-k.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-l.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-m.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-n.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-c.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-d.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-e.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-awning-wide.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-awning.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-overhang-wide.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-overhang.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-parasol-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-parasol-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-c.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-d.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-e.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-f.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-g.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-h.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-i.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-j.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-k.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-l.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-m.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-n.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-wide-a.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-wide-b.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/Textures/colormap.png",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/PaletteVariants/variation-a.png",
+        "UnityPort/Assets/ThirdParty/KenneyCommercial/PaletteVariants/variation-b.png"
+      ]
+    },
+    "KenneyRoads": {
+      "archive": "kenney_city-kit-roads.zip",
+      "sha256": "22058af3d68173a7cf9bda9f0e243a8cef6bd68168c302ebc76327063849674e",
+      "imported": [
+        "UnityPort/Assets/ThirdParty/KenneyRoads/License.txt",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/bridge-pillar-wide.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/bridge-pillar.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-cone.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-fence.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-light.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/dumpster.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-pole-single.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-pole-wide.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-pole.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-side-single.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-side-wide.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-side.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-wires-wide.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-wires.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-curved-cross.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-curved-double.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-curved.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-square-cross.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-square-double.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-square.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-sidewalk.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-square-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-square.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bridge.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossing.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad-line.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad-path.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-intersection-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-intersection.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-pavement.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-double-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-double.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-single-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-single.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end-round-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end-round.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection-line.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection-path.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-roundabout-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-roundabout.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-entry-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-entry.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-exit-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-exit.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-empty-hanging.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-empty.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-object-stop.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-object-street.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-object-warning.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-stop.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-street.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-warning.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-curve-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-curve.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-flat-curve.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-flat-high.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-flat.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-high-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-high.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-split-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-split.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-square-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-square.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-barrier-end.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-barrier-half.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-barrier.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-half.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/sign-highway-detailed.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/sign-highway-wide.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/sign-highway.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/Textures/colormap.png",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-high.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-low.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-slant.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-slantHigh.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-hanging.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-object-hanging.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-object-horizontal.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-object-vertical.fbx",
+        "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light.fbx"
+      ]
+    }
+  },
+  "public_creator_files": {
+    "QuaterniusCuteFish": [
+      {
+        "file": "BlueTang.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=10o_C5IoboQdAY_atzJDwgiSwQZeCyD0a",
+        "sha256": "2ed90544baff780900af7d1ac5eb249e8ebaffbbdb0db53f2256d59ffb54a596",
+        "bytes": 303740
+      },
+      {
+        "file": "ButterflyFish.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1d3VM3jIiLL04slsQn06MiGm8nogW-tZn",
+        "sha256": "a4320ab65ae27fcfa756545aeefec249b2d51bfc6ef94fc6a927c1889e4cf3be",
+        "bytes": 301804
+      },
+      {
+        "file": "Clownfish.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1ogBE40FyvQjbsrLRRcIPc2ldvqQVV8G1",
+        "sha256": "2589ef68edcda17190b199fcc7d7dc31c9468fe0bce0a2b0deedeefbe3f59d6b",
+        "bytes": 304828
+      },
+      {
+        "file": "CoralGrouper.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1yNwcJefaEwXTtpEWtx6a89HokyUxPrvx",
+        "sha256": "936621069372e90ab14fd16c17d8652bfde0b6386d5c97e8f60cb30f4930bfaa",
+        "bytes": 307052
+      },
+      {
+        "file": "Goldfish.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1qTRidk3QjQBO7GrwQuz8_QhGPyvsQ-jy",
+        "sha256": "808c49938cb200085e57b9caeb3870eba449dd440a0aa4efaaedc9d28800168b",
+        "bytes": 327724
+      },
+      {
+        "file": "Koi.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1eVVtIyZCrNyJYLoKyVMy8ms57EemAT5h",
+        "sha256": "f63e64fe10599cae828bc6f81cc98a7bfa6f7dd13688010f6133d3f1dc4bd6c3",
+        "bytes": 305292
+      },
+      {
+        "file": "MandarinFish.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=15-6jLQYSmaw-JyAPo5E2D01REfX74Gdp",
+        "sha256": "8122d516942c760c1eb066fd9ec38532e7cad616e594bbe6d915c173602c4345",
+        "bytes": 298876
+      },
+      {
+        "file": "MoorishIdol.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1E7tyai4SqOu2VEv64c6Sd-Kg0W1_A2kn",
+        "sha256": "442ef9c32d49f99a13cd945fcffa4836981c68e4f92d1f953ff4a5a123440f71",
+        "bytes": 303004
+      },
+      {
+        "file": "ParrotFish.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1Cmhze83EmhFkOJr8A9WONbQcMU2pVrdF",
+        "sha256": "307ff0e61ff5c5325e67089acab7c671b0984867a1256eab106a3c6ba5399f7a",
+        "bytes": 300396
+      },
+      {
+        "file": "Puffer.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1jvukg0wJP4y1bTmlelWKVzYAetgFxulE",
+        "sha256": "69dcd7d1606675b4aa684bc77f89e7fc6923c3da90d0d7d25706161ba9b4d430",
+        "bytes": 336924
+      },
+      {
+        "file": "RoyalGramma.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=10RbIT1E3VquhQ_vYE6bN3tOmhW-s0ULl",
+        "sha256": "ca8bbc7bb5fd343603bc712b03ad32b685111ebeaac71c73a4b94b321445223c",
+        "bytes": 300268
+      },
+      {
+        "file": "Tetra.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1NjKZsSKF7L_vLEb4K088qoaa36oJF3IT",
+        "sha256": "8d8ea0c101de6810d3a60a4b06941ade9abb10a8c511981ac41bd93697f90bef",
+        "bytes": 298172
+      }
+    ],
+    "QuaterniusFarm": [
+      {
+        "file": "Barn.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1V0eVUo_eAKIAtrWCf2ZxiJEX6d-Knhry",
+        "sha256": "9c2d565bde1012a8bffb05c641a35dab748f59a7a612209093f12273ae36a365",
+        "bytes": 59484
+      },
+      {
+        "file": "BigBarn.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1UEFF-6zGNiYfKeLj8srV_jJvisD9RgPr",
+        "sha256": "f65f71246c7056f0e48276f259300aeee8f74ccac910f718837421980e50facd",
+        "bytes": 75900
+      },
+      {
+        "file": "ChickenCoop.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1wUEjZYRU9lHiiYIkDw66aHIQLcNumeKQ",
+        "sha256": "f037de32326147646cb4db05b3dedb8effeb4a59a1b1036d79ee86d84ecd743b",
+        "bytes": 30796
+      },
+      {
+        "file": "Fence.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1c0SNguly8AG2zcIWIvyi300m4It4V8Dl",
+        "sha256": "bc5b6c5afc48cc5b0bed12a57a98c0d2c2984b16fe4805f4a9c7196061854123",
+        "bytes": 17308
+      },
+      {
+        "file": "Silo.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1vDCNee7hjCCTOzvdgs8l5IdcVQmSErQi",
+        "sha256": "afcc8b63f1db8dfd8f8d1c417c4e5e63d2409d2ef10835920191516d160dac3c",
+        "bytes": 38588
+      },
+      {
+        "file": "TowerWindmill.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=17JL1rj_E1mPuM3SC13e62HPFZSAd_w-Z",
+        "sha256": "29e213f63a84464058de71a5bf21a553c3f13575593b368f2e9b2aed9e026731",
+        "bytes": 142620
+      },
+      {
+        "file": "WaterTower.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1I_BbSwEvA0uZKoJFmCXqoQV8gwCz7755",
+        "sha256": "2627e9da14ced3a9e62f4167bf3f819a3c34ad2d3b064747a1553497e5ec18fa",
+        "bytes": 46076
+      },
+      {
+        "file": "Well.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=16bw85R_OC-fyNQRsNj58TjWW69vjjZQi",
+        "sha256": "b5aa5b3f77a9eeba740a4ac4d58bac1ae08b7073424cbfcee0c215cbbd79210c",
+        "bytes": 68316
+      },
+      {
+        "file": "Windmill.fbx",
+        "download_url": "https://drive.google.com/uc?export=download&id=1IrJBhR4fSyTUN3Xkw5lOgFgKGsotMUB8",
+        "sha256": "5dddd661f5ad3b198a4f3235611088e9fc0ad473d35182c4d4362c7f2253916e",
+        "bytes": 39436
+      }
+    ]
+  },
+  "manual_archives": [
+    {
+      "archive": "Coral Reef Kit.undefined-zip.zip",
+      "sha256": "79bf98b20382256599d70510d6ed0c6dd158aab5ee76f408aeca54b60a8c303e",
+      "pack": "MiniPolyCoral"
+    },
+    {
+      "archive": "Seaweed by Mohabins - oYxUdpyc4u.zip",
+      "sha256": "8513185b24f951d7d607da9af637eaa024535ea1d82c407d2013208dade5f1fe",
+      "pack": "MohabinsSeaweed"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/License.txt",
+      "bytes": 696,
+      "sha256": "c33b7f6453d134deae7b1b8493717d9ccfa754c25ab97f6de89b88f8fda19b00"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/ambulance.fbx",
+      "bytes": 146544,
+      "sha256": "e526211635fbc07c3f92bae0eb953a9a4ef5781e17358a5b87120d8014cb06c2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/box.fbx",
+      "bytes": 29392,
+      "sha256": "a5841846122b5c3e45e48fbb125cf35875ce02e20d586effc3db689937005548"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/cone-flat.fbx",
+      "bytes": 30176,
+      "sha256": "410b68ada884b0345cb7717afa9b292edfb66af1f4e20a0f79221a4eb81ba1f5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/cone.fbx",
+      "bytes": 30144,
+      "sha256": "dc08fcf65f6e7b6b7e22e81698a7597734e2d70e232343967cdfe45a1257bbc3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-bolt.fbx",
+      "bytes": 28752,
+      "sha256": "b828da297647d92caf3588609c48594551d985280bf8b0959b17cbc309f3cc24"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-bumper.fbx",
+      "bytes": 26448,
+      "sha256": "83c0a6d9d4f9fc063de8283d67fcd21bbf86961ce71012177d43020e4a30f783"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-door-window.fbx",
+      "bytes": 27344,
+      "sha256": "73bcd68a01bb0f45c110b72dd8f3b7835b4194c3f2f796ccb2c2b4380919efbd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-door.fbx",
+      "bytes": 27072,
+      "sha256": "315aabf42828d152c6fe1e289f15e43a84c2882a50f8c609c276a9ca67ec5485"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-drivetrain-axle.fbx",
+      "bytes": 29360,
+      "sha256": "6390ec331d39e68821c72d6900a884981a60b2d16ee00c21176b7902ec8f0266"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-drivetrain.fbx",
+      "bytes": 34432,
+      "sha256": "aaaf22adec461d6097854e0def9d37f080fb50bcf670b3d18d9f31e5af70bb29"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-nut.fbx",
+      "bytes": 29040,
+      "sha256": "4eac9696c455d24036a2d88c28fdeb80a84bd82a457c957d09bcea5eb01b5dcf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-a.fbx",
+      "bytes": 28480,
+      "sha256": "a499ff36b5d11fb566a6674922169391e5cfd7d6d6bc480a8723344007e83d2e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-b.fbx",
+      "bytes": 26128,
+      "sha256": "9f15fc08f24d31e0eaeb297db366b762faf6f9d2bc92ed9561b29cc835ff903e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-small-a.fbx",
+      "bytes": 27600,
+      "sha256": "52d0416a4a71987b576d212a8c5955dd4e11a6a62dbef22faae1c0598eaf47f2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-plate-small-b.fbx",
+      "bytes": 26096,
+      "sha256": "bd9f5e09dee233c894efb934156fb997678574027f034e52e35050b786cd6730"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-spoiler-a.fbx",
+      "bytes": 25696,
+      "sha256": "70aa0f4c8fc591f2e981a4a6137a6466d07009450f05d9f9b50161f2e635a933"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-spoiler-b.fbx",
+      "bytes": 25488,
+      "sha256": "e3e3ab35540258b3df47ed808eb2adb898c3e79d1f8646cba06114689349cd45"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/debris-tire.fbx",
+      "bytes": 33184,
+      "sha256": "202d893c156e76dad189899e6ec59a319306538b726952b796ca6cd9ec649e25"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/delivery-flat.fbx",
+      "bytes": 131216,
+      "sha256": "c39a98fb42d3177f58b96862e20de7dbc723aca79cff2492ff253f3c0b76e61f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/delivery.fbx",
+      "bytes": 134544,
+      "sha256": "20b9d04fef940e003ef1bca4a1b3533bf443e81e43aa265972aa66a9d02bf60e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/firetruck.fbx",
+      "bytes": 136512,
+      "sha256": "db74bb037db6d9bbeea0c2b7e627c37cbf85a96353bb0c7c92a8f4a5de246ede"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/garbage-truck.fbx",
+      "bytes": 150560,
+      "sha256": "d6e9fe35e9b765d51df944a9c0a592f1b5089a7a113636add2822509ff30781c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/hatchback-sports.fbx",
+      "bytes": 116032,
+      "sha256": "ecd7df3d2be99bd0c798836031e093a02c259cfa0a4841233d4ab62e35cdd4bf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oobi.fbx",
+      "bytes": 183168,
+      "sha256": "4dae6311ff6520ed3ccef38d78f0344ecf86f88424dd0a8c6503cc5441d8d2f6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oodi.fbx",
+      "bytes": 169808,
+      "sha256": "cec13272edbed8d448bb61221def26e71f5c812276d029d6189e736ccf4617ac"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-ooli.fbx",
+      "bytes": 170512,
+      "sha256": "65e98626b067c90bf72aee9bb9d9f1cd9ab12a3a5ae246a29e0489c57e5cc143"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oopi.fbx",
+      "bytes": 172928,
+      "sha256": "80cfb1acad05ee55a7393510e66efb75c149d6ee2d5b0d823e4e1ab9daa3e090"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/kart-oozi.fbx",
+      "bytes": 175536,
+      "sha256": "f7c8c6fcf6cb109a80b45ecf045d17bb6ed21ae3de4fbfe14367272686c545d8"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/police.fbx",
+      "bytes": 125744,
+      "sha256": "fd7b79eca48b01aac186a9dec073f2f6aefddbf25a21914c88b84b977ed20bee"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/race-future.fbx",
+      "bytes": 113232,
+      "sha256": "9fd7faa615b99c811496ee743995068b010db0e95d916f0a2c5f147d6b9f9573"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/race.fbx",
+      "bytes": 111760,
+      "sha256": "40ef0c0caa3acb6b692661ea7648fc8b0b3e3a112bb99e6c73c7d2536f47b662"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/sedan-sports.fbx",
+      "bytes": 120400,
+      "sha256": "2dbcb4e218ee32d1bb4884d0e96bd29a0f3891d54e31e480c957752567ffea7c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/sedan.fbx",
+      "bytes": 114272,
+      "sha256": "0affa82e6b09440844b2d69dfccfa1ec962e5915b08c2740efe9abe3964ac579"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/suv-luxury.fbx",
+      "bytes": 115472,
+      "sha256": "b802c92d9aaa1c054f08822a692d7fde7870b51a5052d2d7cb9fad580db400cf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/suv.fbx",
+      "bytes": 135104,
+      "sha256": "d44b0558458fea1f51de83c62f5c21bf82e1feebcf1fca396a73a989bb6afb12"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/taxi.fbx",
+      "bytes": 115344,
+      "sha256": "084415c990ed48a6e05ce02da4de829b10ad0228fbe2068dfff5f4346d643a65"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/Textures/colormap.png",
+      "bytes": 12371,
+      "sha256": "f3622a03a20c6696065cae9cbe391351be873508af190c2ebd1d420c055787a5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/tractor-police.fbx",
+      "bytes": 134096,
+      "sha256": "1b21862bfd5dfe64e7a79e587f38326f9246c32bd295c089fdd4debad6872c0a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/tractor-shovel.fbx",
+      "bytes": 141184,
+      "sha256": "cc67050f9c05d84008e3607e6a99bb48314a19b21b0a2df4476d716a69e60ea2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/tractor.fbx",
+      "bytes": 124288,
+      "sha256": "0b9247f78366856ffc6c5e3aab95ef71325f197cd15023a5cf115ef2fc82a757"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/truck-flat.fbx",
+      "bytes": 124896,
+      "sha256": "5502e87aa979b1051e5071eca8ad910623e7e6aa918600a9da0910272f9c8ec6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/truck.fbx",
+      "bytes": 116272,
+      "sha256": "3820fb12d04a558fe2a8eaecd988c8ee865ea3898817bf40089777d76b0c5a8e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/van.fbx",
+      "bytes": 115488,
+      "sha256": "0717a81e7770300e96faa0a52910bea287f591ec8d0b956667f74819c5df0bbb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-dark.fbx",
+      "bytes": 35456,
+      "sha256": "a134fb75e05d10c74eec8f0aa5dfb5092005676d20e86711e72643c4d8ba8af2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-default.fbx",
+      "bytes": 34144,
+      "sha256": "241da720d24a74b839ff18c4e6b30b8ea5f0cc8a925fa04c01327b0be5277ce8"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-racing.fbx",
+      "bytes": 35456,
+      "sha256": "c779dba6ca48b46df4ed1244a026132eb84ba426370d945a3c1b8eef76b41dbe"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-back.fbx",
+      "bytes": 39648,
+      "sha256": "54fc6eaa21d6f45ab947bd93e16ef5fe4b55cd82a7c4fd1e4e49e438fa3c4499"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-dark-back.fbx",
+      "bytes": 38976,
+      "sha256": "9418037453fdee09a1b601d110905f0dcb2336dd96605ea17cf47de522e79628"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-dark-front.fbx",
+      "bytes": 35808,
+      "sha256": "1b26e3128a74532b44d689b002632d4f845fd17b49d8ecdbd33e69f884d1b18f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-tractor-front.fbx",
+      "bytes": 35776,
+      "sha256": "8b034e33d0678b69fc6a7564af6a83716fc7b418651ce65eb89b9c33e560343f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCars/Models/wheel-truck.fbx",
+      "bytes": 37696,
+      "sha256": "21090484ab58c404b3001fbfce09221a790f41faf5c9fd010b895c4846ce392e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/License.txt",
+      "bytes": 708,
+      "sha256": "c38cee408d022e57e44e49f1cd655c2fe0dc881a07b881276b795215cdc0de69"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-a.fbx",
+      "bytes": 56672,
+      "sha256": "3d383bdeb0ea180b703b92cd07ecdb01d6222703a378580437528868437c612d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-b.fbx",
+      "bytes": 56096,
+      "sha256": "26b153451c6ea1400e14cff0a6ce8411f0b114127b3081a29ad5ded98896b050"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-c.fbx",
+      "bytes": 57920,
+      "sha256": "557d52cde0289365a1ca7e0d32c595122e98f031923219b46ae196a78d97b975"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-d.fbx",
+      "bytes": 56320,
+      "sha256": "9176e712840f116f3837ccf861045b28048ceac545f09717486856ebf79ffc27"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-e.fbx",
+      "bytes": 64192,
+      "sha256": "09f9e92134d8e00e9a7e14c6e2ea62e201f1fe8605edfa668ba0eeb52049550c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-f.fbx",
+      "bytes": 71216,
+      "sha256": "d64a64ee4718b0f76778861bca9a971ac1f12f5c190dae7dbc07b5e42591a894"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-g.fbx",
+      "bytes": 73536,
+      "sha256": "ba972159cb1ff78ad2bf28011367167be6c7ff2cde66c6d58a0faede585897c2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-h.fbx",
+      "bytes": 62960,
+      "sha256": "4f6554d76944938cccb9b32c62f510123bb735784f8296011c9fb4507450ae1c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-i.fbx",
+      "bytes": 85424,
+      "sha256": "4e849bdbdda605b82087ada6cd730cd15565c886abc7566ea6f7a1b348317fc1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-j.fbx",
+      "bytes": 154032,
+      "sha256": "8f71730317760a9d8cd7d91a940c0f0b18dfbb14e081edcd8694264bad232040"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-k.fbx",
+      "bytes": 98816,
+      "sha256": "3561c873c6df83cbc4679885b930577c5ed2b686b5d646bb321ec81352bbe0c1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-l.fbx",
+      "bytes": 110864,
+      "sha256": "3bc4f8c8a54460b99b40b82a0e761024fe735a3b4911f025868d83267106d73c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-m.fbx",
+      "bytes": 109696,
+      "sha256": "d0497a11869a9e9fdd26859294c809e21e8e5a99edae53f3b0d112e55732d56d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-n.fbx",
+      "bytes": 129408,
+      "sha256": "c977f6879a8021291c8e79e1abb6d3f4862e63ae621749cd954c4d78dad11589"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-a.fbx",
+      "bytes": 56832,
+      "sha256": "769f629b00d7ed4d134163c1067e5524d2f46043a6c983fca132d97b717651b0"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-b.fbx",
+      "bytes": 63296,
+      "sha256": "2a5731e00b5f067151353569965795c484e3fd8df5228527e5790aabfbcc0bd4"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-c.fbx",
+      "bytes": 69344,
+      "sha256": "142a773ec0ab0745a20d80b22a99bb9f5802e99ef525130671ae6f802dc9a6fb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-d.fbx",
+      "bytes": 73200,
+      "sha256": "a1b8c3a6bcd2d980582805a4c1828b325f715909d0124c4996717d6dc719148f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/building-skyscraper-e.fbx",
+      "bytes": 51616,
+      "sha256": "bf223a5ee77fa80c91c6f3b83bc1ac7bb339167a85488f3e99066a4c0ef8fef0"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-awning-wide.fbx",
+      "bytes": 28576,
+      "sha256": "995e5a1d784f927a516a550bcd6026369d9726c3b4fed92c3dcff1dd8ba4d730"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-awning.fbx",
+      "bytes": 28528,
+      "sha256": "e718ffcb9d5d025288c09290244749e8f13aa58cce08334196c049c065d92a19"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-overhang-wide.fbx",
+      "bytes": 26576,
+      "sha256": "f4c284a0fae0e4f6435926638a8e6338df96b5bd8fec0172dffadd0678632e0d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-overhang.fbx",
+      "bytes": 26560,
+      "sha256": "1ac33863624ba4d51a19780f83967deefa38f166384b949006ba80d9fe67742d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-parasol-a.fbx",
+      "bytes": 26608,
+      "sha256": "1c6eae3191e70d1c63456f810376f55c2f149138508e2069823e59bf9eaa80b7"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/detail-parasol-b.fbx",
+      "bytes": 27536,
+      "sha256": "4da74cc9389e5094cdc326be056c621cd7d15d9f4e4f5df4b576d1889011eb05"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-a.fbx",
+      "bytes": 27760,
+      "sha256": "7bade3808bc0984c77d50d67616b482bd1fb3bb9bd6d6b077e2a5d840cf3fcd3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-b.fbx",
+      "bytes": 27968,
+      "sha256": "4b660cc533a6495ad205949202c3731ede42d99d9dbcb0e63348080dfae9faf2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-c.fbx",
+      "bytes": 26864,
+      "sha256": "f623fd7f10a8e546ab5cb186e3631eaf5ce4e8874fabf27c3e1afb311b0e7d3a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-d.fbx",
+      "bytes": 25936,
+      "sha256": "f20860ee8201979274fde5d92ac60ee441dbd023734fc6fcba9f8024287023e1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-e.fbx",
+      "bytes": 26160,
+      "sha256": "a0edbb719f5f56b576afb46b0d9550a3b74ac0080fd69ab2934399d3df7a0e55"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-f.fbx",
+      "bytes": 25504,
+      "sha256": "ebe8215155d97640da7a1ab6cc7c0005d22d66e372e4604f7b30fe1aeda3117b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-g.fbx",
+      "bytes": 27312,
+      "sha256": "771e355b103822e569312bd7c72496f31469cda727988fbee92c5e9fe62bc133"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-h.fbx",
+      "bytes": 31072,
+      "sha256": "908a94ad9ae84bf85313ebf6b38c822f02e7b41ebcc7b294dc57c29cf6e3bbf4"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-i.fbx",
+      "bytes": 26688,
+      "sha256": "e9014c011013526772027945a263e42d97ecb1a3cac3c210043888103ebc19a9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-j.fbx",
+      "bytes": 27936,
+      "sha256": "7e2d5c8380823890c635c04515bedefafb63f355d0185d797bfad234d87cbabc"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-k.fbx",
+      "bytes": 25392,
+      "sha256": "03b03700b694a9e41e97f3d3820b82c4b74c4d43b09379065b75ff923719c6bb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-l.fbx",
+      "bytes": 26784,
+      "sha256": "da474e2cc9d531dc50f0a074cc33a97cb3fc368acbded80bd9fd82e4493a0585"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-m.fbx",
+      "bytes": 27872,
+      "sha256": "8064e91d2e4deeacfad940e5733f83fd3947d46a5a9d0fea5986b81f8d8b52fe"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-n.fbx",
+      "bytes": 26592,
+      "sha256": "51ad9ec369b6892744dd57727761c4558e68c53ba64db7384ddd1199b1edb679"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-wide-a.fbx",
+      "bytes": 27040,
+      "sha256": "787b3e5f321e71748f84711b148f4c51fa8af139c95bc88d25bd9ee319fc6f0d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/low-detail-building-wide-b.fbx",
+      "bytes": 28704,
+      "sha256": "b53e52b7713667be2520a61bb1f3d8cb77c9b9c4d59495fbd432cc331989b8ca"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/Models/Textures/colormap.png",
+      "bytes": 11002,
+      "sha256": "191bec3889aaaca5018380038fecc129ebb5c2182879a099b7b538b3fa050b5d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/PaletteVariants/variation-a.png",
+      "bytes": 11020,
+      "sha256": "22be5afbdf78f8158ebd568667779e73ebc16f887481d3add35df59bf820b118"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/PaletteVariants/variation-b.png",
+      "bytes": 10897,
+      "sha256": "d7fa3fb6243fdb8cbcbbe8b61c4ff10ceb29aed23be806171f58cef13a8690e6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/License.txt",
+      "bytes": 703,
+      "sha256": "87b9404aef5dff6162ae1e53a27bc6427fe1cdd2e2dd5ec05fdd25f17da10498"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/bridge-pillar-wide.fbx",
+      "bytes": 28208,
+      "sha256": "41e616701a6e9f850a65a5e6c1dbf87c10a0d0e0aa2f6d3cc7e1cf4346bc1255"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/bridge-pillar.fbx",
+      "bytes": 28192,
+      "sha256": "9d87bd7aa74d650df92f5d1153753161dc19416dbb92bea00135f6ff226a133d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-barrier.fbx",
+      "bytes": 28112,
+      "sha256": "7a8f29008527c6711ec3db42ec449274ade8636100832cb82cb28d53920d0a19"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-cone.fbx",
+      "bytes": 26816,
+      "sha256": "5407851a763f4fa2943e8f9b86605647901774f553c88718d0ee7be6b831cddb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-fence.fbx",
+      "bytes": 30128,
+      "sha256": "39df903367c5de0488f04c589963862a6a2c304af71b632446516d30ce430561"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/construction-light.fbx",
+      "bytes": 29232,
+      "sha256": "daa4104e525a36970ed908244d37e0630ad356134c1139664424b74c83485734"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/dumpster.fbx",
+      "bytes": 49952,
+      "sha256": "50049d6dd6f29cbb3f5c94796f4cbeaf15976ef14bac77ae10ffc0c49ae15e8f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-pole-single.fbx",
+      "bytes": 32304,
+      "sha256": "db5c2186d372768e8106ceb8931800e63afe4880d6ffff5b3916220f06d83ab9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-pole-wide.fbx",
+      "bytes": 45376,
+      "sha256": "f1437e1a28a5a7389af37a6131d584016138a959ea2e4dcecc90d484d6aea805"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-pole.fbx",
+      "bytes": 40064,
+      "sha256": "75db77f4180521ee0e368f96c9a6ff2d70d11253794ccb0b186d28f3336e278f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-side-single.fbx",
+      "bytes": 32352,
+      "sha256": "b58d63dc82909ff36fa5842a9016571855142f5f6d731c67c31e19b1309779e1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-side-wide.fbx",
+      "bytes": 45536,
+      "sha256": "dc54e7b696feb1c8a01e3137f307e242959dbb2a1033186ef53db3833903d2f9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-side.fbx",
+      "bytes": 39984,
+      "sha256": "a4a8e80a4111635ea42a8af371f83250937f09038309a8a2de6d9bda3c7ad3d1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-wires-wide.fbx",
+      "bytes": 33616,
+      "sha256": "99fd81eb13d4dc32db5d8fd89b149dadeac115543e06ff18be9b911cebe314b5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/electricity-wires.fbx",
+      "bytes": 28784,
+      "sha256": "c7322192847ecbed91109a22cfd320382ef28da01f26ceab80f50d917680abcd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-curved-cross.fbx",
+      "bytes": 31136,
+      "sha256": "903b31f8580b7c346a59024be079a528bb77163becb7c0c9e0bcbcf5b59743f6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-curved-double.fbx",
+      "bytes": 27712,
+      "sha256": "f50fe78c4fc1b1090cb21493cdababb8e0e460c9b669a762d72a4281240a3b31"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-curved.fbx",
+      "bytes": 26288,
+      "sha256": "a62e0313f365905ababd390ccc0325049110c085830d51ddfb80defe1145d1c9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-square-cross.fbx",
+      "bytes": 27472,
+      "sha256": "d3566c5f675181400203f6cc5ae47ae30f7d540157fb4218f5ae9096de5679e9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-square-double.fbx",
+      "bytes": 26032,
+      "sha256": "77418eca88d86715edb5bd5253537d29b31766f27b2546e77d79d716ad4cf1ee"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/light-square.fbx",
+      "bytes": 26832,
+      "sha256": "66e465c5cc188a3b2acb32d87d83082473c092e95b0a09586376b69cb49a1ed7"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-barrier.fbx",
+      "bytes": 27984,
+      "sha256": "457f441d17eae7624589aa178d58490601c6865a63c7526fb1466b02b313954c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-sidewalk.fbx",
+      "bytes": 28864,
+      "sha256": "b7f4b0ebbefbff709e2d91d906c0ad0bb1f1181ca9fb9fea45dd7ac4fa5a4e25"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-square-barrier.fbx",
+      "bytes": 26304,
+      "sha256": "1f0825907937d8fa69acfdfd9fb482a47cbe2dd395ca5f5ce54355b12df96b7c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend-square.fbx",
+      "bytes": 25584,
+      "sha256": "fb7b906e7ecfbdd87b375e364f4aea1ae0aff0593e10599fa031e4a5dae06b80"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bend.fbx",
+      "bytes": 29632,
+      "sha256": "cacdfd969a72783aa1d71b27bf0a2aeb13ba1dd3ba44477118e020bfff9fa7b1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-bridge.fbx",
+      "bytes": 29136,
+      "sha256": "6ec6141b793730f694dc85e938c44a9a05b57f59fe8d46d776299ffd58432ab7"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossing.fbx",
+      "bytes": 25088,
+      "sha256": "f45997554cf33fe2133ee8ebff7a1b90bb5fb6417aa00c8913c41662c5a189da"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad-barrier.fbx",
+      "bytes": 27584,
+      "sha256": "8e228513f38f20a9e2eabd0c3013c84a37b23b3ac33d762808463c7876e47aa9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad-line.fbx",
+      "bytes": 25440,
+      "sha256": "6e19d611ca808d040d01adf6f558905608140985de9c3357d14e46ccadf234e5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad-path.fbx",
+      "bytes": 27664,
+      "sha256": "406a105b6ff91470051e35c395850085f39022e84566fdbbdd70e511efa7b459"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-crossroad.fbx",
+      "bytes": 25552,
+      "sha256": "31d19c2e51f9a9e4def136458b0538ea2da98239b1962c74764bf96b26925784"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-barrier.fbx",
+      "bytes": 30112,
+      "sha256": "a3dbf02b4d4c001d681f888a0be0e9b8d04b926ecc8e9e57c46d09e1c8f7a966"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-intersection-barrier.fbx",
+      "bytes": 29008,
+      "sha256": "dadfcd575f29cf630edd338abda2f69739bb82ae914f1fe39bded58d40dc8d91"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-intersection.fbx",
+      "bytes": 30320,
+      "sha256": "febe3c3b28f163667e93ae0a7ff22a23434da62f8daa8cd2ba8e0132a3869689"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve-pavement.fbx",
+      "bytes": 28704,
+      "sha256": "8a3e85268e0402d7e6f1f7b1b0413d196dfb9f51d70049b514e3d88f72782f8a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-curve.fbx",
+      "bytes": 30496,
+      "sha256": "77a676c0ab366cc7777bc69f8416d3b544eabc6a7e4e9c0e4fc2fac92f9e21bb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-double-barrier.fbx",
+      "bytes": 27504,
+      "sha256": "94c162f8a5e339f8f5afb98e91001b6a5a5ea0962b05814713aec1a57881e7a3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-double.fbx",
+      "bytes": 26688,
+      "sha256": "990089d77faebac3bb9106f7103a6071cbdeea6b037e786b3e03c0d8f2c2a9fa"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-single-barrier.fbx",
+      "bytes": 26624,
+      "sha256": "4821a490482c94024e09bc9f7ad0ab622e194a94a7c3464779e111f3a25b9d94"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-driveway-single.fbx",
+      "bytes": 26160,
+      "sha256": "fbb9affe475fa988dfe8718f2b239e378c53a92bce969cc056d6cb1f92574173"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end-barrier.fbx",
+      "bytes": 27360,
+      "sha256": "22e12af9b20c8ec70289cf680548942868028917ac2789157f9bd9f0e162eed8"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end-round-barrier.fbx",
+      "bytes": 30352,
+      "sha256": "0c5e151b991c99f884c9781cf556df70d7c1bd2f1f0d264622d7de6feb60c089"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end-round.fbx",
+      "bytes": 28784,
+      "sha256": "942a5c49829d64930e1712e4107667b19ef0c48f29cc26bd34fe4dee2df8c54b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-end.fbx",
+      "bytes": 28528,
+      "sha256": "dfec610656ac5d9f90198704d4c97d25b43b6f1443d9bae8931fc28da60bbbf3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection-barrier.fbx",
+      "bytes": 27680,
+      "sha256": "1ecd16b21f8ae9b2c33161f4c65287fbf0cda71dc364012fc0c38f3bceab5935"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection-line.fbx",
+      "bytes": 26080,
+      "sha256": "5844fdf154c0bfb1190fd1302d11e3c7cf0bdb7597629ebd81757d6fcad01c6b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection-path.fbx",
+      "bytes": 26912,
+      "sha256": "4adbd2ff3950cb085b8d010c42c4b718c7364df0bd6c4cd28f2eab437c85227d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-intersection.fbx",
+      "bytes": 26416,
+      "sha256": "7ba960632906f527d23d189e72910814b89656ecebebc38adedcccd792766a75"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-roundabout-barrier.fbx",
+      "bytes": 48064,
+      "sha256": "4dec46dd3b159fcc179b312cce741f5d469294a3a87359b78154ca22a534acff"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-roundabout.fbx",
+      "bytes": 53728,
+      "sha256": "ba51b5a7bc27b1d0f58ba5c7f0bccb995c8c43cdd17e5498295ce3dd2eb9d6ff"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-barrier.fbx",
+      "bytes": 27056,
+      "sha256": "7bb6c33db578e418415f20d5d6e96d377807231154a810c33d66506e30d3d9a5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-entry-barrier.fbx",
+      "bytes": 33104,
+      "sha256": "0d631b18cf7d5d9a341955b6726d00452cc1a23009ea591617e2cec1e7d296f4"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-entry.fbx",
+      "bytes": 31408,
+      "sha256": "ae93afa9dd89cac511d8a244b9840f295b131e9aa6ca1f90d8518667ec52d060"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-exit-barrier.fbx",
+      "bytes": 33152,
+      "sha256": "10ef7c9944c19164f7156fd445c47701d9b2c3493c386ea40dd16b13cfd1fb90"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side-exit.fbx",
+      "bytes": 31392,
+      "sha256": "844c7f20222c228a83d1fbc9a9419a6938f5a9e529c289e9df83f8e4a9f10498"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-side.fbx",
+      "bytes": 25504,
+      "sha256": "5d6a7bda5c1ee5b1009d2306151ba4a5f39f6ed6319396eb28a8a5b6abf7b36c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-empty-hanging.fbx",
+      "bytes": 26864,
+      "sha256": "6fe4ec4b940aac98f91bdcdcc827a2bd5eafd3e3832d423b4e36aa4996d98892"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-empty.fbx",
+      "bytes": 28832,
+      "sha256": "b235f4578682c68eee9559e60f81edeb1650665892f7389080fc997d6d923905"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-object-stop.fbx",
+      "bytes": 27376,
+      "sha256": "a011a73bad6694b74b43d164264292d2ec4c8b6697b8c58252ed88e09b70c990"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-object-street.fbx",
+      "bytes": 26560,
+      "sha256": "faef204916b47395bafba867792bc40ec8d3e5781d53732db9e0fb6951313881"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-object-warning.fbx",
+      "bytes": 27936,
+      "sha256": "8e8f0d3d7b485c1c7ea9214d534c6d92e32bc487cffefa129f8e203c9eb6976a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-stop.fbx",
+      "bytes": 27264,
+      "sha256": "0710a5a0f2ecaa871eeb7516a67cdfd63c6d3c17fc137cadfeb877e9e66329a2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-street.fbx",
+      "bytes": 28160,
+      "sha256": "62f3a7e1b6a232c65da6fbc0038a190d69f549f69db91796dab832a1d76e2d42"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-sign-warning.fbx",
+      "bytes": 27808,
+      "sha256": "953a4b245604f9f914045c70ea7975e110d8afd9bf81e753c9ca6525c800b159"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-barrier.fbx",
+      "bytes": 27072,
+      "sha256": "345ce8acfd6c1daf53d99092ae3c472609501c2982ae7f6666203377e34baab7"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-curve-barrier.fbx",
+      "bytes": 38288,
+      "sha256": "1ac8cd68617ed1b3acfac7ce2e6ed85db98060698fee1d75cb8a0aeaf5664ac1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-curve.fbx",
+      "bytes": 35440,
+      "sha256": "7e45c4b7da055057e02f3bc8e15b48b4d9f082ed2a7926235cce312b1ff7bee1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-flat-curve.fbx",
+      "bytes": 38096,
+      "sha256": "5bac93bf3b97203085b65a522f7f56be1a0db55e72f5e2e0f7686047b0191813"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-flat-high.fbx",
+      "bytes": 25440,
+      "sha256": "594d52f30b598bba50f97f74c32a810e3a34b96eed7e166342b6bba35fd000ce"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-flat.fbx",
+      "bytes": 25424,
+      "sha256": "e139897199301308a1f22a4ffd1d7e34ef8c9a8dea5165514ac0683336c4073f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-high-barrier.fbx",
+      "bytes": 27104,
+      "sha256": "21ff830dbb2581e42565b81383fcfd4baa8113b9a9402734f9d3905020720521"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant-high.fbx",
+      "bytes": 25360,
+      "sha256": "1b02f085c36037526f7cc4a83d83d5916edf5954d8ef3f767cac1f5547f68590"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-slant.fbx",
+      "bytes": 25376,
+      "sha256": "45df8cd40ec395c381ee0c752bbc38f2b6a4dd47f393d71d60fb6b79535d43a5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-split-barrier.fbx",
+      "bytes": 42032,
+      "sha256": "4877a89d2a2d35bdc7e319a015536f96f58a4b75e139d6f22a51ee749c6be813"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-split.fbx",
+      "bytes": 43184,
+      "sha256": "6a75be10b274ec355888324d36f21b08457c8e73baed3bff4cd981371c421c9b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-square-barrier.fbx",
+      "bytes": 27776,
+      "sha256": "7e72b52ef2fe2bbf9646ca5932732681a4871cc4a597e4ab106f8428395763f5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-square.fbx",
+      "bytes": 28272,
+      "sha256": "4d7f9ed701fd5ad7de7dae1e8d46b46d8d066e82fc431d75d42f165564250420"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-barrier-end.fbx",
+      "bytes": 25968,
+      "sha256": "5f370850ffec3a86bf75330c5392e574334a01954795f080e116d0b5b3a91c8a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-barrier-half.fbx",
+      "bytes": 27008,
+      "sha256": "f070a20170c2f7322bed5d9eae3127c169c62aeb44a30d3b30e924d1d573ce9d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-barrier.fbx",
+      "bytes": 27040,
+      "sha256": "500bebb8f596b072ddad873620479b451199d8283db7449bedc61946100f69dd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight-half.fbx",
+      "bytes": 25344,
+      "sha256": "1995dc77ec8f796a63f0727a08a7a15aadc1f1cac816b4436739f4196c96823d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/road-straight.fbx",
+      "bytes": 25328,
+      "sha256": "d668fbdd0168cc078198e838c79631d40d5dc6a5565065a7a04a942e8073f0a6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/sign-highway-detailed.fbx",
+      "bytes": 30048,
+      "sha256": "7bed2283ba4944e9d4a59a06656e88be5e8b6aa90fc02b570b3e93986bde81ba"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/sign-highway-wide.fbx",
+      "bytes": 27536,
+      "sha256": "eb6fa397bf9c8c9edcc4db33b5d06c27741d2b042a0bc2711a8e38f55ba30744"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/sign-highway.fbx",
+      "bytes": 28288,
+      "sha256": "a39d0508339504596409900286954362e79b19b9b34c973ed7d6d0e55731ecb2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/Textures/colormap.png",
+      "bytes": 11428,
+      "sha256": "a48e2962661ae44368ffddf3054f80ed8491d082b757dcc3011184cd9a98b185"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-high.fbx",
+      "bytes": 27488,
+      "sha256": "853a52fd160e1c64f6852466ecbc83f8157897aab07b0a857cc4f9b03868767b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-low.fbx",
+      "bytes": 27472,
+      "sha256": "4a6c011dae0f79dff1b731278215d40a3f81568163bcb680a13b07079e6b14f5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-slant.fbx",
+      "bytes": 27488,
+      "sha256": "24a2294e0640e909c7a4b386ff7137876a090c2bf6c34ebadd065ca7da071b22"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/tile-slantHigh.fbx",
+      "bytes": 27504,
+      "sha256": "3ded0dade57bf4c33f58daa75c0df581e8a1d21369874dcba1e2c4d179ace5f1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-hanging.fbx",
+      "bytes": 30784,
+      "sha256": "0a4e5054ae09789fe7d84c359f1e05b3bf1c44f275f4db53ff9301cae505183a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-object-hanging.fbx",
+      "bytes": 27312,
+      "sha256": "0973800b589d7bdfdce988615f1a9085064c0ca5567031278741f3e06ef2976e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-object-horizontal.fbx",
+      "bytes": 27248,
+      "sha256": "496992936250237fa4a52d8c2bb57c560ad9d201b64f5eb5d6788c28ecce418c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light-object-vertical.fbx",
+      "bytes": 27680,
+      "sha256": "094f02b8a4ac48c8037044c7d78d2c457f0e79f6044c40c3ed3ef15b92d52d97"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyRoads/Models/traffic-light.fbx",
+      "bytes": 29968,
+      "sha256": "ab3db75f5b2e34080337e938daa9db135c0fa7df0370439c7a6b297c64466f51"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/License.txt",
+      "bytes": 706,
+      "sha256": "d778fa769a89a7d9f167bc337fdf8fc2144e47d9abb0c35eb6ad897c0ee24d0a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-a.fbx",
+      "bytes": 58032,
+      "sha256": "04512ed6761e63e04f9a3bf85a5c86d80dea3944c9b2401e66a523a6661d8d53"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-b.fbx",
+      "bytes": 76592,
+      "sha256": "be7639283dbd42ae888604da490cc68e401bd7147c2cb7904de2bb814ca57d20"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-c.fbx",
+      "bytes": 59056,
+      "sha256": "f556ffa40ac8d0e07e5b1cf1d36dadfccae28ac8d56d30964c331ab19e9cc269"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-d.fbx",
+      "bytes": 74624,
+      "sha256": "0121dfcafbe2dd61948be244bd345c04dfc472f7745bff5d1185dfd480a875a3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-e.fbx",
+      "bytes": 73840,
+      "sha256": "cb3211cea3c4e0ad6694afb05418508cda819378fd5bb7eafdec539d72b2c563"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-f.fbx",
+      "bytes": 76000,
+      "sha256": "82ba9e760fdf9bdc765218da9a6114805bc6050f417f5ee593e360d7b72cc2f2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-g.fbx",
+      "bytes": 61904,
+      "sha256": "8f08ca534d5233ef3f9bab8c90b607cce61460aec79bdc6a5acafcf9998a1308"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-h.fbx",
+      "bytes": 44352,
+      "sha256": "fbba827b563a6360513b111255fbdfe1669b5e7c7a9cb9c72ca48e36dbb4f8b2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-i.fbx",
+      "bytes": 49552,
+      "sha256": "294268abbcbd3d01bb92f33d26037f5dabd12911e210cbade199aeaa14f4e890"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-j.fbx",
+      "bytes": 57488,
+      "sha256": "3d8f82406e077282676f8d73a2f3819c35b693c0be3f26d5de00ac90cb802097"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-k.fbx",
+      "bytes": 54784,
+      "sha256": "1723fb1219007a44bdbe49f3c22af4b1872bb2421129cff154d094fb8876c5a6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-l.fbx",
+      "bytes": 66032,
+      "sha256": "92e33bfca66578443da125bbda796889763792ec968db5f266bbad93ee128600"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-m.fbx",
+      "bytes": 59904,
+      "sha256": "5b9418d64659e93e20f5d628b9170530c3aad7016f488adb534d98a3b2711eb6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-n.fbx",
+      "bytes": 72016,
+      "sha256": "224858fa3fb7337ebd88db2b6d3e36af6411c787ccb03030ce3adb7c90dc1981"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-o.fbx",
+      "bytes": 65472,
+      "sha256": "6753286891d6666abfe6edb92d62a43c0318f5cdeefe18d1dea37fdab5fe8802"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-p.fbx",
+      "bytes": 61424,
+      "sha256": "a6fc4771147c14b7f1719a8092e03570e38dc76aa5060ce72ffc4d9ba97f7357"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-q.fbx",
+      "bytes": 56992,
+      "sha256": "decb68d6936c9d137821a8b85f018864831d000bb69ea3deb120ece1447c7dc1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-r.fbx",
+      "bytes": 56432,
+      "sha256": "0ff8f9ae77b08f58a0ce8e51c7f7580939cabe8323530b4642edffc593da46bc"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-s.fbx",
+      "bytes": 60848,
+      "sha256": "1b29a7cee280aa33e5b059882bdbe1738fe8b1166019dd920a21a0787de8b777"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-t.fbx",
+      "bytes": 82192,
+      "sha256": "88074c37606e17085ac1b051cbc3438e44414ee4722a0aa4a3d948b5622bf13c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/building-type-u.fbx",
+      "bytes": 69728,
+      "sha256": "c1edda0b4314f9657fc74f45fe6ae9a5b8e225cd7dd69d5ecd13d09f2e1006d4"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/driveway-long.fbx",
+      "bytes": 27488,
+      "sha256": "690a7f9c5dd310b97408f66e4c88b8639979bc936e6afab693e5d11c268d14b2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/driveway-short.fbx",
+      "bytes": 27504,
+      "sha256": "2cfa9f7bca2d5b874e7142599c8a2ee57fd268387a62448b3ee2be19bbade5c1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-1x2.fbx",
+      "bytes": 27872,
+      "sha256": "4111523cae3236f015fd78546a4a671a7e8a5f537ddebd864277e95095fad925"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-1x3.fbx",
+      "bytes": 29072,
+      "sha256": "ab158093810e814299dbf285cb1dbc6bfab18952bdaffbcd06c38dff37d0d09c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-1x4.fbx",
+      "bytes": 30272,
+      "sha256": "df761c1242bb5b69334a349c9a10eb24a2ac6d19094421c422988a038b7017ec"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-2x2.fbx",
+      "bytes": 29888,
+      "sha256": "fc670e3d22d0d8e1928fab19eb00cc5f70a5d90e578d01383a63218a380963bc"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-2x3.fbx",
+      "bytes": 31136,
+      "sha256": "627ad7849947b129267f65281be7796c25757b9dcd37427055b7efe5eb683fad"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-3x2.fbx",
+      "bytes": 31936,
+      "sha256": "ee6f65c1b1f58b4f31e38af06bcd2662c53a08cb13b8c2689d79a7b210e5e493"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-3x3.fbx",
+      "bytes": 33072,
+      "sha256": "672f0a1f4eace2128eee567d27c83e00a2081bad89156bd853e8c5fefe8c37e6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence-low.fbx",
+      "bytes": 28496,
+      "sha256": "0070d77bd0c93bccc5dea31b310ac7303bf4f751bfb866b6b7a5071c0a273d0f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/fence.fbx",
+      "bytes": 26032,
+      "sha256": "ded136595bb2791d599065b8fdfd4ef18ea7946fa04d66c9df069bbcee7beca5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-long.fbx",
+      "bytes": 27488,
+      "sha256": "b058ab1b43f219d6a039b6c40d22e481d21ba0fe24b2178ccef41150a9632ddb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-short.fbx",
+      "bytes": 27488,
+      "sha256": "9863ed23699d822e26b984a65573351aba346c30daaab33adb7b785b0b167c66"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-stones-long.fbx",
+      "bytes": 26320,
+      "sha256": "cf9bf8b3b67d430b7b78e73790419c7c9b60119f68f42e537191e18d40627414"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-stones-messy.fbx",
+      "bytes": 28848,
+      "sha256": "ccfb8e9efafdcba4221ce085beb38be1678eb5b8ff13cdffa14fb33eb53dc923"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/path-stones-short.fbx",
+      "bytes": 27328,
+      "sha256": "7e3cafef1716b60282150a21cec36581ed3939f815ee47a1fe948f01edb972af"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/planter.fbx",
+      "bytes": 33792,
+      "sha256": "0569acd64c59c05ef1f0042b572affaf46792adffd72c69f77819c42a53f38b3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/Textures/colormap.png",
+      "bytes": 11784,
+      "sha256": "9b5de86078c25ef02351a80d35ff3c978693a1044565b73eedd9ae9b5b80665d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/tree-large.fbx",
+      "bytes": 29520,
+      "sha256": "1a83b352e177f4cee8ae681358de21774a0736446c418b8ab586db24993d252f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/Models/tree-small.fbx",
+      "bytes": 29584,
+      "sha256": "7f76c0d1cef27c14f1cfbc3c214ef2dd276ab2d40189b01e499d2618d8e1aefb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/PaletteVariants/variation-a.png",
+      "bytes": 12109,
+      "sha256": "7d49db8b291751640ace09430d37da5b00ce35d00f71ea03979a0f47656abd5e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/PaletteVariants/variation-b.png",
+      "bytes": 12101,
+      "sha256": "476b218961c0485bc4c32f80368db7cfdd5d3f1aba2573ad941069996c89bc5f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneySuburban/PaletteVariants/variation-c.png",
+      "bytes": 12276,
+      "sha256": "f11cf0a7b0a110da56602851b2fc65fd3ce10065f9359691da8a5689732c5903"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/LICENSE.txt",
+      "bytes": 602,
+      "sha256": "77909c2cfb073540badacde26f0526d4d975af055a43f7eb8dcf99361178cc86"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Models/CoralReefSet1.fbx",
+      "bytes": 357564,
+      "sha256": "ee372c135b76b39c4f6904cd13c2a647741b00f5e3d0af28b8632a4e1c9ba608"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Models/CoralReefSet2.fbx",
+      "bytes": 204732,
+      "sha256": "2b06a0a6a3525f41709152ba5707d514d839ab12e32e404c6a0a2157fc8400d1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Models/CoralReefSet3.fbx",
+      "bytes": 292012,
+      "sha256": "c2e2ac0db7c877d37b4634430289eebce1a9748605f6d8d7c3ccbd446b856ef3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Models/CoralReefSet4.fbx",
+      "bytes": 195340,
+      "sha256": "f3efdc225fd5c6f3dab8a01964bea3444f9baaee6ab0f8bfd170f1527783527d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Models/CoralReefSet5.fbx",
+      "bytes": 301996,
+      "sha256": "b113eb1402fbf8877e2ec4dd1e07ae3b7b87678306d263447c00f5ed7956aeee"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Models/CoralReefSet6.fbx",
+      "bytes": 205132,
+      "sha256": "87737091aad42e2eef18623ebd18c097e3b795845369ba863b4885d8ff18258b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet1/BaseColor.png",
+      "bytes": 98140,
+      "sha256": "d0774012a939faeb1881d2ecf3eff9cfcae476610e0f3481af2ffd8936686524"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet1/Emission.png",
+      "bytes": 23660,
+      "sha256": "c298385fb7665d7bbb91ab4fd09a6cf88004de38ecc061448d9e715afc5d6248"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet1/Metallic.png",
+      "bytes": 8354,
+      "sha256": "d6ca7d18e1445febbd451018a76f10c28b0e6d6295da5d2d93693200e20fb376"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet1/Roughness.png",
+      "bytes": 8340,
+      "sha256": "cbe0e233e8a8aa3e1bc21c4df96e7a34e4934cf99c7aeed9a50ec7976a7ce6b6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet2/BaseColor.png",
+      "bytes": 98140,
+      "sha256": "d0774012a939faeb1881d2ecf3eff9cfcae476610e0f3481af2ffd8936686524"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet2/Emission.png",
+      "bytes": 23660,
+      "sha256": "c298385fb7665d7bbb91ab4fd09a6cf88004de38ecc061448d9e715afc5d6248"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet2/Metallic.png",
+      "bytes": 8354,
+      "sha256": "d6ca7d18e1445febbd451018a76f10c28b0e6d6295da5d2d93693200e20fb376"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet2/Roughness.png",
+      "bytes": 8340,
+      "sha256": "cbe0e233e8a8aa3e1bc21c4df96e7a34e4934cf99c7aeed9a50ec7976a7ce6b6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet3/BaseColor.png",
+      "bytes": 98140,
+      "sha256": "d0774012a939faeb1881d2ecf3eff9cfcae476610e0f3481af2ffd8936686524"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet3/Emission.png",
+      "bytes": 23660,
+      "sha256": "c298385fb7665d7bbb91ab4fd09a6cf88004de38ecc061448d9e715afc5d6248"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet3/Metallic.png",
+      "bytes": 8354,
+      "sha256": "d6ca7d18e1445febbd451018a76f10c28b0e6d6295da5d2d93693200e20fb376"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet3/Roughness.png",
+      "bytes": 8340,
+      "sha256": "cbe0e233e8a8aa3e1bc21c4df96e7a34e4934cf99c7aeed9a50ec7976a7ce6b6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet4/BaseColor.png",
+      "bytes": 98140,
+      "sha256": "d0774012a939faeb1881d2ecf3eff9cfcae476610e0f3481af2ffd8936686524"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet4/Emission.png",
+      "bytes": 23660,
+      "sha256": "c298385fb7665d7bbb91ab4fd09a6cf88004de38ecc061448d9e715afc5d6248"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet4/Metallic.png",
+      "bytes": 8354,
+      "sha256": "d6ca7d18e1445febbd451018a76f10c28b0e6d6295da5d2d93693200e20fb376"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet4/Roughness.png",
+      "bytes": 8340,
+      "sha256": "cbe0e233e8a8aa3e1bc21c4df96e7a34e4934cf99c7aeed9a50ec7976a7ce6b6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet5/BaseColor.png",
+      "bytes": 98140,
+      "sha256": "d0774012a939faeb1881d2ecf3eff9cfcae476610e0f3481af2ffd8936686524"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet5/Emission.png",
+      "bytes": 23660,
+      "sha256": "c298385fb7665d7bbb91ab4fd09a6cf88004de38ecc061448d9e715afc5d6248"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet5/Metallic.png",
+      "bytes": 8354,
+      "sha256": "d6ca7d18e1445febbd451018a76f10c28b0e6d6295da5d2d93693200e20fb376"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet5/Roughness.png",
+      "bytes": 8340,
+      "sha256": "cbe0e233e8a8aa3e1bc21c4df96e7a34e4934cf99c7aeed9a50ec7976a7ce6b6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet6/BaseColor.png",
+      "bytes": 98140,
+      "sha256": "d0774012a939faeb1881d2ecf3eff9cfcae476610e0f3481af2ffd8936686524"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet6/Emission.png",
+      "bytes": 23660,
+      "sha256": "c298385fb7665d7bbb91ab4fd09a6cf88004de38ecc061448d9e715afc5d6248"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet6/Metallic.png",
+      "bytes": 8354,
+      "sha256": "d6ca7d18e1445febbd451018a76f10c28b0e6d6295da5d2d93693200e20fb376"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/Textures/CoralReefSet6/Roughness.png",
+      "bytes": 8340,
+      "sha256": "cbe0e233e8a8aa3e1bc21c4df96e7a34e4934cf99c7aeed9a50ec7976a7ce6b6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MohabinsSeaweed/LICENSE.txt",
+      "bytes": 369,
+      "sha256": "25da6cc8ad0be17cde43cce3b58e9c9a1df0affea565715f5a8bdc58661b2f4d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MohabinsSeaweed/Models/Seaweed_Mohabins.fbx",
+      "bytes": 28748,
+      "sha256": "30380ffdaa7ab817eac4e835238f613cce73e8e78b0ab2f3647fc30e70c4ead2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/MohabinsSeaweed/Textures/Water Gradients.png",
+      "bytes": 41136,
+      "sha256": "5afdb9a4f28099e2e4c4e4ab0f7f9c511e6c10970b5ecfc7d70033adf0ae704c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PantherOneBird/LICENSE.txt",
+      "bytes": 591,
+      "sha256": "1c8e37b333bed5c73752272347f048b132623837aba5939c6951f17786d38ba0"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PantherOneBird/Models/Bird.fbx",
+      "bytes": 101036,
+      "sha256": "28bfb0287558c301f18e961188df86670f37b3635cb26c89b26ea3abb0c446c2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PantherOneBird/Textures/Bird.png",
+      "bytes": 729798,
+      "sha256": "31b51d38e61668adf826a7e77a07a096ff24d3cb4f0c76596a737a6c82476d4d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/License.txt",
+      "bytes": 364,
+      "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/BlueTang.fbx",
+      "bytes": 303740,
+      "sha256": "2ed90544baff780900af7d1ac5eb249e8ebaffbbdb0db53f2256d59ffb54a596"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/ButterflyFish.fbx",
+      "bytes": 301804,
+      "sha256": "a4320ab65ae27fcfa756545aeefec249b2d51bfc6ef94fc6a927c1889e4cf3be"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/Clownfish.fbx",
+      "bytes": 304828,
+      "sha256": "2589ef68edcda17190b199fcc7d7dc31c9468fe0bce0a2b0deedeefbe3f59d6b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/CoralGrouper.fbx",
+      "bytes": 307052,
+      "sha256": "936621069372e90ab14fd16c17d8652bfde0b6386d5c97e8f60cb30f4930bfaa"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/Goldfish.fbx",
+      "bytes": 327724,
+      "sha256": "808c49938cb200085e57b9caeb3870eba449dd440a0aa4efaaedc9d28800168b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/Koi.fbx",
+      "bytes": 305292,
+      "sha256": "f63e64fe10599cae828bc6f81cc98a7bfa6f7dd13688010f6133d3f1dc4bd6c3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/MandarinFish.fbx",
+      "bytes": 298876,
+      "sha256": "8122d516942c760c1eb066fd9ec38532e7cad616e594bbe6d915c173602c4345"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/MoorishIdol.fbx",
+      "bytes": 303004,
+      "sha256": "442ef9c32d49f99a13cd945fcffa4836981c68e4f92d1f953ff4a5a123440f71"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/ParrotFish.fbx",
+      "bytes": 300396,
+      "sha256": "307ff0e61ff5c5325e67089acab7c671b0984867a1256eab106a3c6ba5399f7a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/Puffer.fbx",
+      "bytes": 336924,
+      "sha256": "69dcd7d1606675b4aa684bc77f89e7fc6923c3da90d0d7d25706161ba9b4d430"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/RoyalGramma.fbx",
+      "bytes": 300268,
+      "sha256": "ca8bbc7bb5fd343603bc712b03ad32b685111ebeaac71c73a4b94b321445223c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/Tetra.fbx",
+      "bytes": 298172,
+      "sha256": "8d8ea0c101de6810d3a60a4b06941ade9abb10a8c511981ac41bd93697f90bef"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/License.txt",
+      "bytes": 364,
+      "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/Barn.fbx",
+      "bytes": 59484,
+      "sha256": "9c2d565bde1012a8bffb05c641a35dab748f59a7a612209093f12273ae36a365"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/BigBarn.fbx",
+      "bytes": 75900,
+      "sha256": "f65f71246c7056f0e48276f259300aeee8f74ccac910f718837421980e50facd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/ChickenCoop.fbx",
+      "bytes": 30796,
+      "sha256": "f037de32326147646cb4db05b3dedb8effeb4a59a1b1036d79ee86d84ecd743b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/Fence.fbx",
+      "bytes": 17308,
+      "sha256": "bc5b6c5afc48cc5b0bed12a57a98c0d2c2984b16fe4805f4a9c7196061854123"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/Silo.fbx",
+      "bytes": 38588,
+      "sha256": "afcc8b63f1db8dfd8f8d1c417c4e5e63d2409d2ef10835920191516d160dac3c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/TowerWindmill.fbx",
+      "bytes": 142620,
+      "sha256": "29e213f63a84464058de71a5bf21a553c3f13575593b368f2e9b2aed9e026731"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/WaterTower.fbx",
+      "bytes": 46076,
+      "sha256": "2627e9da14ced3a9e62f4167bf3f819a3c34ad2d3b064747a1553497e5ec18fa"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/Well.fbx",
+      "bytes": 68316,
+      "sha256": "b5aa5b3f77a9eeba740a4ac4d58bac1ae08b7073424cbfcee0c215cbbd79210c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/Models/Windmill.fbx",
+      "bytes": 39436,
+      "sha256": "5dddd661f5ad3b198a4f3235611088e9fc0ad473d35182c4d4362c7f2253916e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/License.txt",
+      "bytes": 361,
+      "sha256": "2832c27ece15255677c5a6d7437ed05d6a2f49ccb73d867ab13d2be3f93e84e2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Dolphin.fbx",
+      "bytes": 130796,
+      "sha256": "4b6f1ff9487bf25bd3dd7e3397723a356579ee9e3d62e915f978c003ee41644f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Fish1.fbx",
+      "bytes": 98156,
+      "sha256": "1adea1cca2f02f351cf524b60d2448502e3acb3ef2965f74a21c45a5dfce77e3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Fish2.fbx",
+      "bytes": 97996,
+      "sha256": "ab12853cbd9c205a3aeb1d2cff1fd0cced44e5faa707020637bfd41634201509"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Fish3.fbx",
+      "bytes": 87468,
+      "sha256": "142bb6559b928c61ff839eecbba4ee0cfafa964df37720db6a6ba3a90b4ed639"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Manta ray.fbx",
+      "bytes": 155244,
+      "sha256": "bde315d4f35205215e1c0a2443f8256e7f5b3641c765686c941040530aaa81ec"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Shark.fbx",
+      "bytes": 101788,
+      "sha256": "fee1cfe578643cefb06457332b5d323f4883eba2515eb255ae0f2abb497a75c9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusFish/Models/Whale.fbx",
+      "bytes": 137980,
+      "sha256": "56cbdb5a6eeb8f9d334440fe384b7849eb84fba1ce03d8df9a997be981cbb8d9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/License_Standard.txt",
+      "bytes": 852,
+      "sha256": "120710e542c3ebaf83856c4eb55b4a1e680593b39302eba7fdc5d942dfe78c58"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Bush_Common.fbx",
+      "bytes": 84060,
+      "sha256": "f4c057dc7118ab76b946cfa9d01908aa151cc2585bc8799e5a97833bccfec022"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Bush_Common_Flowers.fbx",
+      "bytes": 115532,
+      "sha256": "3187c4e37f3be09da9d212e1c3ae04ae24814b7fc7074c19c56f633e95d10943"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Clover_1.fbx",
+      "bytes": 32860,
+      "sha256": "71b8d08da722418e73b4036d240a073c3499f558a28593c6cda67896ada3c3d1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Clover_2.fbx",
+      "bytes": 40604,
+      "sha256": "6a541be2ff15c4372541f825ae725a200d19a79bd672463bf74550cea25c70d5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_1.fbx",
+      "bytes": 374492,
+      "sha256": "270b8be7dbde95980a308212319d99580a433821ca8daa7d115f3d289ede9608"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_2.fbx",
+      "bytes": 330636,
+      "sha256": "8a2274f2a86ded8f3f6e3d2fcebb7d2e0449c9d3d3733f86c11e09dd8e4e6804"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_3.fbx",
+      "bytes": 238860,
+      "sha256": "9246334082d5abe40ff4307f138163aa88bbe40bc6ec1124038458ffe8353506"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_4.fbx",
+      "bytes": 240748,
+      "sha256": "2e7526829fd7adbb3383f927f0e692f16cf4c5cd6063e48c7497ccd231a3488f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/CommonTree_5.fbx",
+      "bytes": 211404,
+      "sha256": "4f77ad8be1ff819365448ae7b0515c84be64936d9f62c173489f59ac9c0b71e1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_1.fbx",
+      "bytes": 324540,
+      "sha256": "239ea458a4274b5ff8803e20f2bfc52819a32b578d64eeae9ff614aca9fd7124"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_2.fbx",
+      "bytes": 343756,
+      "sha256": "054f73eb882904ffdc0d70170be11ff441735b718dc1c2c5c73b7cad1ada2726"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_3.fbx",
+      "bytes": 302604,
+      "sha256": "3ba813aec43b78031ee5d1c4e01286ac97a2dbec94b1174c4653aab4d615fef8"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_4.fbx",
+      "bytes": 297452,
+      "sha256": "245ef56c5e5f6ac0928bbdada0fc6b0b8f38531a4937595976d145834d7d6f98"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/DeadTree_5.fbx",
+      "bytes": 295068,
+      "sha256": "29e49494d7edbc15eb20dec2dead45a5ef46479c6ce0d4d14ce6ca9716cac4f6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Fern_1.fbx",
+      "bytes": 32060,
+      "sha256": "520f1bce3d292885b6d85d5f7b541a1f0c236697ca99eb69e57817eed47eab31"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_3_Group.fbx",
+      "bytes": 49308,
+      "sha256": "c2a4d9369513e1c3cb1b992d5ae036dd86bd39c402a782ce3fe97f9b1a34d8e1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_3_Single.fbx",
+      "bytes": 33084,
+      "sha256": "c69c8a154f1634a4f0c184c37b2c64ae34c12dc55b7313b735be910780b489cd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_4_Group.fbx",
+      "bytes": 80108,
+      "sha256": "1edd78307fcd9618c226c48bd09594462fd21339d7d2b08f732bac649874f623"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Flower_4_Single.fbx",
+      "bytes": 45452,
+      "sha256": "161123b62620f16a8a6c2245fd54918bbec9e213f03d0d41bce9de1917c4e298"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Common_Short.fbx",
+      "bytes": 26060,
+      "sha256": "9bdb821b226ec62e485e648f35ea227c21d0245f3aefe1633d560e457476cd09"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Common_Tall.fbx",
+      "bytes": 32892,
+      "sha256": "71e676f1a0b4ad585646c9c8ea68b23320fc5b1db8946bd19a46147b9060bf14"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Wispy_Short.fbx",
+      "bytes": 41084,
+      "sha256": "123e9d77c073e8a22a8a5d49349d0110731f419778185b458f31f5796249f213"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Grass_Wispy_Tall.fbx",
+      "bytes": 44524,
+      "sha256": "8043f9d5eab5fce3a1b261914ed9225c07d704a679b066e47baca95e726f46f5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Mushroom_Common.fbx",
+      "bytes": 43180,
+      "sha256": "183cfdab4f120d83bc8b40b580bb683300cbb7fe4a0b4e0219f65a1070c2924f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Mushroom_Laetiporus.fbx",
+      "bytes": 108956,
+      "sha256": "3e3f8ea3c1dbe1e1258462a6c3b3f618537df912ae5df1e8976febc277a7b90c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_1.fbx",
+      "bytes": 23372,
+      "sha256": "113ac73ebda2ef729f84fc7d7d1a9713912c4a65dc18ffa829a4674af40da28f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_2.fbx",
+      "bytes": 22540,
+      "sha256": "6e49f088d01572be66ae2deeaed1d2306ea0c704e0ee44990dcc45b2e21464ab"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_3.fbx",
+      "bytes": 22988,
+      "sha256": "0736df35025896b0a08c7a391a9f572c2a7837ba80868668ac7a920d9e986ebd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_4.fbx",
+      "bytes": 23084,
+      "sha256": "86bbc9f3a6f7dd893c8960311071fc2f6163f858cfce38b8704c45b228323dfd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Round_5.fbx",
+      "bytes": 22828,
+      "sha256": "8f1a3bbab06ef4a79d69e4da348d65afa3aa5716834c2313e914a0f1beb7e00f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_1.fbx",
+      "bytes": 21628,
+      "sha256": "5a87d9a7a58c6beb115c023e877e73c4b0c11941751faa751828b9a1f8174d2e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_2.fbx",
+      "bytes": 20812,
+      "sha256": "b5dba7f969c592c8c3d19b213736be188d2fbb47184546e29e0fe420a176b868"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_3.fbx",
+      "bytes": 19996,
+      "sha256": "fd0ba8c323a56da8caf8347b2c1901f48189da4f9fd7b2e4c5dcb50d2bd47f85"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_4.fbx",
+      "bytes": 19996,
+      "sha256": "dc18a34e6c076d95ed1184e3885bea6fc94b3392a76ea42ba5efee9fc4128a2f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_5.fbx",
+      "bytes": 20700,
+      "sha256": "01421906d1129f0ca8c658f281fa393cda064be175be99cc8d8fa2168382195d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pebble_Square_6.fbx",
+      "bytes": 20412,
+      "sha256": "2416783b0e4fc6f90e40ffa0895a9ced2c4afd48e1128eb91a79cc6023b20c3f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_1.fbx",
+      "bytes": 19532,
+      "sha256": "5f27ad917dbebccb0a0d450572f28061189e0ed1686aa41742e9e1540cf74759"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_2.fbx",
+      "bytes": 19644,
+      "sha256": "8f577b69cc7d723dab5e14fd9598ca121264c70ebf55c7a5734a39102d079c60"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_3.fbx",
+      "bytes": 19676,
+      "sha256": "3c6df09f169af0a74591f05e5834eb63b1e7b74c4d69771d10137c18642916c8"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_4.fbx",
+      "bytes": 20092,
+      "sha256": "9a951691794709ab8987b2b9c6c35017266507f0ab49577c51ba21d1db649c8c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Petal_5.fbx",
+      "bytes": 19676,
+      "sha256": "70cd28d4bd5d7f73880abb0912a33a7ecf73ad5de97f0a5eb329d86a47c19e35"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_1.fbx",
+      "bytes": 225404,
+      "sha256": "f1e352910cb4f7be686212a5f1d6441861202d237575f7df4852b24cf1cae7eb"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_2.fbx",
+      "bytes": 208028,
+      "sha256": "8471d5f4b8b9e60d3d18a6dd70065b09c6507872319d895573467940ef3cb423"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_3.fbx",
+      "bytes": 267548,
+      "sha256": "82a243d96972221dc4f2b4f5cc6efff80827e1bd93d305c32ccb1e3bbf75b34f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_4.fbx",
+      "bytes": 200924,
+      "sha256": "4faa05be7f3c8d0d5d875a998e640ab75aecfab66c8dea98f67f28aa1adbe49c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Pine_5.fbx",
+      "bytes": 113868,
+      "sha256": "cd74741395adbe51f8a1271f764c53e0b73930f4982bf9b0c9106fcf1ba2a023"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_1.fbx",
+      "bytes": 24396,
+      "sha256": "0d1c10451cd028689ae358c0e2415bc42815dec10eee0f0b724ab0951b7a0679"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_1_Big.fbx",
+      "bytes": 34508,
+      "sha256": "fdd557b8cac8a97ae756a6b1c11da6529f7ce843ad52a7b26cf01a160c7a462f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_7.fbx",
+      "bytes": 21212,
+      "sha256": "77894a2ee355f5cb49203442670aa1f43b432c1437ebe3d1a92948c9c32b5b67"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Plant_7_Big.fbx",
+      "bytes": 24284,
+      "sha256": "f60d6aa75e3b51ec6b197f1637b062496c329dd2cade5b8eea49d8003eabd4fe"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Rock_Medium_1.fbx",
+      "bytes": 30700,
+      "sha256": "e75986c05c1071ca99b8810005aa6d69d575a529e38c7e77c519c592e16f264e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Rock_Medium_2.fbx",
+      "bytes": 27276,
+      "sha256": "6ffd1e9d4b2898e881e612a01faf7cd8120061aec9f1b7c8abe71d63b205341c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/Rock_Medium_3.fbx",
+      "bytes": 37324,
+      "sha256": "4d1ae93a255821b04f8a2f48c2f65d374617b36b2ad933e8b941a22194a3c3c7"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Small_1.fbx",
+      "bytes": 46988,
+      "sha256": "231f9133a2f7c642668a71376bbe4a02fe5ddda987529a8330416804f06f763c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Small_2.fbx",
+      "bytes": 49788,
+      "sha256": "c919c6577aab27e0f9eacc6bd2034d873573df3307a5ba93148af4ac71c12d8a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Small_3.fbx",
+      "bytes": 47180,
+      "sha256": "a1d5028ba98e5b8eb6998de04ada26935a464d842f00b748bda20bb0896cdc3e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Thin.fbx",
+      "bytes": 78268,
+      "sha256": "c536753a8883c021f30bf7b6bc97cd10c188062f159f916dd4bcf393ec5c6715"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Round_Wide.fbx",
+      "bytes": 109308,
+      "sha256": "a2026190e1688dc5200d8c8d10ed753be9908d89c0533cb333f43da63416a759"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Small_1.fbx",
+      "bytes": 40476,
+      "sha256": "ac72e6b93b41be4d49ca99fe468aa7a8e30d0e8a150453a83032c4e21532e551"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Small_2.fbx",
+      "bytes": 33900,
+      "sha256": "c6270e6bf7afed7423ada29c775c296c6a47298988d14052f3dff2291b3ad7ef"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Small_3.fbx",
+      "bytes": 34460,
+      "sha256": "16666b6a0e36a8bd16c8ad611fccc2789457ecce1491529bbb8b73d835720d16"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Thin.fbx",
+      "bytes": 65852,
+      "sha256": "9131324058aaa55a7afbc7a4ea58b1b17756f444752f1c660f320e43f3b48bce"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/RockPath_Square_Wide.fbx",
+      "bytes": 76604,
+      "sha256": "f8ed4843ad38044e2f4288f62efcf55648f61aa1a18aac72828212b350c7d7d5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_1.fbx",
+      "bytes": 539292,
+      "sha256": "a6e0bd30a752ddf99a08002dada8a1e3e02451b005fdec41ce246cbdd10f8428"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_2.fbx",
+      "bytes": 517228,
+      "sha256": "36ea40f4d40e1cbafc3a659a7a5e2232ff92a3699ed025ef4e85cf4dbab3912e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_3.fbx",
+      "bytes": 573196,
+      "sha256": "0eba018dc87dd68d63e93ab051bf4d5544cf6476fe7464d9bc537ee5e2fd18e6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_4.fbx",
+      "bytes": 551052,
+      "sha256": "61cf2ccc03a47ee6e88b7a4c658e2797ab954a5f585efd3fc7f0f9bade027584"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Models/TwistedTree_5.fbx",
+      "bytes": 582284,
+      "sha256": "fe5224a5d01547c655c799fb7744fbfd6117dec2469f6b2ca67d1fe8a0eb0d2a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_DeadTree.png",
+      "bytes": 4228870,
+      "sha256": "8f055724c35f8e8c5685a505775b3b9ebfc6b4745308ef35ce1cfe6fd976153f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_DeadTree_Normal.png",
+      "bytes": 5728199,
+      "sha256": "692da2f58909263f074cb17b36defd09f56bf89ab7efda567a9a3e59261747b3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_NormalTree.png",
+      "bytes": 3894788,
+      "sha256": "f36e94fdd73255347325b998e02a0b2575fdf714b0315bfe5e8ff34bc8e13603"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_NormalTree_Normal.png",
+      "bytes": 4384496,
+      "sha256": "852f6155404b8c39e100e41e26970e02a6a5c81b482d3726618dab28e3ad03a2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_TwistedTree.png",
+      "bytes": 4630805,
+      "sha256": "01608a96c42954eb725b32824530b51e67a2f3d85432d21a8d8adff958d2084a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Bark_TwistedTree_Normal.png",
+      "bytes": 5728199,
+      "sha256": "692da2f58909263f074cb17b36defd09f56bf89ab7efda567a9a3e59261747b3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Flowers.png",
+      "bytes": 444609,
+      "sha256": "5c531f2329c241c625aafd6cb769de29f33b480ef2a16491c2489f3c68e62a6a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Grass.png",
+      "bytes": 33605,
+      "sha256": "5d69048193b246a73c996b892607fb36c75d0c60afcb2dab8aa12de3c0b2d9bd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaf_Pine.png",
+      "bytes": 71747,
+      "sha256": "b1a6de1f0f2d1d68a68b3e70b38325c7f2293ab88e2b2c26d9d426407682b26b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaf_Pine_C.png",
+      "bytes": 70055,
+      "sha256": "86f7ff7a214f5424de48d269568f36a15485e61c80677e426c7be9f45181eef9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves.png",
+      "bytes": 2586432,
+      "sha256": "23248cebe28a24e78add32db3c2ee2f4d7b9219e9d2467279722f0197a7b6bd5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_GiantPine_C.png",
+      "bytes": 59613,
+      "sha256": "57f375e6a8ee339a415986033d54513186b0d82b9fa865070a2ef2afe61a0aa3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_NormalTree.png",
+      "bytes": 158772,
+      "sha256": "171ad1c8fa6ddde351a3b3c9e2b1457d5c7a4a43ba4fd55a83801029db797151"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_NormalTree_C.png",
+      "bytes": 158796,
+      "sha256": "998612bdf0b76a22f5f54d65cd7a457815d2842d89653fa4348a4ebb42933ad3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_TwistedTree.png",
+      "bytes": 69611,
+      "sha256": "d548e707fa34a558f88f477fa98f7b4ad3afbd4ceb7ab954506be694edf0f2ba"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Leaves_TwistedTree_C.png",
+      "bytes": 70353,
+      "sha256": "0e459b56b14c0e81b1b7cf3d1e8c6f0bb71790eb6c46bb02a76a922d8df646ea"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Mushrooms.png",
+      "bytes": 1208660,
+      "sha256": "e29eed2db831e44a29634fe25c62e9e31edf201e978a52912b9e5221ffd4a1f3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/PathRocks_Diffuse.png",
+      "bytes": 811732,
+      "sha256": "85a04abb2c136fee53b376daf3b7d7f96fdf3966de0258dff6fe2b24da792b23"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Rocks_Desert_Diffuse.png",
+      "bytes": 2095731,
+      "sha256": "209a27345707385a00de9ce6ab548ea238994f0a0721ed765aa4cdd25b7306fc"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Rocks_Diffuse.png",
+      "bytes": 2517398,
+      "sha256": "b813696df6081f469a127092eb0ce45cc39d56f3ccc0699152bfcd3804810b48"
+    }
+  ]
+}

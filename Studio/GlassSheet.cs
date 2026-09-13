@@ -20,13 +20,13 @@ public sealed class GlassSheet
     {
         if(Falling)return false;quiet=0;Pressure=Math.Min(1,Pressure+.07f);
         // Pressure propagates into the largest remaining load-bearing piece after a local split.
-        var pane=Panes.Count%3==0?Panes.MaxBy(p=>p.Area)!:Panes.OrderBy(p=>Vector2.DistanceSquared(p.Center,point)/Math.Max(1,p.Area)).First();
+        var pane=Panes.Count%3==0?Panes.OrderByDescending(p=>p.Area).First():Panes.OrderBy(p=>Vector2.DistanceSquared(p.Center,point)/Math.Max(1,p.Area)).First();
         if(Panes.Count<80 && pane.Area>2000)
         {
             var center=Panes.Count==1?Vector2.Clamp(point,new(30,30),new(1410,870)):pane.Center;Panes.Remove(pane);
             if(Panes.Count==0){for(int i=0;i<pane.Points.Length;i++)Panes.Add(Make([center,pane.Points[i],pane.Points[(i+1)%pane.Points.Length]]));}
             else{
-                var angle=(float)random.NextDouble()*MathF.Tau;var normal=new Vector2(MathF.Cos(angle),MathF.Sin(angle));
+                var angle=(float)random.NextDouble()*(2*MathF.PI);var normal=new Vector2(MathF.Cos(angle),MathF.Sin(angle));
                 var a=Clip(pane.Points,center,normal);var b=Clip(pane.Points,center,-normal);
                 if(a.Length>=3 && b.Length>=3 && AreaOf(a)>20 && AreaOf(b)>20){Panes.Add(Make(a));Panes.Add(Make(b));}else Panes.Add(pane);
             }
