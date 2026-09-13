@@ -13,7 +13,7 @@ Mention whether the keys came from the laptop keyboard, an attached keyboard, Re
 
 ## What the log records
 
-- Version, full build GUID, Unity version, OS/GPU descriptions, protected/preview/studio mode, and an RDP-session boolean. No machine name, hardware serial, device identifier or session name.
+- Version, full build GUID, Unity version, compiled input backend, OS/GPU descriptions, protected/preview/studio mode, and an RDP-session boolean. No machine name, hardware serial, device identifier or session name.
 - One flushed heartbeat per second during the first minute, then every five seconds, including when the game receives no keys or has no focus.
 - The bound and foreground window handles/process IDs (no titles or executable paths), Unity focus, visibility/minimize/maximize state, native desktop query success, and whether that desktop receives input.
 - Hook callback and focus-rejection counts; physical versus synthetic packets **only after the ownership gates**; held-key count, discarded malformed packets, repair/reset counts, hook renewals/errors, and the message-pump heartbeat age.
@@ -29,10 +29,10 @@ There are no key codes, scan codes, held-key identities, typed characters/words,
 - Physical packets followed by increasing `staleEvents`/large event age indicate queue freshness rejection. Dispatched events with no picker/game increments point farther downstream.
 - A passing preview keyboard test verifies Unity's unprotected input path only. It does not establish protected physical-key acceptance.
 
-The user's zero-keyboard report remains unresolved until their device log identifies the failing stage. Do not infer a fix from rendering, compilation, or a single successful focus test.
+The user's 3.0.31 device log confirmed the same failing stage as local reproduction: Unity GUI received keyboard events while our hook received zero callbacks, despite healthy ownership and pump state. A controlled build changing only Active Input Handling from Both to Input Manager (Old) restored hook delivery and passed the formerly failing native check. This project uses UnityEngine.Input for presentation and preview; the unused new backend is now disabled, while the protected physical-key path is unchanged. Builds and EditMode tests reject an incompatible configured or compiled backend. New session logs must report inputBackend=legacy-only. Physical keyboard gameplay on the target device still needs confirmation; synthetic delivery tests do not establish it.
 
 ## Reproducible local splash check
 
 Preview replays normally skip the introduction so existing gameplay timing stays unchanged. `--preview --show-intro` enables the actual introduction for visual QA. Use an isolated `--data` directory for all previews. The ordinary protected launch has no skip flag and advances from the introduction without keyboard or mouse input.
 
-`scripts/verify-unity-startup.ps1` captures and verifies the actual splash/picker and matching diagnostic identity. `scripts/test-unity-protected-focus.ps1 -VerifyDiagnostics` additionally requires the protected hook to acknowledge an OS-tagged synthetic press/release while rejecting it from gameplay. That opt-in diagnostic assertion currently exposes a local failure: healthy focus/pump state and Unity GUI input, but zero low-level callbacks. It remains a failing acceptance check; ordinary Unity/CI test success does not override it.
+`scripts/verify-unity-startup.ps1` captures and verifies the actual splash/picker and matching diagnostic identity. `scripts/test-unity-protected-focus.ps1 -VerifyDiagnostics` additionally requires the protected hook to acknowledge an OS-tagged synthetic press/release while rejecting it from gameplay. The initial Both-backends build failed this assertion. The legacy-only comparison passed without weakening synthetic-input rejection. The check now sends three bounded press/release pairs across hook renewals and requires all six packets; the original failed evidence is retained alongside subsequent results.

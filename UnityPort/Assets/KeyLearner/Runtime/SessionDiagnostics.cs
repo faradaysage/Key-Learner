@@ -10,6 +10,21 @@ namespace KeyLearner.Unity
     // serializes KeyEvent/KeySnapshot, or writes from a native keyboard callback.
     public sealed class SessionDiagnostics : IDisposable
     {
+        public static string UnityInputBackend
+        {
+            get
+            {
+#if ENABLE_LEGACY_INPUT_MANAGER && ENABLE_INPUT_SYSTEM
+                return "both";
+#elif ENABLE_LEGACY_INPUT_MANAGER
+                return "legacy-only";
+#elif ENABLE_INPUT_SYSTEM
+                return "input-system-only";
+#else
+                return "none";
+#endif
+            }
+        }
         public const long MaximumBytes = 2 * 1024 * 1024;
         StreamWriter writer;
         public string DirectoryPath { get; }

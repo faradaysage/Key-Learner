@@ -36,7 +36,9 @@ namespace KeyLearner.Unity.Editor
                 var serialized = new SerializedObject(playerAsset);
                 var input = serialized.FindProperty("activeInputHandler");
                 if (input != null)
-                    input.intValue = 2;
+                    // Both backends on Unity 6000.6 suppress delivery to our protected hook.
+                    // Presentation uses UnityEngine.Input; keep its single legacy backend.
+                    input.intValue = 0;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
             }
             QualitySettings.vSyncCount = 1;
@@ -158,6 +160,10 @@ namespace KeyLearner.Unity.Editor
         {
             if (!File.Exists("Assets/KeyLearner/Scenes/KeyLearner.unity"))
                 Configure();
+            var playerAsset = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset").FirstOrDefault();
+            var input = playerAsset ? new SerializedObject(playerAsset).FindProperty("activeInputHandler") : null;
+            if (input == null || input.intValue != 0 || SessionDiagnostics.UnityInputBackend != "legacy-only")
+                throw new InvalidOperationException("Protected Windows play requires the legacy-only Unity input backend. Configure the project and restart the Editor before building; Both breaks native hook delivery on the verified Unity version.");
             string version = PlayerSettings.bundleVersion;
             string[] arguments = Environment.GetCommandLineArgs();
             for (int i = 0; i < arguments.Length; i++)
@@ -199,6 +205,7 @@ namespace KeyLearner.Unity.Editor
                 unityVersion = Application.unityVersion,
                 target = "StandaloneWindows64",
                 backend = "Mono",
+                inputBackend = SessionDiagnostics.UnityInputBackend,
                 result = report.summary.result.ToString(),
                 errors = (int)report.summary.totalErrors,
                 bytes = report.summary.totalSize.ToString(),
@@ -209,7 +216,7 @@ namespace KeyLearner.Unity.Editor
         [Serializable]
         private sealed class WindowsBuildManifest
         {
-            public string version, unityVersion, target, backend, result, bytes, builtAtUtc;
+            public string version, unityVersion, target, backend, inputBackend, result, bytes, builtAtUtc;
             public int errors;
         }
         public static void ConfigureAndBuild()

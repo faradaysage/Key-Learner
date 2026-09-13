@@ -154,7 +154,7 @@ namespace KeyLearner.Unity
                 var options = LaunchOptions.Parse(Environment.GetCommandLineArgs());
                 diagnostics = new SessionDiagnostics(options.DataRoot);
                 diagnostics.Write("session", new {
-                    version = Application.version, buildGuid = Application.buildGUID, unity = Application.unityVersion,
+                    version = Application.version, buildGuid = Application.buildGUID, unity = Application.unityVersion, inputBackend = SessionDiagnostics.UnityInputBackend,
                     os = SystemInfo.operatingSystem, gpu = SystemInfo.graphicsDeviceName,
                     protectedPlay = !options.Unprotected, preview = options.Preview, studio = options.Studio,
                     remoteSession = System.Environment.GetEnvironmentVariable("SESSIONNAME")?.StartsWith("RDP-", StringComparison.OrdinalIgnoreCase) == true,

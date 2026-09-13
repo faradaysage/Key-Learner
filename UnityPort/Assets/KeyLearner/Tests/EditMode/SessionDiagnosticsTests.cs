@@ -13,6 +13,17 @@ namespace KeyLearner.Unity.Tests.EditMode
         [TearDown] public void Cleanup() { if (Directory.Exists(root)) Directory.Delete(root, true); else if (File.Exists(root)) File.Delete(root); }
 
         [Test]
+        public void ProtectedPlayerConfigurationAndCompiledBackendExcludeCompetingInputSystem()
+        {
+            var asset = UnityEditor.AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset").First();
+            var settings = new UnityEditor.SerializedObject(asset);
+            Assert.That(settings.FindProperty("activeInputHandler").intValue, Is.Zero,
+                "Both input backends prevented native protected-hook callbacks in the actual Windows player.");
+            Assert.That(SessionDiagnostics.UnityInputBackend, Is.EqualTo("legacy-only"),
+                "The compiled runtime must match the configured backend; restart Unity after a backend change.");
+        }
+
+        [Test]
         public void SnapshotIsFlushedAndReadableBeforeNormalShutdown()
         {
             using var log = new SessionDiagnostics(root);

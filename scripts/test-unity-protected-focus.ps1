@@ -60,12 +60,16 @@ try {
   }
   if(!$baseline){throw 'No flushed protected picker heartbeat after the introduction.'}
   $beforeSynthetic=[long]$baseline.data.input.guard.syntheticPackets
-  [UnityPreviewWindow]::HoldRight($p.Id,500)
+  # Sample different hold lengths across hook renewals, not just one fortunate packet.
+  foreach($holdMilliseconds in @(150,500,1000)){
+   [UnityPreviewWindow]::HoldRight($p.Id,$holdMilliseconds)
+   Start-Sleep -Milliseconds 1100
+  }
   $diagnosticDeadline=[DateTime]::UtcNow.AddSeconds(6)
   while([DateTime]::UtcNow -lt $diagnosticDeadline -and !$p.HasExited){
    $diagnosticText=[UnityPreviewWindow]::ReadSharedReport($diagnosticFile.FullName)
    $records=@($diagnosticText -split '\r?\n' | Where-Object {$_} | ForEach-Object {$_ | ConvertFrom-Json})
-   $observed=$records | Where-Object {$_.kind -eq 'heartbeat' -and $_.data.input.guard.syntheticPackets -ge ($beforeSynthetic+2)} | Select-Object -Last 1
+   $observed=$records | Where-Object {$_.kind -eq 'heartbeat' -and $_.data.input.guard.syntheticPackets -ge ($beforeSynthetic+6)} | Select-Object -Last 1
    if($observed){break}
    Start-Sleep -Milliseconds 100
   }
