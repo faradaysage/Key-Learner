@@ -187,6 +187,8 @@ jobs:
           key: Unity-Library-${{ runner.os }}-${{ needs.unity-preflight.outputs.editor }}-${{ hashFiles('UnityPort/Packages/**') }}-${{ hashFiles('UnityPort/Assets/**', 'Shared/**', 'Studio/**') }}
           restore-keys: |
             Unity-Library-${{ runner.os }}-${{ needs.unity-preflight.outputs.editor }}-${{ hashFiles('UnityPort/Packages/**') }}-
+      - name: Record resources before Unity tests
+        run: python3 scripts/unity-ci-resources.py before-tests
       - name: Unity EditMode and PlayMode tests
         id: unity-tests
         # v4.3.2: maintained Unity 6.6 shared-memory backport; avoids v4.4 CLI flag mismatch.
@@ -200,9 +202,14 @@ jobs:
           unityVersion: auto
           customImage: unityci/editor:ubuntu-6000.6.0f1-windows-mono-3.2.2@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71
           testMode: all
+          # Lifecycle/geometry tests disable cameras; rendering acceptance uses the real Windows player.
+          customParameters: -nographics -job-worker-count 2 -gc-helper-count 2
           coverageOptions: ''
           artifactsPath: artifacts/unity-tests
           githubToken: ''
+      - name: Record resources after Unity tests
+        if: always()
+        run: python3 scripts/unity-ci-resources.py after-tests
       - name: Require actual passing Unity test results
         shell: bash
         run: |
@@ -253,6 +260,9 @@ jobs:
           versioning: Custom
           version: ${{ needs.unity-preflight.outputs.version }}
           allowDirtyBuild: true
+      - name: Record resources after Unity build
+        if: always()
+        run: python3 scripts/unity-ci-resources.py after-build
       - name: Make custom player output writable
         shell: bash
         run: |
@@ -300,6 +310,7 @@ jobs:
           name: CI-Unity-test-results-${{ github.run_number }}
           path: |
             artifacts/unity-tests/**/*.xml
+            artifacts/unity-ci-resources/*.json
             artifacts/unity-migration/build-result.txt
             artifacts/unity-windows/build-manifest.json
             artifacts/unity-windows/ci-provenance.json
