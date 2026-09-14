@@ -552,9 +552,9 @@
     "trimAligner": "small.en"
   },
   "word-ann": {
-    "generationText": "Listen closely. ann.",
-    "trimPrefix": "Listen closely",
-    "seedOffset": 211,
+    "generationText": "Her name is. Ann.",
+    "trimPrefix": "Her name is",
+    "seedOffset": 347,
     "trimAligner": "small.en"
   },
   "word-anna": {
@@ -564,9 +564,9 @@
     "trimAligner": "small.en"
   },
   "word-anne": {
-    "generationText": "Listen closely. anne.",
-    "trimPrefix": "Listen closely",
-    "seedOffset": 211,
+    "generationText": "Her name is. Anne.",
+    "trimPrefix": "Her name is",
+    "seedOffset": 347,
     "trimAligner": "small.en"
   },
   "word-antenna": {
@@ -1014,8 +1014,8 @@
     "trimAligner": "small.en"
   },
   "word-syndrome": {
-    "generationText": "The word. syndrome.",
-    "trimPrefix": "The word",
+    "generationText": "Listen closely. syndrome.",
+    "trimPrefix": "Listen closely",
     "seedOffset": 211,
     "trimAligner": "small.en"
   },
@@ -4758,9 +4758,9 @@
     "trimAligner": "small.en"
   },
   "word-bat": {
-    "generationText": "Listen closely. bat.",
-    "trimPrefix": "Listen closely",
-    "seedOffset": 211,
+    "generationText": "The animal is a. Bat.",
+    "trimPrefix": "The animal is a",
+    "seedOffset": 347,
     "trimAligner": "small.en"
   },
   "word-bath": {
@@ -4878,9 +4878,9 @@
     "trimAligner": "small.en"
   },
   "word-bin": {
-    "generationText": "Listen closely. bin.",
-    "trimPrefix": "Listen closely",
-    "seedOffset": 211,
+    "generationText": "Throw it in the. Bin.",
+    "trimPrefix": "Throw it in the",
+    "seedOffset": 347,
     "trimAligner": "small.en"
   },
   "word-bind": {
@@ -7938,9 +7938,9 @@
     "trimAligner": "small.en"
   },
   "word-grocer": {
-    "generationText": "The word. grocer.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. grocer.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-groucho": {
@@ -8238,9 +8238,9 @@
     "trimAligner": "small.en"
   },
   "word-hdmi": {
-    "generationText": "The word. hdmi.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. H D M I.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-head": {
@@ -8340,9 +8340,9 @@
     "trimAligner": "small.en"
   },
   "word-help": {
-    "generationText": "The word. help.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. help.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-hen": {
@@ -8352,9 +8352,9 @@
     "trimAligner": "small.en"
   },
   "word-her": {
-    "generationText": "The word. her.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. her.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-herb": {
@@ -8532,9 +8532,9 @@
     "trimAligner": "small.en"
   },
   "word-horseback": {
-    "generationText": "The word. horseback.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. horseback.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-horsie": {
@@ -8550,9 +8550,9 @@
     "trimAligner": "small.en"
   },
   "word-hose": {
-    "generationText": "The word. hose.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. hose.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-hotairballoon": {
@@ -8598,9 +8598,9 @@
     "trimAligner": "small.en"
   },
   "word-hullabaloo": {
-    "generationText": "The word. hullabaloo.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. hullabaloo.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-hum": {
@@ -8670,9 +8670,9 @@
     "trimAligner": "small.en"
   },
   "word-iced": {
-    "generationText": "The word. iced.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. iced.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-icky": {
@@ -8700,9 +8700,9 @@
     "trimAligner": "small.en"
   },
   "word-implore": {
-    "generationText": "The word. implore.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. implore.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-in": {
@@ -8724,9 +8724,9 @@
     "trimAligner": "small.en"
   },
   "word-inform": {
-    "generationText": "The word. inform.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. inform.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-ingrid": {
@@ -8970,9 +8970,9 @@
     "trimAligner": "small.en"
   },
   "word-jungle-gym": {
-    "generationText": "The word. jungle gym.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. jungle gym.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-junk": {
@@ -9126,9 +9126,9 @@
     "trimAligner": "small.en"
   },
   "word-knee": {
-    "generationText": "The word. knee.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. knee.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-knelt": {
@@ -9204,9 +9204,9 @@
     "trimAligner": "small.en"
   },
   "word-ladle": {
-    "generationText": "The word. ladle.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. ladle.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-ladybug": {
@@ -9336,9 +9336,9 @@
     "trimAligner": "small.en"
   },
   "word-lifering": {
-    "generationText": "The word. lifering.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. life ring.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-lightne": {
@@ -9498,9 +9498,9 @@
     "trimAligner": "small.en"
   },
   "word-loveseat": {
-    "generationText": "The word. loveseat.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. loveseat.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-loxy": {
@@ -9576,15 +9576,15 @@
     "trimAligner": "small.en"
   },
   "word-macaw": {
-    "generationText": "The word. macaw.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. macaw.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-mack": {
-    "generationText": "The word. mack.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. mack.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-mackenzio": {
@@ -9666,9 +9666,9 @@
     "trimAligner": "small.en"
   },
   "word-mantel": {
-    "generationText": "The word. mantel.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. mantel.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-mara": {
@@ -9690,9 +9690,9 @@
     "trimAligner": "small.en"
   },
   "word-marie": {
-    "generationText": "The word. marie.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. marie.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-marigold": {
@@ -9846,9 +9846,9 @@
     "trimAligner": "small.en"
   },
   "word-mend": {
-    "generationText": "The word. mend.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. mend.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-meow": {
@@ -9894,9 +9894,9 @@
     "trimAligner": "small.en"
   },
   "word-milkshake": {
-    "generationText": "The word. milkshake.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. milkshake.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-milly": {
@@ -10050,9 +10050,9 @@
     "trimAligner": "small.en"
   },
   "word-moose": {
-    "generationText": "The word. moose.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. moose.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-morsel": {
@@ -10128,9 +10128,9 @@
     "trimAligner": "small.en"
   },
   "word-muffle": {
-    "generationText": "The word. muffle.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. muffle.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-mulan": {
@@ -10164,9 +10164,9 @@
     "trimAligner": "small.en"
   },
   "word-myrrh": {
-    "generationText": "The word. myrrh.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. myrrh.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-nachi": {
@@ -10194,9 +10194,9 @@
     "trimAligner": "small.en"
   },
   "word-nausea": {
-    "generationText": "The word. nausea.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. nausea.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-navy": {
@@ -10230,9 +10230,9 @@
     "trimAligner": "small.en"
   },
   "word-nell": {
-    "generationText": "The word. nell.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. nell.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-neptune": {
@@ -10296,15 +10296,15 @@
     "trimAligner": "small.en"
   },
   "word-ninny": {
-    "generationText": "The word. ninny.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. ninny.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-ninth": {
-    "generationText": "The word. ninth.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. ninth.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-noel": {
@@ -10536,9 +10536,9 @@
     "trimAligner": "small.en"
   },
   "word-palm": {
-    "generationText": "The word. palm.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. palm.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-pan": {
@@ -10788,9 +10788,9 @@
     "trimAligner": "small.en"
   },
   "word-pitcher": {
-    "generationText": "The word. pitcher.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. pitcher.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-pizza": {
@@ -10848,9 +10848,9 @@
     "trimAligner": "small.en"
   },
   "word-pluto": {
-    "generationText": "The word. pluto.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. pluto.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-poke": {
@@ -10860,9 +10860,9 @@
     "trimAligner": "small.en"
   },
   "word-pollen": {
-    "generationText": "The word. pollen.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. pollen.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-poly": {
@@ -10878,9 +10878,9 @@
     "trimAligner": "small.en"
   },
   "word-pool": {
-    "generationText": "The word. pool.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. pool.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-poor": {
@@ -10908,9 +10908,9 @@
     "trimAligner": "small.en"
   },
   "word-postman": {
-    "generationText": "The word. postman.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. postman.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-pot": {
@@ -10998,9 +10998,9 @@
     "trimAligner": "small.en"
   },
   "word-pry": {
-    "generationText": "The word. pry.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. pry.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-pudde": {
@@ -11016,9 +11016,9 @@
     "trimAligner": "small.en"
   },
   "word-pull": {
-    "generationText": "The word. pull.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. pull.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-pulverize": {
@@ -11340,21 +11340,21 @@
     "trimAligner": "small.en"
   },
   "word-ride": {
-    "generationText": "The word. ride.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. ride.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-rider": {
-    "generationText": "The word. rider.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. rider.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-riding": {
-    "generationText": "The word. riding.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. riding.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-riff": {
@@ -11406,9 +11406,9 @@
     "trimAligner": "small.en"
   },
   "word-robe": {
-    "generationText": "The word. robe.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. robe.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-rock": {
@@ -11592,15 +11592,15 @@
     "trimAligner": "small.en"
   },
   "word-sand": {
-    "generationText": "The word. sand.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. sand.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-sandbank": {
-    "generationText": "The word. sandbank.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. sandbank.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-sandbox": {
@@ -11616,9 +11616,9 @@
     "trimAligner": "small.en"
   },
   "word-sang": {
-    "generationText": "The word. sang.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. sang.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-satyagraha": {
@@ -11718,9 +11718,9 @@
     "trimAligner": "small.en"
   },
   "word-seaurchin": {
-    "generationText": "The word. seaurchin.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. sea urchin.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-seesaw": {
@@ -11748,9 +11748,9 @@
     "trimAligner": "small.en"
   },
   "word-sequins": {
-    "generationText": "The word. sequins.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. sequins.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-seraphina": {
@@ -12012,9 +12012,9 @@
     "trimAligner": "small.en"
   },
   "word-sign": {
-    "generationText": "The word. sign.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. sign.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-signal": {
@@ -12060,9 +12060,9 @@
     "trimAligner": "small.en"
   },
   "word-skid": {
-    "generationText": "The word. skid.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. skid.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-skitter": {
@@ -12096,9 +12096,9 @@
     "trimAligner": "small.en"
   },
   "word-sleet": {
-    "generationText": "The word. sleet.",
-    "trimPrefix": "The word",
-    "seedOffset": 103,
+    "generationText": "Listen closely. sleet.",
+    "trimPrefix": "Listen closely",
+    "seedOffset": 211,
     "trimAligner": "small.en"
   },
   "word-sleigh": {

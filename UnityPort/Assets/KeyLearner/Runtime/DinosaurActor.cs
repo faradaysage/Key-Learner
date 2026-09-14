@@ -13,6 +13,8 @@ namespace KeyLearner.Unity
         }
         readonly List<Rig> rigs=new List<Rig>();
         public string Motion {get;private set;}="";
+        public string Gait {get;private set;}="";
+        bool wasRoaring;
         public DinosaurActor(GameObject body)
         {
             foreach(var animation in body.GetComponentsInChildren<Animation>())
@@ -28,23 +30,36 @@ namespace KeyLearner.Unity
                 }
                 if(rig.Walk==null || rig.Run==null || rig.Idle==null || rig.Roar==null)
                     throw new InvalidOperationException("T-rex source animation set is incomplete.");
+                Transform neck=null;
+                foreach(var transform in animation.GetComponentsInChildren<Transform>())
+                    if(transform.name=="Neck"){neck=transform;break;}
+                if(!neck)throw new InvalidOperationException("T-rex source neck bone is missing.");
+                rig.Roar.layer=1;rig.Roar.wrapMode=WrapMode.ClampForever;rig.Roar.speed=0;
+                rig.Roar.AddMixingTransform(neck,true);
                 rigs.Add(rig);
             }
             if(rigs.Count==0)throw new InvalidOperationException("T-rex source rig is missing.");
         }
         public void Tick(float distance,float speed,float roarProgress)
         {
-            string next=roarProgress>=0?"Roar":speed<.7f?"Idle":speed>17?"Run":"Walk";
+            bool roaring=roarProgress>=0;
+            string gait=speed<.7f?"Idle":speed>17?"Run":"Walk";
             foreach(var rig in rigs)
             {
-                var state=next=="Roar"?rig.Roar:next=="Idle"?rig.Idle:next=="Run"?rig.Run:rig.Walk;
-                state.wrapMode=next=="Roar"?WrapMode.ClampForever:WrapMode.Loop;
-                state.speed=next=="Idle"?.8f:0;
-                if(Motion!=next)rig.Animation.CrossFade(state.name,.13f);
-                if(next!="Idle")state.normalizedTime=next=="Roar"?Mathf.Clamp01(roarProgress):Mathf.Repeat(distance/10.4f,1);
+                var state=gait=="Idle"?rig.Idle:gait=="Run"?rig.Run:rig.Walk;
+                state.wrapMode=WrapMode.Loop;state.speed=gait=="Idle"?.8f:0;
+                if(Gait!=gait)rig.Animation.CrossFade(state.name,.13f);
+                if(gait!="Idle")state.normalizedTime=Mathf.Repeat(distance/10.4f,1);
+                // The original neck/head action overlays the gait; the feet keep moving.
+                if(roaring)
+                {
+                    if(!wasRoaring)rig.Animation.CrossFade(rig.Roar.name,.13f);
+                    rig.Roar.normalizedTime=Mathf.Clamp01(roarProgress);
+                }
+                else if(wasRoaring)rig.Animation.Blend(rig.Roar.name,0,.13f);
                 rig.Animation.Sample();
             }
-            Motion=next;
+            Gait=gait;Motion=roaring?"Roar":gait;wasRoaring=roaring;
         }
     }
 }

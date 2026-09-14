@@ -106,7 +106,7 @@ try{
        if($evidence.idle -and !$evidence.roaring -and $task.IsCompleted){
         $task.GetAwaiter().GetResult();[UnityPreviewWindow]::HoldGameKey($process.Id,162,100);$evidence.roaring=$true
        }
-       if($evidence.roaring -and $state.heroMotion -eq 'Roar' -and $state.roarActive){$success=$true}
+       if($evidence.roaring -and $state.heroMotion -eq 'Roar' -and $state.heroGait -eq 'Walk' -and $state.roarActive){$success=$true}
       }
       'dinosaur-camera'{
        if($state.cameraHeight -lt 3.5){throw 'Camera entered terrain.'}

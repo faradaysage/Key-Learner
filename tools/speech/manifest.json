@@ -4476,9 +4476,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "Listen closely. ann.",
-      "trimPrefix": "Listen closely",
-      "seedOffset": 211,
+      "generationText": "Her name is. Ann.",
+      "trimPrefix": "Her name is",
+      "seedOffset": 347,
       "trimAligner": "small.en"
     },
     {
@@ -4504,9 +4504,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "Listen closely. anne.",
-      "trimPrefix": "Listen closely",
-      "seedOffset": 211,
+      "generationText": "Her name is. Anne.",
+      "trimPrefix": "Her name is",
+      "seedOffset": 347,
       "trimAligner": "small.en"
     },
     {
@@ -6377,9 +6377,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "Listen closely. bat.",
-      "trimPrefix": "Listen closely",
-      "seedOffset": 211,
+      "generationText": "The animal is a. Bat.",
+      "trimPrefix": "The animal is a",
+      "seedOffset": 347,
       "trimAligner": "small.en"
     },
     {
@@ -7239,9 +7239,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "Listen closely. bin.",
-      "trimPrefix": "Listen closely",
-      "seedOffset": 211,
+      "generationText": "Throw it in the. Bin.",
+      "trimPrefix": "Throw it in the",
+      "seedOffset": 347,
       "trimAligner": "small.en"
     },
     {
@@ -23016,9 +23016,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. grocer.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. grocer.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -24393,9 +24393,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. hdmi.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. H D M I.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -24844,9 +24844,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. help.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. help.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -24893,9 +24893,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. her.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. her.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -25844,9 +25844,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. horseback.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. horseback.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -25886,9 +25886,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. hose.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. hose.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -26089,9 +26089,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. hullabaloo.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. hullabaloo.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -26428,9 +26428,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. iced.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. iced.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -26569,9 +26569,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. implore.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. implore.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -26777,9 +26777,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. inform.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. inform.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -27991,9 +27991,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. jungle gym.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. jungle gym.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -28620,9 +28620,9 @@
         "data/app_dictionary.csv",
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. knee.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. knee.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -28910,9 +28910,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. ladle.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. ladle.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -29706,9 +29706,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. lifering.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. life ring.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -30614,9 +30614,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. loveseat.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. loveseat.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -30987,9 +30987,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. macaw.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. macaw.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -31001,9 +31001,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. mack.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. mack.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -31485,9 +31485,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. mantel.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. mantel.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -31672,9 +31672,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. marie.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. marie.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -32645,9 +32645,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. mend.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. mend.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -33003,9 +33003,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. milkshake.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. milkshake.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -33800,9 +33800,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. moose.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. moose.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -34186,9 +34186,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. muffle.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. muffle.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -34430,9 +34430,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. myrrh.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. myrrh.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -34701,9 +34701,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. nausea.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. nausea.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -34906,9 +34906,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. nell.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. nell.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -35254,9 +35254,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. ninny.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. ninny.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -35268,9 +35268,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. ninth.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. ninth.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -36761,9 +36761,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. palm.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. palm.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -38261,9 +38261,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. pitcher.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. pitcher.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -38565,9 +38565,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. pluto.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. pluto.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -38745,9 +38745,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. pollen.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. pollen.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -38809,9 +38809,9 @@
         "data/app_dictionary.csv",
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. pool.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. pool.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -38991,9 +38991,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. postman.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. postman.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -39667,9 +39667,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. pry.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. pry.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -39780,9 +39780,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. pull.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. pull.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -41846,9 +41846,9 @@
         "data/app_dictionary.csv",
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. ride.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. ride.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -41860,9 +41860,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. rider.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. rider.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -41874,9 +41874,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. riding.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. riding.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -42081,9 +42081,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. robe.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. robe.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -43025,9 +43025,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. sand.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. sand.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -43049,9 +43049,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. sandbank.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. sandbank.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -43111,9 +43111,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. sang.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. sang.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -43877,9 +43877,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. seaurchin.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. sea urchin.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -44100,9 +44100,9 @@
       "sources": [
         "data/app_dictionary.csv"
       ],
-      "generationText": "The word. sequins.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. sequins.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -45239,9 +45239,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. sign.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. sign.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -45566,9 +45566,9 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. skid.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. skid.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -45805,9 +45805,9 @@
         "data/app_dictionary.csv",
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. sleet.",
-      "trimPrefix": "The word",
-      "seedOffset": 103,
+      "generationText": "Listen closely. sleet.",
+      "trimPrefix": "Listen closely",
+      "seedOffset": 211,
       "trimAligner": "small.en"
     },
     {
@@ -50193,8 +50193,8 @@
       "sources": [
         "data/CPB_dictionary.csv"
       ],
-      "generationText": "The word. syndrome.",
-      "trimPrefix": "The word",
+      "generationText": "Listen closely. syndrome.",
+      "trimPrefix": "Listen closely",
       "seedOffset": 211,
       "trimAligner": "small.en"
     },

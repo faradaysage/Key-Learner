@@ -329,7 +329,15 @@
     },
     "outputSha256": "4c7c9a64865062b4f37804dd775f76304dd00736105c042d59dc213607eccb6d",
     "seconds": 4.0,
-    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades."
+    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades.",
+    "preparation": {
+      "schema": 1,
+      "rate": 24000,
+      "format": "PCM_16",
+      "channels": 1,
+      "peak": 0.65,
+      "fadeSeconds": 0.1
+    }
   },
   "ocean-wave-2": {
     "author": "jasinski (submitted by qubodup)",
@@ -341,7 +349,15 @@
     },
     "outputSha256": "aada492d64e6833d29ae8ee092adeacfd83afe29520d11905e3e31382415f79d",
     "seconds": 2.5,
-    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades."
+    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades.",
+    "preparation": {
+      "schema": 1,
+      "rate": 24000,
+      "format": "PCM_16",
+      "channels": 1,
+      "peak": 0.65,
+      "fadeSeconds": 0.1
+    }
   },
   "ocean-wave-3": {
     "author": "jasinski (submitted by qubodup)",
@@ -353,7 +369,15 @@
     },
     "outputSha256": "66ac5e1871c0d93fc09ffb165f5b535575cb388f0e978dc922ae6076d69500ba",
     "seconds": 2.25,
-    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades."
+    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades.",
+    "preparation": {
+      "schema": 1,
+      "rate": 24000,
+      "format": "PCM_16",
+      "channels": 1,
+      "peak": 0.65,
+      "fadeSeconds": 0.1
+    }
   },
   "ocean-wave-4": {
     "author": "jasinski (submitted by qubodup)",
@@ -365,7 +389,15 @@
     },
     "outputSha256": "7b70c0021d0a7e8fc84e5fd34035ccccc87c13a0fed672ab9f0498fea901daf0",
     "seconds": 3.511,
-    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades."
+    "modifications": "Mono, polyphase resampling 24kHz PCM16, peak .65, 100ms edge fades.",
+    "preparation": {
+      "schema": 1,
+      "rate": 24000,
+      "format": "PCM_16",
+      "channels": 1,
+      "peak": 0.65,
+      "fadeSeconds": 0.1
+    }
   },
   "learning-home": {
     "author": "heartade",
@@ -378,6 +410,14 @@
     "sourceSha256": "454bdfb568427867405bdcfa3969b39b5be92e885bbf7383c353c13586fbbd9b",
     "outputSha256": "e5a4e100855f26c43906cb9a059d68ca6ee9f904e130e58115e3868e364750ea",
     "seconds": 85.458,
-    "modifications": "Mono mix, peak normalized to .65, polyphase resample 24kHz PCM16; 120ms edge fades."
+    "modifications": "Mono mix, peak normalized to .65, polyphase resample 24kHz PCM16; 120ms edge fades.",
+    "preparation": {
+      "schema": 1,
+      "rate": 24000,
+      "format": "PCM_16",
+      "channels": 1,
+      "peak": 0.65,
+      "fadeSeconds": 0.12
+    }
   }
 }
