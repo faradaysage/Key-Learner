@@ -1,0 +1,32 @@
+[
+  {
+    "file": "dinosaur-chase.jpg",
+    "source": "artifacts/immersion-build19-camera-recheck/dinosaur-camera/camera-0.png",
+    "sourceSha256": "30d700908e901e102a43ea012ba59a87732da59d874be5a5f59fb380789d914a",
+    "description": "Local build 19; default close chase, native F1 camera cycle also passed."
+  },
+  {
+    "file": "dinosaur-valley.jpg",
+    "source": "artifacts/immersion-build21-dino-valley/mode-12.png",
+    "sourceSha256": "b4c82ab405a143e31cfe649d0c6a3e20c96e1892a3b4f12caac7c4ce28c9db08",
+    "description": "Local build 21; Red Rock Valley, mode 12, native source animation."
+  },
+  {
+    "file": "sky-companion.jpg",
+    "source": "artifacts/immersion-build20-events/bird-companion/action.png",
+    "sourceSha256": "9f1debe7897958159179524c4b162fc755f2c17d910c28c52257abcd1b26d4f5",
+    "description": "Local build 20; bounded companion visit."
+  },
+  {
+    "file": "ocean-shark-visit.jpg",
+    "source": "artifacts/immersion-build20-events/ocean-visitor/action.png",
+    "sourceSha256": "79ff37847426089b17c68bef91552cbdf18af0858f7d3e833784ec351f465b72",
+    "description": "Local build 20; harmless shark pass after fish scatter."
+  },
+  {
+    "file": "ocean-reentry.jpg",
+    "source": "artifacts/immersion-build21-breach/breach/entry.png",
+    "sourceSha256": "5b23777e77cd3360c2fb9a963a596bf17c16deaeafd05d76621d8e4e96386b1a",
+    "description": "Local build 21; dolphin re-entry spray and wake."
+  }
+]

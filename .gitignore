@@ -57,3 +57,11 @@ UnityPort/Assets/StreamingAssets/Platform/
 
 # Private task attachments
 .codex-remote-attachments/
+
+# Unity staging copies prepared speech from the canonical Content directory.
+UnityPort/Assets/StreamingAssets/Content/Voice/speech-*
+UnityPort/Assets/StreamingAssets/Content/Voice/catalog.json*
+
+# Development-only Python caches (speech and asset conversion tools).
+__pycache__/
+*.pyc

@@ -20,6 +20,13 @@ namespace KeyLearner.Unity
     {
         // Builder-owned source adaptations. SetItems deliberately leaves authored entries intact.
         public ContentItem[] Items = Array.Empty<ContentItem>();
+        public Texture2D GroundDiffuse, GroundNormal;
+        public void ConfigureGround(Material material)
+        {
+            material.SetTexture("_GroundMap", GroundDiffuse);
+            material.SetTexture("_GroundNormal", GroundNormal);
+            material.SetFloat("_GroundDetail", GroundDiffuse && GroundNormal ? 1 : 0);
+        }
         [Tooltip("Optional artist-owned replacements by stable Id, or additional content. Keep referenced prefabs/materials outside generated folders.")]
         public ContentItem[] AuthoredItems = Array.Empty<ContentItem>();
         readonly Dictionary<string, ContentItem[]> groups = new Dictionary<string, ContentItem[]>();

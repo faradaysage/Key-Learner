@@ -42,6 +42,21 @@ namespace KeyLearner.Unity.Tests.EditMode
         [TestCase("landmark")]
         [TestCase("coral")]
         [TestCase("seaweed")]
+        [TestCase("animal")]
+        [TestCase("polar-bear")]
+        [TestCase("wolf")]
+        [TestCase("dinosaur")]
+        [TestCase("pterosaur")]
+        [TestCase("tropical-tree")]
+        [TestCase("fern")]
+        [TestCase("cliff")]
+        [TestCase("mountainside")]
+        [TestCase("boat")]
+        [TestCase("spectator")]
+        [TestCase("treasure")]
+        [TestCase("road-obstacle")]
+        [TestCase("cannon")]
+        [TestCase("reef-shark")]
         public void ExplorerCatalogContainsRequiredAuthoredContent(string category)
         {
             var library = Resources.Load<ContentLibrary>("ContentLibrary");
@@ -99,6 +114,14 @@ namespace KeyLearner.Unity.Tests.EditMode
         [TestCase("dolphin")]
         [TestCase("fish")]
         [TestCase("shark")]
+        [TestCase("animal")]
+        [TestCase("polar-bear")]
+        [TestCase("wolf")]
+        [TestCase("dinosaur")]
+        [TestCase("pterosaur")]
+        [TestCase("boat")]
+        [TestCase("spectator")]
+        [TestCase("reef-shark")]
         public void FlyingAndSwimmingContentHasPlayableLoopingSourceAnimation(string category)
         {
             var library = Resources.Load<ContentLibrary>("ContentLibrary");
@@ -109,6 +132,16 @@ namespace KeyLearner.Unity.Tests.EditMode
                 Assert.That(animations, Is.Not.Empty, item.Id);
                 Assert.That(animations.Any(a => a.clip && a.clip.legacy && a.clip.length > 0 && a.playAutomatically && a.wrapMode == WrapMode.Loop), Is.True, item.Id);
             }
+        }
+
+        [Test]
+        public void NearGroundDetailKeepsItsLicensedTextureReferences()
+        {
+            var library = Resources.Load<ContentLibrary>("ContentLibrary");
+            Assert.That(library.GroundDiffuse, Is.Not.Null);
+            Assert.That(library.GroundNormal, Is.Not.Null);
+            var normal = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(library.GroundNormal)) as TextureImporter;
+            Assert.That(normal.textureType, Is.EqualTo(TextureImporterType.NormalMap));
         }
 
         [Test]

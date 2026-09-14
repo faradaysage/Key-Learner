@@ -8,11 +8,11 @@ public sealed partial class StudioGame
     int gameSelection,gameFilter;
     readonly string[] gameFilters=["All games","Explore","Letters","Numbers"];
     readonly Dictionary<PlayMode,RenderTarget2D> gamePreviews=new();
-    GameDefinition[] PickerGames=>GameCatalog.All.Where(g=>gameFilter==0 || g.Type==gameFilters[gameFilter] || g.Topics.Contains(gameFilters[gameFilter])).ToArray();
+    GameDefinition[] PickerGames=>GameCatalog.Legacy.Where(g=>gameFilter==0 || g.Type==gameFilters[gameFilter] || g.Topics.Contains(gameFilters[gameFilter])).ToArray();
     void OpenPicker(){
         if(benchmarking)FinishBenchmark();
         parent=false;editValue=null;editCommit=null;calibration=-1;picker=true;gameFilter=0;
-        gameSelection=Array.FindIndex(GameCatalog.All,g=>g.Mode==S.Mode);ResetVisibleSession();
+        gameSelection=Math.Max(0,Array.FindIndex(GameCatalog.Legacy,g=>g.Mode==S.Mode));ResetVisibleSession();
     }
     void PickGame(GameDefinition game){
         if(game.Mode==PlayMode.CannonHop&&!store.MathLearning.HopUnlocked){voice?.Stop();voice?.Say("First, play How Many Now. Practice joining and taking away.",S);return;}
@@ -29,7 +29,7 @@ public sealed partial class StudioGame
     }
     void PrepareGamePreviews(){
         if(!picker)return;
-        foreach(var game in GameCatalog.All.Where(g=>g.Explorer!=null && !gamePreviews.ContainsKey(g.Mode))){
+        foreach(var game in GameCatalog.Legacy.Where(g=>g.Explorer!=null && !gamePreviews.ContainsKey(g.Mode))){
             var texture=new RenderTarget2D(GraphicsDevice,808,302,false,SurfaceFormat.Color,DepthFormat.Depth24);
             GraphicsDevice.SetRenderTarget(texture);
             var model=new FlightModel();model.Configure(game.Explorer!.Value);

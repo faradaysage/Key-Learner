@@ -52,3 +52,31 @@ All automatically downloaded source files came from the creators' published publ
 Blender 4.3.2 was discovered locally and used with `--disable-autoexec` for inspection, original image-byte extraction and the one bird FBX conversion. No build depends on runtime `.blend` importing or Blender installation. Source inspection verified original dolphin/whale swim clips, all cute-fish clip names, all nature material mappings, coral embedded atlases and the seaweed GLB palette. The Unity import report in `artifacts/unity/content-import-report.txt` records final bounds and selected runtime clip durations after the Editor builder runs. See the migration verification report for gameplay-camera evidence and measured performance; source acquisition alone is not a visual acceptance claim.
 
 Procedural geometry is reserved for terrain, continuous roads, water, mathematical objects, letter targets and effects. Recognizable bird, dolphin, marine animals, reef, seaweed, trees, buildings, cars and roadside props use the credited real models.
+
+
+## Immersion expansion (September 2026)
+
+- **Ultimate Animated Animal Pack**, Quaternius, CC0 1.0: https://quaternius.com/packs/ultimateanimatedanimals.html . Cow, Deer, Fox and Horse source FBXs downloaded from the creator's public Google Drive folder; original walk rigs/animations retained. Unity materials, pivot and scale adapted.
+- **Pirate Kit 2.1**, Kenney, CC0 1.0: https://opengameart.org/content/pirate-kit . Chest, barrel and original palette texture; Unity materials/pivot/scale adapted. No executables imported.
+- New audio recordings, music cues, licenses, processing and exact hashes are documented in `Content/Sounds/ATTRIBUTION.md` and `Content/Sounds/IMMERSION_SOURCES.json`.
+- Prepared synthetic narration is generated using Resemble AI Chatterbox (MIT) as a development-only tool. See `tools/speech/README.md` and `Content/Voice/CHATTERBOX_LICENSE.txt`. Model weights and Python dependencies are not distributed with the game.
+
+
+## September 14 supplied wildlife
+
+- **Polar Bear**, kenchoo, CC BY 4.0: https://skfb.ly/oRMzK . Original GLB/rig/walk animation and textures supplied by the user; converted to FBX with Blender 4.3. See `KenchooPolarBear/License.txt` and `scripts/convert-animated-polar-bear.py`. Two scales depict mother and cub.
+- **ULTIMATE ANIMAL PACK**, WildMesh 3D, **CC BY-NC 4.0**: https://skfb.ly/pMR9W . User authorized noncommercial-only use. Only the separately animated Wolf and its diffuse texture are imported. This restricts builds containing it to noncommercial use. Exact files, usage, replacement points and future licensing steps are maintained in **NONCOMMERCIAL_ASSETS.md / .json** and shipped with notices.
+
+### Poly Haven prehistoric scenery
+
+Fern 02 (Rico Cilliers / Rob Tuytel), Coastal Cliff 01 (Rico Cilliers / Rob Tuytel), Mountainside (Dario Barresi / Rico Cilliers), all CC0 1.0: https://polyhaven.com/a/fern_02 , https://polyhaven.com/a/coastal_cliff_01 , https://polyhaven.com/a/mountainside . Sources downloaded through the public API with its required project user-agent. Offline FBX/PNG adaptations only ship; no runtime API use. Separate fern clumps, source-authored LOD1/2/3, 2K maps and packed leaf alpha. Used for the prehistoric understory and geological skyline. Full adaptation/hash ledger in ASSET_MANIFEST.json.
+
+## Additional authored prehistoric and coastal life (September 2026)
+
+- **Pteranodon (Animated)** by **Chistodrako._.**, https://skfb.ly/o6KXA , **CC BY 4.0** (https://creativecommons.org/licenses/by/4.0/). User-supplied archive; original rig, flight/walk/standing actions and maps retained, GLB converted to FBX, bone-display helper omitted. `UnityPort/Assets/ThirdParty/ChistodrakoPteranodon`; reproducible converter `scripts/convert-pteranodon.py`.
+- **Free palm treeZ v3** by **Yughues / Nobiax**, https://opengameart.org/content/free-palm-treez-v3 , **CC0 1.0**. Five authored OBJ silhouettes/UVs converted to FBX; diffuse/normal TGA converted to PNG. Original readme retained. `UnityPort/Assets/ThirdParty/YughuesPalms`; converter `scripts/convert-tropical-palms.py`.
+- **Animated Sharks Circling Fishing Boat Loop** by **LasquetiSpice**, https://skfb.ly/o9nSO , **CC BY 4.0** (https://creativecommons.org/licenses/by/4.0/). Boat, two waving crew members and swimming shark separated into reusable FBXs, original rigs/animation/textures retained; helper and cigar prop omitted. `UnityPort/Assets/ThirdParty/LasquetiBoat`; converter `scripts/convert-boat-scene.py`.
+
+### Forest Ground 01 — Poly Haven
+
+Rob Tuytel, [Forest Ground 01](https://polyhaven.com/a/forrest_ground_01), CC0 1.0. Original 2k diffuse/OpenGL normal textures provide near-ground leaf-litter relief in land explorers; material scale, tint and distance blend adapted. Source URLs and hashes: `Assets/ThirdParty/PolyHavenGround/source-manifest.json`.

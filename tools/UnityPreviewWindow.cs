@@ -27,6 +27,8 @@ public static class UnityPreviewWindow
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr window);
     [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr window,int command);
     [DllImport("user32.dll")] static extern bool IsZoomed(IntPtr window);
+    [DllImport("user32.dll")] static extern bool IsIconic(IntPtr window);
+    [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr window);
     [DllImport("user32.dll")] static extern bool GetClientRect(IntPtr window,out Rect rect);
     [DllImport("user32.dll")] static extern bool ClientToScreen(IntPtr window,ref Point point);
     [DllImport("user32.dll")] static extern bool GetCursorPos(out Point point);
@@ -36,20 +38,20 @@ public static class UnityPreviewWindow
     delegate bool EnumWindowProc(IntPtr window,IntPtr state);
     [DllImport("user32.dll")] static extern bool EnumWindows(EnumWindowProc callback,IntPtr state);
     [DllImport("user32.dll",CharSet=CharSet.Unicode)] static extern int GetClassName(IntPtr window,StringBuilder name,int capacity);
-    static IntPtr Window(int processId)
+    static IntPtr Window(int processId,bool includeMinimized=false)
     {
         using(var process=Process.GetProcessById(processId)){
-            process.Refresh();IntPtr window=process.MainWindowHandle;
-            if(window==IntPtr.Zero){
+            process.Refresh();IntPtr window=IntPtr.Zero;
+            {
                 EnumWindows((candidate,state)=>{
                     GetWindowThreadProcessId(candidate,out uint candidateOwner);if(candidateOwner!=processId)return true;
                     var name=new StringBuilder(128);GetClassName(candidate,name,name.Capacity);
-                    if(name.ToString()!="UnityWndClass")return true;
-                    if(!GetClientRect(candidate,out Rect bounds)||bounds.Right<64||bounds.Bottom<64)return true;
+                    if(name.ToString()!="UnityWndClass" || !IsWindowVisible(candidate))return true;
+                    if((!GetClientRect(candidate,out Rect bounds)||bounds.Right<64||bounds.Bottom<64) && !(includeMinimized&&IsIconic(candidate)))return true;
                     window=candidate;return false;
                 },IntPtr.Zero);
             }
-            if(window==IntPtr.Zero)throw new InvalidOperationException("Preview has no main window yet.");
+            if(window==IntPtr.Zero)throw new InvalidOperationException("Preview has no visible Unity window yet.");
             GetWindowThreadProcessId(window,out uint owner);
             if(owner!=processId)throw new InvalidOperationException("Window does not belong to the launched preview.");
             return window;
@@ -58,21 +60,24 @@ public static class UnityPreviewWindow
     public static bool Focus(int processId){var window=Window(processId);ShowWindow(window,9);SetForegroundWindow(window);return GetForegroundWindow()==window;}
     public static bool IsMaximized(int processId)=>IsZoomed(Window(processId));
     public static void Minimize(int processId){ShowWindow(Window(processId),6);}
-    public static void Restore(int processId){var window=Window(processId);ShowWindow(window,9);SetForegroundWindow(window);}
-    // The only synthetic key accepted by this test helper is the right arrow.
+    public static void Restore(int processId){var window=Window(processId,true);ShowWindow(window,9);SetForegroundWindow(window);}
+    // Only navigation/confirm keys accepted by this scoped gameplay acceptance helper.
     public static Task HoldRightAsync(int processId,int milliseconds)=>Task.Run(()=>HoldRight(processId,milliseconds));
-    public static void HoldRight(int processId,int milliseconds)
+    public static void HoldRight(int processId,int milliseconds)=>HoldGameKey(processId,39,milliseconds);
+    public static Task HoldGameKeyAsync(int processId,int key,int milliseconds)=>Task.Run(()=>HoldGameKey(processId,key,milliseconds));
+    public static void HoldGameKey(int processId,int key,int milliseconds)
     {
+        if(key!=13 && key!=32 && key!=112 && key!=162 && key!=163 && (key<37 || key>40)) throw new ArgumentOutOfRangeException(nameof(key));
         if(milliseconds<1||milliseconds>2000)throw new ArgumentOutOfRangeException(nameof(milliseconds));
         IntPtr window=Window(processId);
         if(GetForegroundWindow()!=window)throw new InvalidOperationException("Refusing key input because the preview is not foreground.");
-        var down=new Input{Type=1,Data=new InputData{Keyboard=new KeyInput{Key=39,Flags=1}}};
-        var up=new Input{Type=1,Data=new InputData{Keyboard=new KeyInput{Key=39,Flags=3}}};
+        var down=new Input{Type=1,Data=new InputData{Keyboard=new KeyInput{Key=(ushort)key,Flags=(key==163 || (key>=37 && key<=40))?1u:0u}}};
+        var up=new Input{Type=1,Data=new InputData{Keyboard=new KeyInput{Key=(ushort)key,Flags=(key==163 || (key>=37 && key<=40))?3u:2u}}};
         bool pressed=false;
         try{
-            if(SendInput(1,new[]{down},Marshal.SizeOf<Input>())!=1)throw new InvalidOperationException("Right-arrow press was not delivered.");
+            if(SendInput(1,new[]{down},Marshal.SizeOf<Input>())!=1)throw new InvalidOperationException("Gameplay key press was not delivered.");
             pressed=true;var elapsed=Stopwatch.StartNew();
-            while(elapsed.ElapsedMilliseconds<milliseconds){if(GetForegroundWindow()!=window)throw new InvalidOperationException("Preview lost foreground during right-arrow test.");Thread.Sleep(10);}
+            while(elapsed.ElapsedMilliseconds<milliseconds){if(GetForegroundWindow()!=window)throw new InvalidOperationException("Preview lost foreground during gameplay key test.");Thread.Sleep(10);}
         }finally{if(pressed)SendInput(1,new[]{up},Marshal.SizeOf<Input>());}
     }
     public static void Click(int processId,int x,int y,bool right)

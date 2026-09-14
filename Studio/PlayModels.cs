@@ -2,10 +2,11 @@ namespace KeyLearner.Studio;
 /// <summary>Each count has its own five-second show, independent of frame rate.</summary>
 public sealed class FireworkSchedule
 {
-    readonly List<double> launches=new();
+    readonly List<(double At,int Number)> launches=new();
     public int Pending=>launches.Count;
-    public void Add(int number,double now){for(int i=0;i<Math.Clamp(number,1,100);i++)launches.Add(now+(number<=1?0:4.0*i/(number-1)));}
-    public int Due(double now){var count=launches.RemoveAll(t=>t<=now);return count;}
+    public void Add(int number,double now){for(int i=0;i<Math.Clamp(number,1,100);i++)launches.Add((now+(number<=1?0:4.0*i/(number-1)),i+1));}
+    public int[] DueNumbers(double now){var due=launches.Where(t=>t.At<=now).OrderBy(t=>t.At).Select(t=>t.Number).ToArray();launches.RemoveAll(t=>t.At<=now);return due;}
+    public int Due(double now)=>DueNumbers(now).Length;
     public void Clear()=>launches.Clear();
 }
 public sealed class BalloonReward

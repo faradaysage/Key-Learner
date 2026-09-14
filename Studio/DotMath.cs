@@ -106,6 +106,7 @@ public sealed class MathGame
     public MathPhase Phase {get;private set;}
     public double Time {get;private set;}
     public int Errors {get;private set;}
+    public LearningBonus Bonus {get;}=new();
     public int BuiltMask {get;private set;}
     public int BuiltCount=>BitOperations.PopCount((uint)BuiltMask);
     public int Stage=>skill.Stage;
@@ -126,7 +127,7 @@ public sealed class MathGame
     public MathGame(MathActivity activity,MathProgress progress,int seed=1,int? level=null,int? a=null,int? b=null,bool? subtract=null){
         Activity=activity;this.progress=progress;skill=progress.For(activity);generator=new(seed);forcedLevel=level;forcedA=a;forcedB=b;forcedSubtract=subtract;Next();
     }
-    void Next(){Difficulty=MathDifficulty.At(forcedLevel??skill.Level);Round=generator.Next(Activity,Difficulty,forcedA,forcedB,forcedSubtract);Errors=0;Replaying=false;BuiltMask=(1<<Round.A)-1;Set(MathPhase.Ready);Revision++;}
+    void Next(){Bonus.BeginRound();Difficulty=MathDifficulty.At(forcedLevel??skill.Level);Round=generator.Next(Activity,Difficulty,forcedA,forcedB,forcedSubtract);Errors=0;Replaying=false;BuiltMask=(1<<Round.A)-1;Set(MathPhase.Ready);Revision++;}
     void Set(MathPhase phase){Phase=phase;Time=0;}
     public void Restart(){
         if(Phase==MathPhase.Reward){Next();return;}
@@ -134,7 +135,7 @@ public sealed class MathGame
     }
     public bool Answer(int value){
         if(!CanAnswer||Activity==MathActivity.MakeNumber)return false;
-        if(value!=Round.Answer){Errors++;Replaying=true;Set(MathPhase.Incorrect);return false;}
+        if(value!=Round.Answer){Errors++;Bonus.Miss();Replaying=true;Set(MathPhase.Incorrect);return false;}
         if(AskFirst||Activity==MathActivity.CannonHop){Set(MathPhase.Confirm);return true;}
         Win();return true;
     }
@@ -144,6 +145,7 @@ public sealed class MathGame
         if(BuiltCount==Round.B)Win();return true;
     }
     void Win(){
+        Bonus.Complete(Errors==0);
         skill.Complete(Errors==0); // Stage is earned immediately; navigation cannot lose or duplicate it.
         if(Activity==MathActivity.HowManyNow){if(Round.Subtract)progress.SeparatingCompleted++;else progress.JoiningCompleted++;}
         Set(MathPhase.Reward);Revision++;

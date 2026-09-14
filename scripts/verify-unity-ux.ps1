@@ -43,7 +43,7 @@ try{
  $count=@(Get-ChildItem -LiteralPath $Output -Filter '*.png').Count
  if($count -lt 13){throw "Expected all picker/parent/credit screenshots; found $count."}
  Write-Output "PASS: $($state.passed.Count) UX assertions; $count actual player screenshots. Evidence: $Output"
- if(!$SkipNativeFocus){Write-Output 'PASS: own player minimized/restored and actual Unity focus events canceled its unfinished parent edit.'}
+ if(!$SkipNativeFocus){Write-Output 'PASS: own player minimized/restored and native input ownership transitions canceled its unfinished parent edit.'}
 }finally{
  if(!$process.HasExited){$process.Kill()};$process.Dispose()
  foreach($name in $before.Keys){

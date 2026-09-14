@@ -1,0 +1,6 @@
+"Polar Bear" (https://skfb.ly/oRMzK) by kenchoo is licensed under Creative Commons Attribution 4.0 International.
+https://creativecommons.org/licenses/by/4.0/
+Source: https://sketchfab.com/3d-models/polar-bear-deeb7f4add9f4c36abaacdb73ce3e553
+
+User supplied original GLB and confirmed attribution on 2026-09-14.
+Changes by KeyLearner: GLB-to-FBX conversion with Blender 4.3; original mesh, rig, animation and diffuse/normal/roughness textures retained; omitted Blender bone-display helper geometry; Unity materials/pivot/scale adaptation; smaller instance represents the cub.

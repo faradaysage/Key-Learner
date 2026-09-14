@@ -1,5 +1,5 @@
 {
-  "verified_date": "2026-09-13",
+  "verified_date": "2026-09-14",
   "source_archives": {
     "QuaterniusNature": {
       "archive": "stylized_nature_megakitstandard.zip",
@@ -520,6 +520,51 @@
   ],
   "source_files": [
     {
+      "path": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/License.txt",
+      "bytes": 450,
+      "sha256": "012509b5cdfae0ebad48488fdaf7ce03608daeb3d284739f7b6859bcec7f08ed"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/Models/Pteranodon.fbx",
+      "bytes": 3449804,
+      "sha256": "64f6722d8fb12dda79abc5a52a1cf407aff306096d37173f2bbce60361f2096e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/Textures/Pteranodon_Diffuse.png",
+      "bytes": 9500775,
+      "sha256": "dfa1b9650ffee45aafabeb6068f4affa2e5d93a30860703e077302c95f53333b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/Textures/Pteranodon_Normal.png",
+      "bytes": 5204587,
+      "sha256": "88d485f8cbf128769fe90823c2a4f27e83af09bd8d3fd0f6b416a96f0697f3e0"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenchooPolarBear/License.txt",
+      "bytes": 582,
+      "sha256": "1e471d3c82e9bd1a0546b9f174a1846259a11743e841c659c56b42b80cd782d9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Models/PolarBear.fbx",
+      "bytes": 1054108,
+      "sha256": "a218fb1e0065574f9fba22710bdd9f770a2624f8c42014c19a5358a5beeffd00"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Textures/PolarBear_Diffuse.png",
+      "bytes": 833261,
+      "sha256": "c13baea18aa6719a394543215219a7414c64fc76f5c5afa624a5934dec0ec2f1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Textures/PolarBear_Normal.png",
+      "bytes": 686178,
+      "sha256": "1f5c300c12725b9ece824a82293486fbe3d5cf49ab063f5c29cf71bc13a21574"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Textures/PolarBear_Roughness.png",
+      "bytes": 62377,
+      "sha256": "3f65e594849eaa1bef2615e7faba1a15db02ab3aaa2efb38b3bc740a42638794"
+    },
+    {
       "path": "UnityPort/Assets/ThirdParty/KenneyCars/License.txt",
       "bytes": 696,
       "sha256": "c33b7f6453d134deae7b1b8493717d9ccfa754c25ab97f6de89b88f8fda19b00"
@@ -1003,6 +1048,31 @@
       "path": "UnityPort/Assets/ThirdParty/KenneyCommercial/PaletteVariants/variation-b.png",
       "bytes": 10897,
       "sha256": "d7fa3fb6243fdb8cbcbbe8b61c4ff10ceb29aed23be806171f58cef13a8690e6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyPirate/License.txt",
+      "bytes": 699,
+      "sha256": "5e99246a5a65fa3420a1a1c7a8616f096202c78866f73d7aacfe73c0aab0ca36"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/barrel.fbx",
+      "bytes": 28736,
+      "sha256": "41b41db50b51163b04a4a4eea80f9e3c52c7c5c74464a83ce8c8aad1960737ba"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/cannon-mobile.fbx",
+      "bytes": 51728,
+      "sha256": "c65796e72360b6758e526e918a6c07b9b9f8ca6175e29e26881a25792754130b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/chest.fbx",
+      "bytes": 48400,
+      "sha256": "1ed6225d618b1231f153073d70587d6ce8991dda4828c0d4c6e6b50c5036eee2"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/Textures/colormap.png",
+      "bytes": 10061,
+      "sha256": "451e1d7a53b8e76f4b2ee58742e241509fee5f82cf2cee6e3f7aca86ba718abe"
     },
     {
       "path": "UnityPort/Assets/ThirdParty/KenneyRoads/License.txt",
@@ -1715,6 +1785,181 @@
       "sha256": "f11cf0a7b0a110da56602851b2fc65fd3ce10065f9359691da8a5689732c5903"
     },
     {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/License.txt",
+      "bytes": 594,
+      "sha256": "c57c4f7f22e517cd1bc2f404dfff3e528a9ec294ecd6e3f19a7bb206c18b6e45"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/FishingBoat.fbx",
+      "bytes": 3168924,
+      "sha256": "dd1a82d176297e3c7396e4f8bf2531b71296960cc63429b446eb87a64de95de3"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/SpectatorA.fbx",
+      "bytes": 878876,
+      "sha256": "2b885cda37b6d8bfedcbf66a1e852a78414f48ac09cfec0029f3c8800d4267c1"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/SpectatorB.fbx",
+      "bytes": 1563804,
+      "sha256": "15f4a894ae4cfa43595fcaea7f1144a6548eeec3fbc5c757b3e1fbfb2c2feac8"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/SwimmingShark.fbx",
+      "bytes": 2854188,
+      "sha256": "81ce0653607251f5201e7f8807840c0d06b740873f0979c955302bdde56d1037"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Cigar_Mat_Diffuse.png",
+      "bytes": 1247203,
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Cigar_Mat_Normal.png",
+      "bytes": 1347662,
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_001_Diffuse.png",
+      "bytes": 1247203,
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_001_Normal.png",
+      "bytes": 1347662,
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_Diffuse.png",
+      "bytes": 1247203,
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_Normal.png",
+      "bytes": 1347662,
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_001_Diffuse.png",
+      "bytes": 1247203,
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_001_Normal.png",
+      "bytes": 1347662,
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_Diffuse.png",
+      "bytes": 1247203,
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_Normal.png",
+      "bytes": 1347662,
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_001_Diffuse.png",
+      "bytes": 4234050,
+      "sha256": "18952bd4957f13432454b003593901b8cacdac09622ca8374aad91527ca60669"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_001_Normal.png",
+      "bytes": 4335083,
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_002_Diffuse.png",
+      "bytes": 6719343,
+      "sha256": "17ebc77b3b087b5a2570e13d4ea25bb431240c9f7c4ae13b7a250096ca502e11"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_002_Normal.png",
+      "bytes": 4335083,
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_003_Diffuse.png",
+      "bytes": 6719343,
+      "sha256": "17ebc77b3b087b5a2570e13d4ea25bb431240c9f7c4ae13b7a250096ca502e11"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_003_Normal.png",
+      "bytes": 4335083,
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_004_Diffuse.png",
+      "bytes": 1513727,
+      "sha256": "3d28df339e3651a33459c6d5b2f70b9a624a6d9819107cc549bd66de4fc5c056"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_004_Normal.png",
+      "bytes": 3784197,
+      "sha256": "a6875967e4a7a561a2fc9c2dadb67fe2fa45f8a5c82e318c133a564e789f241e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_Diffuse.png",
+      "bytes": 6719343,
+      "sha256": "17ebc77b3b087b5a2570e13d4ea25bb431240c9f7c4ae13b7a250096ca502e11"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_Normal.png",
+      "bytes": 4335083,
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material1_001_Normal.png",
+      "bytes": 1718812,
+      "sha256": "5bd0218246e03f02f3db8a198087879d181f2352c6320711df555887826828dd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material1_Diffuse.png",
+      "bytes": 3881640,
+      "sha256": "7d79de70f71cbbddb55631c4fcf686a4e5750fe15b440042fab7d7808a5685b5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material1_Normal.png",
+      "bytes": 829408,
+      "sha256": "35845c2cf6f352276fbff2e85a3fbc06d869fbaf75c081f9a68fe05ecefece9e"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material2_Diffuse.png",
+      "bytes": 543398,
+      "sha256": "2c2a5f9a8c25a222ef07c8b9921a8f6d2a8028806fde951c991a93a31de7b93b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material2_Normal.png",
+      "bytes": 1909536,
+      "sha256": "6a33e83a9a3c0c0bc1154130b1703d16dfe43715dadcc9c374cb3686a04fe841"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material3_Normal.png",
+      "bytes": 2730344,
+      "sha256": "7245cbbb24c993c006fa5528a31ecafc8c0091f0f3f9a1b152c892a3f82d0692"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/phong1_Diffuse.png",
+      "bytes": 1682648,
+      "sha256": "f65702e31ccb423c135c62e4ec73daca6aa5e2c98fa0fc231da8b59a29da9e7a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/phong1_Normal.png",
+      "bytes": 1770633,
+      "sha256": "3cb9d90d0b96c368785589cb465acb6be41050da8e1400c1dac8d96834a62f8d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Skin_MAT_Diffuse.png",
+      "bytes": 1247203,
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Skin_MAT_Normal.png",
+      "bytes": 1347662,
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
       "path": "UnityPort/Assets/ThirdParty/MiniPolyCoral/LICENSE.txt",
       "bytes": 602,
       "sha256": "77909c2cfb073540badacde26f0526d4d975af055a43f7eb8dcf99361178cc86"
@@ -1900,6 +2145,131 @@
       "sha256": "31b51d38e61668adf826a7e77a07a096ff24d3cb4f0c76596a737a6c82476d4d"
     },
     {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenGround/License.txt",
+      "bytes": 237,
+      "sha256": "672af9ed0525a874afb867c982fb96bdcd1b65140c5955c2384be944a382f6c5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenGround/Textures/Ground_Diffuse.png",
+      "bytes": 26253635,
+      "sha256": "06a7c3c4a3916fd96821c4f4d21b4a38c333e931bfc66856e19dab720a22ffa5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenGround/Textures/Ground_Normal.png",
+      "bytes": 27037479,
+      "sha256": "bfc3e06ea31c3de513c9421a8fbbb4a540ebe32fada1bbb545286c1abc96e313"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/License.txt",
+      "bytes": 507,
+      "sha256": "4a4e7b4a15ff5c6259c5c0f09dc0eaaf3e1dc4e049a8c03371932049b1ddb033"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/coastal_cliff_01.fbx",
+      "bytes": 13942300,
+      "sha256": "88d0b6079981620103c795d94487fffc80f4c8aa67a8398c3708a599536c3d61"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_a.fbx",
+      "bytes": 39916,
+      "sha256": "aee3aa58b8bd5bf91f584128c89a1a593d1dd13eef95efd7ede3d2ff18bb231f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_b.fbx",
+      "bytes": 87708,
+      "sha256": "315fc0990886726d7a63f987eb5a4757770fea1b46ec1dfcad069a2976bef601"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_c.fbx",
+      "bytes": 83900,
+      "sha256": "d85efe10ed22f81fa57c19c688f8661da3ff4e9f8e08180e0c455b73cf128de6"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_d.fbx",
+      "bytes": 40668,
+      "sha256": "17d70ae4657b9ceffe6bafc790767a104be055e52d84012f41b6f9967d10b00a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/mountainside.fbx",
+      "bytes": 4987404,
+      "sha256": "99e2874c1d3be8ba2c9e899594e1f97dfa06167b98463dc117548cf15b0b69a8"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/coastal_cliff_01_Diffuse.png",
+      "bytes": 19610328,
+      "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/coastal_cliff_01_Normal.png",
+      "bytes": 19510767,
+      "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/coastal_cliff_01_Roughness.png",
+      "bytes": 4984327,
+      "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Alpha.png",
+      "bytes": 230089,
+      "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Diffuse.png",
+      "bytes": 2109086,
+      "sha256": "da2b5baf83e4085ca924bbbc3ab8bd77b91e335ef77a86c725efbfa0a476899c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Normal.png",
+      "bytes": 10596774,
+      "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Roughness.png",
+      "bytes": 1338982,
+      "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/mountainside_Diffuse.png",
+      "bytes": 20430028,
+      "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/mountainside_Normal.png",
+      "bytes": 20642417,
+      "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/mountainside_Roughness.png",
+      "bytes": 5932745,
+      "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/License.txt",
+      "bytes": 364,
+      "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Cow.fbx",
+      "bytes": 3001836,
+      "sha256": "097ba8d23692d901a9f821d569de579032aeb43b9e52d89e73d0999387337d74"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Deer.fbx",
+      "bytes": 3410172,
+      "sha256": "b79f07ac3fd702ab98f5d1b606168618a318f10f57028aaaefd420c468be2618"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Fox.fbx",
+      "bytes": 3498828,
+      "sha256": "24da24dbd2800be0b268ade50429fb7d815423a92a9a39178a4fc460d7b832de"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Horse.fbx",
+      "bytes": 3768844,
+      "sha256": "babb40391b8c3e217be2bb9c1f7c4d21910e943c28840363509dde7e88b54cba"
+    },
+    {
       "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/License.txt",
       "bytes": 364,
       "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
@@ -1963,6 +2333,41 @@
       "path": "UnityPort/Assets/ThirdParty/QuaterniusCuteFish/Models/Tetra.fbx",
       "bytes": 298172,
       "sha256": "8d8ea0c101de6810d3a60a4b06941ade9abb10a8c511981ac41bd93697f90bef"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/License.txt",
+      "bytes": 364,
+      "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Apatosaurus.fbx",
+      "bytes": 1142508,
+      "sha256": "e09a1c62f282cf5470d297c6a67f5acb51b09edd1a26af35d2f7fa30fedda2b4"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Parasaurolophus.fbx",
+      "bytes": 1054828,
+      "sha256": "ad36fd5ba88ee96600fd7c286c8d9e7cb8810a408336fda4995b0caacb4e7f16"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Stegosaurus.fbx",
+      "bytes": 1133964,
+      "sha256": "944a457338731a544a904a7c60d85d67c8f034c77e0205aae0ca3efc5711a002"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Trex.fbx",
+      "bytes": 1074060,
+      "sha256": "db4ae6f657f32ce2253851c3eeca70602be2572b7f5e7fdda3c4c6e7132dea8c"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Triceratops.fbx",
+      "bytes": 1087452,
+      "sha256": "ad66b51cc5fc44c9a3429a5b1b98a61621af08d58d102d8a817499bd6a7f5b5a"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Velociraptor.fbx",
+      "bytes": 1047948,
+      "sha256": "d66ef78fd0d9cb32ff5a1d15f0c06e837a4681be110988f280b69f50e175f11a"
     },
     {
       "path": "UnityPort/Assets/ThirdParty/QuaterniusFarm/License.txt",
@@ -2498,6 +2903,2474 @@
       "path": "UnityPort/Assets/ThirdParty/QuaterniusNature/Textures/Rocks_Diffuse.png",
       "bytes": 2517398,
       "sha256": "b813696df6081f469a127092eb0ce45cc39d56f3ccc0699152bfcd3804810b48"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/WildMeshAnimals/License.txt",
+      "bytes": 874,
+      "sha256": "da562f1475930969d6a660257aa839cad401fe765dfaa1dedf7965e2b8c492ac"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/WildMeshAnimals/Models/Wolf.fbx",
+      "bytes": 1555372,
+      "sha256": "44f3f5263fb5dd8f73d3e845f53fe468d96283eaecb6efd7403613e8f5f53c0f"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/WildMeshAnimals/Textures/Wolf_Diffuse.png",
+      "bytes": 6782459,
+      "sha256": "ed4ac1ce52ef339a5d9dde6cefc6e18e9ccf8852c44d6763b46a227b359c5c04"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/License.txt",
+      "bytes": 1178,
+      "sha256": "a8c11e923a039acf5e5ca42c48856e8b30d93eea4b8bd0537fba1eb40ca04f90"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_bend.fbx",
+      "bytes": 41244,
+      "sha256": "c84da0791eb06ede52cc66a17dcb71ac1e7e34e766d1d6aee6ae49363b968e3d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_dual.fbx",
+      "bytes": 70492,
+      "sha256": "08764fdcf75edda0ef610d33544950497781c67533978fce4696063b242314cd"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_dual_bend.fbx",
+      "bytes": 70412,
+      "sha256": "814a6c0425aea95b1350468383be8b1f692373e22b1b34a49e97817c9f63a18b"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_straight.fbx",
+      "bytes": 39740,
+      "sha256": "f61ef164d584eabe3ac86db1e34a8a57d6fc0e7022466334f162c0b7f2daa5ef"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_trio.fbx",
+      "bytes": 99020,
+      "sha256": "e5b0f80d2813334be25e4eda2404c324570f13480d7e39bc15243b8ffa08574d"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/Textures/Palm_Diffuse.png",
+      "bytes": 7967979,
+      "sha256": "e5b80d632f0ef669bd70d84fa91303231b0007dca13583d0866af144f2252d75"
+    },
+    {
+      "path": "UnityPort/Assets/ThirdParty/YughuesPalms/Textures/Palm_Normal.png",
+      "bytes": 6517331,
+      "sha256": "acee0c05bd57d240da13e39b1f0d0cdc92850b0d252cb79abc1def2bd7bfb4a4"
+    }
+  ],
+  "immersion_files": [
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Cow.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1i9F0dP6RISYmIv9s5WGe17zrpj2xFkNJ",
+      "sha256": "097ba8d23692d901a9f821d569de579032aeb43b9e52d89e73d0999387337d74"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Deer.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1whdcRdRvBlIjE_ALhQqMnmby9LMyVmYx",
+      "sha256": "b79f07ac3fd702ab98f5d1b606168618a318f10f57028aaaefd420c468be2618"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Fox.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=18LKS424TzJB7WO8ZjhwCimov7RNnhSih",
+      "sha256": "24da24dbd2800be0b268ade50429fb7d815423a92a9a39178a4fc460d7b832de"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/Models/Horse.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=14S-I3jZTcwivD9W3mMuJw7OBbEEMba3v",
+      "sha256": "babb40391b8c3e217be2bb9c1f7c4d21910e943c28840363509dde7e88b54cba"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusAnimals/License.txt",
+      "url": "https://drive.google.com/uc?export=download&id=1F2uy8T2fRpdc6gZ4mnS02_C2E63WvKtn",
+      "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenneyPirate/License.txt",
+      "archive": "kenney_pirate-kit_2.1.zip",
+      "member": "License.txt",
+      "sha256": "5e99246a5a65fa3420a1a1c7a8616f096202c78866f73d7aacfe73c0aab0ca36"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/barrel.fbx",
+      "archive": "kenney_pirate-kit_2.1.zip",
+      "member": "Models/FBX format/barrel.fbx",
+      "sha256": "41b41db50b51163b04a4a4eea80f9e3c52c7c5c74464a83ce8c8aad1960737ba"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/chest.fbx",
+      "archive": "kenney_pirate-kit_2.1.zip",
+      "member": "Models/FBX format/chest.fbx",
+      "sha256": "1ed6225d618b1231f153073d70587d6ce8991dda4828c0d4c6e6b50c5036eee2"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/Textures/colormap.png",
+      "archive": "kenney_pirate-kit_2.1.zip",
+      "member": "Models/FBX format/Textures/colormap.png",
+      "sha256": "451e1d7a53b8e76f4b2ee58742e241509fee5f82cf2cee6e3f7aca86ba718abe"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenchooPolarBear/License.txt",
+      "archive": "polar-bear.zip",
+      "archiveSha256": "153e9bd831482a1ba12d42e0517ef637f2d77d9e25ce87e06ebcd79d6b0dc70e",
+      "member": "source/PolarBear.glb",
+      "sourceSha256": "a0f25ea2ad343041ad56846f50d80203981c675be8a9d87f84f1c151aaf413ff",
+      "sha256": "1e471d3c82e9bd1a0546b9f174a1846259a11743e841c659c56b42b80cd782d9",
+      "conversion": "scripts/convert-animated-polar-bear.py",
+      "url": "https://sketchfab.com/3d-models/polar-bear-deeb7f4add9f4c36abaacdb73ce3e553"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Models/PolarBear.fbx",
+      "archive": "polar-bear.zip",
+      "archiveSha256": "153e9bd831482a1ba12d42e0517ef637f2d77d9e25ce87e06ebcd79d6b0dc70e",
+      "member": "source/PolarBear.glb",
+      "sourceSha256": "a0f25ea2ad343041ad56846f50d80203981c675be8a9d87f84f1c151aaf413ff",
+      "sha256": "a218fb1e0065574f9fba22710bdd9f770a2624f8c42014c19a5358a5beeffd00",
+      "conversion": "scripts/convert-animated-polar-bear.py",
+      "url": "https://sketchfab.com/3d-models/polar-bear-deeb7f4add9f4c36abaacdb73ce3e553"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Textures/PolarBear_Diffuse.png",
+      "archive": "polar-bear.zip",
+      "archiveSha256": "153e9bd831482a1ba12d42e0517ef637f2d77d9e25ce87e06ebcd79d6b0dc70e",
+      "member": "source/PolarBear.glb",
+      "sourceSha256": "a0f25ea2ad343041ad56846f50d80203981c675be8a9d87f84f1c151aaf413ff",
+      "sha256": "c13baea18aa6719a394543215219a7414c64fc76f5c5afa624a5934dec0ec2f1",
+      "conversion": "scripts/convert-animated-polar-bear.py",
+      "url": "https://sketchfab.com/3d-models/polar-bear-deeb7f4add9f4c36abaacdb73ce3e553"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Textures/PolarBear_Normal.png",
+      "archive": "polar-bear.zip",
+      "archiveSha256": "153e9bd831482a1ba12d42e0517ef637f2d77d9e25ce87e06ebcd79d6b0dc70e",
+      "member": "source/PolarBear.glb",
+      "sourceSha256": "a0f25ea2ad343041ad56846f50d80203981c675be8a9d87f84f1c151aaf413ff",
+      "sha256": "1f5c300c12725b9ece824a82293486fbe3d5cf49ab063f5c29cf71bc13a21574",
+      "conversion": "scripts/convert-animated-polar-bear.py",
+      "url": "https://sketchfab.com/3d-models/polar-bear-deeb7f4add9f4c36abaacdb73ce3e553"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenchooPolarBear/Textures/PolarBear_Roughness.png",
+      "archive": "polar-bear.zip",
+      "archiveSha256": "153e9bd831482a1ba12d42e0517ef637f2d77d9e25ce87e06ebcd79d6b0dc70e",
+      "member": "source/PolarBear.glb",
+      "sourceSha256": "a0f25ea2ad343041ad56846f50d80203981c675be8a9d87f84f1c151aaf413ff",
+      "sha256": "3f65e594849eaa1bef2615e7faba1a15db02ab3aaa2efb38b3bc740a42638794",
+      "conversion": "scripts/convert-animated-polar-bear.py",
+      "url": "https://sketchfab.com/3d-models/polar-bear-deeb7f4add9f4c36abaacdb73ce3e553"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/WildMeshAnimals/License.txt",
+      "archive": "ultimate-animal-pack-100-animals-50-off.zip",
+      "archiveSha256": "8b0ec1811a275ba7041d77fe31ec123a3331029750f4e661a25fc0cf0de99900",
+      "sha256": "da562f1475930969d6a660257aa839cad401fe765dfaa1dedf7965e2b8c492ac",
+      "license": "CC-BY-NC-4.0",
+      "conversion": "scripts/convert-wildmesh-wolf.py",
+      "url": "https://sketchfab.com/3d-models/ultimate-animal-pack-100-animals-50-off-165f755e44fc477fbc4ee41085606dd1"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/WildMeshAnimals/Models/Wolf.fbx",
+      "archive": "ultimate-animal-pack-100-animals-50-off.zip",
+      "archiveSha256": "8b0ec1811a275ba7041d77fe31ec123a3331029750f4e661a25fc0cf0de99900",
+      "sha256": "44f3f5263fb5dd8f73d3e845f53fe468d96283eaecb6efd7403613e8f5f53c0f",
+      "license": "CC-BY-NC-4.0",
+      "conversion": "scripts/convert-wildmesh-wolf.py",
+      "url": "https://sketchfab.com/3d-models/ultimate-animal-pack-100-animals-50-off-165f755e44fc477fbc4ee41085606dd1"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/WildMeshAnimals/Textures/Wolf_Diffuse.png",
+      "archive": "ultimate-animal-pack-100-animals-50-off.zip",
+      "archiveSha256": "8b0ec1811a275ba7041d77fe31ec123a3331029750f4e661a25fc0cf0de99900",
+      "sha256": "ed4ac1ce52ef339a5d9dde6cefc6e18e9ccf8852c44d6763b46a227b359c5c04",
+      "license": "CC-BY-NC-4.0",
+      "conversion": "scripts/convert-wildmesh-wolf.py",
+      "url": "https://sketchfab.com/3d-models/ultimate-animal-pack-100-animals-50-off-165f755e44fc477fbc4ee41085606dd1"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Apatosaurus.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1v3ZGBrJjA_zGQN6s-9NyZ1eYqbPOYDC2",
+      "sha256": "e09a1c62f282cf5470d297c6a67f5acb51b09edd1a26af35d2f7fa30fedda2b4"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Parasaurolophus.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1V9dkJwAexdpdanJ6RdV2tOmaGDyG_XDU",
+      "sha256": "ad36fd5ba88ee96600fd7c286c8d9e7cb8810a408336fda4995b0caacb4e7f16"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Stegosaurus.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1MS0H-3g1tYRiMxmE0bJIGudG56y_h8G2",
+      "sha256": "944a457338731a544a904a7c60d85d67c8f034c77e0205aae0ca3efc5711a002"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Trex.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1JvVm-GNg4nD4MMWRxhsYu1AaxprOIUmy",
+      "sha256": "db4ae6f657f32ce2253851c3eeca70602be2572b7f5e7fdda3c4c6e7132dea8c"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Triceratops.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1M_CsgQ-e-H7XWBTNlTCRpP6RBe7cM-4A",
+      "sha256": "ad66b51cc5fc44c9a3429a5b1b98a61621af08d58d102d8a817499bd6a7f5b5a"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/Models/Velociraptor.fbx",
+      "url": "https://drive.google.com/uc?export=download&id=1MeDC06WnI8scA1KZqmthmaFIDb8j1XtE",
+      "sha256": "d66ef78fd0d9cb32ff5a1d15f0c06e837a4681be110988f280b69f50e175f11a"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/QuaterniusDinosaurs/License.txt",
+      "url": "https://drive.google.com/uc?export=download&id=1XSnL5PPEEVuZFZbW9m6fKbU4AUVAfyfY",
+      "sha256": "83d8959f9fc56353ed571fbe2dc52e4bcd64508e2399501cd45ac2ce3df0bf8c"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/License.txt",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "4a4e7b4a15ff5c6259c5c0f09dc0eaaf3e1dc4e049a8c03371932049b1ddb033",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/coastal_cliff_01.fbx",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "88d0b6079981620103c795d94487fffc80f4c8aa67a8398c3708a599536c3d61",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_a.fbx",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "aee3aa58b8bd5bf91f584128c89a1a593d1dd13eef95efd7ede3d2ff18bb231f",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_b.fbx",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "315fc0990886726d7a63f987eb5a4757770fea1b46ec1dfcad069a2976bef601",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_c.fbx",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "d85efe10ed22f81fa57c19c688f8661da3ff4e9f8e08180e0c455b73cf128de6",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/fern_02_d.fbx",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "17d70ae4657b9ceffe6bafc790767a104be055e52d84012f41b6f9967d10b00a",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Models/mountainside.fbx",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "99e2874c1d3be8ba2c9e899594e1f97dfa06167b98463dc117548cf15b0b69a8",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/coastal_cliff_01_Diffuse.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/coastal_cliff_01_Normal.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/coastal_cliff_01_Roughness.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Alpha.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Diffuse.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "da2b5baf83e4085ca924bbbc3ab8bd77b91e335ef77a86c725efbfa0a476899c",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Normal.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/fern_02_Roughness.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/mountainside_Diffuse.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/mountainside_Normal.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/PolyHavenScenery/Textures/mountainside_Roughness.png",
+      "source": "https://polyhaven.com/",
+      "license": "CC0-1.0",
+      "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9",
+      "conversion": "scripts/convert-polyhaven-scenery.py; source alpha packed into fern diffuse",
+      "downloads": [
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/fern_02/fern_02_2k.fbx",
+          "file": "fern_02.fbx",
+          "sha256": "bd362e81d789e1030146cc53cba3499b0833e8a6b5a8b273bc24752cf4a4b6b9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_diff_2k.png",
+          "file": "fern_02_Diffuse.png",
+          "sha256": "25168368e55d56e1d4eb97aaf72b1ea7c59b61aa75d64ebca86150a34762a583"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_nor_gl_2k.png",
+          "file": "fern_02_Normal.png",
+          "sha256": "0f66d392641b547bc4e5a2254f93177db2b28dadbe03c8eaac92ff8e8cb5def9"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_rough_2k.png",
+          "file": "fern_02_Roughness.png",
+          "sha256": "ab0f177eb54647de5bd6b889b9be7a3e7d427b1a9bd5135412eb8a6c0e1a586f"
+        },
+        {
+          "asset": "fern_02",
+          "source": "https://polyhaven.com/a/fern_02",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/fern_02/fern_02_alpha_2k.png",
+          "file": "fern_02_Alpha.png",
+          "sha256": "f51eb9b8f9f4b25a882f8fe12d1ef53ba69448bac7e71396ec1f05b684e9ea75"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/coastal_cliff_01/coastal_cliff_01_2k.fbx",
+          "file": "coastal_cliff_01.fbx",
+          "sha256": "d4e23695bde1b7db43251cd06acd30a8782cb1a857c4d2f8b42280a7d1a1437c"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_diff_2k.png",
+          "file": "coastal_cliff_01_Diffuse.png",
+          "sha256": "707037037b394d6bea382c13be6bc039bf8669d57e582a7bea627c4df67fac08"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_nor_gl_2k.png",
+          "file": "coastal_cliff_01_Normal.png",
+          "sha256": "9719aadd36b36deadd09e5002b61d3f35484da6d5d3e3bf8bdcdedbf47f87e15"
+        },
+        {
+          "asset": "coastal_cliff_01",
+          "source": "https://polyhaven.com/a/coastal_cliff_01",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/coastal_cliff_01/coastal_cliff_01_rough_2k.png",
+          "file": "coastal_cliff_01_Roughness.png",
+          "sha256": "b1f0230acc3afb6c17bc5d52a001b3caa42707350141eadfe14c5ec6a8ed9fbd"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/fbx/2k/mountainside/mountainside_2k.fbx",
+          "file": "mountainside.fbx",
+          "sha256": "8ec6d38e6b2120f984253a12adf74896c16cc4333fa48f5d0e85c88e9a06103e"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_diff_2k.png",
+          "file": "mountainside_Diffuse.png",
+          "sha256": "38fcfd8a3c4547605d69012a984fbefdf5c11bf69c0aecefb16dfb66846459e5"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_nor_gl_2k.png",
+          "file": "mountainside_Normal.png",
+          "sha256": "a20e5bdf0459749848767a6c41c0a5768ae6915701097e59d95de3568bf39267"
+        },
+        {
+          "asset": "mountainside",
+          "source": "https://polyhaven.com/a/mountainside",
+          "license": "CC0-1.0",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/2k/mountainside/mountainside_rough_2k.png",
+          "file": "mountainside_Roughness.png",
+          "sha256": "2ffdb59b7dfd3046ee351a04ae83686d04a1a2c3d4588522722b319e179862c9"
+        }
+      ]
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/License.txt",
+      "archive": "pteranodon-animated.zip",
+      "url": "https://skfb.ly/o6KXA",
+      "license": "CC BY 4.0",
+      "sha256": "012509b5cdfae0ebad48488fdaf7ce03608daeb3d284739f7b6859bcec7f08ed"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/Models/Pteranodon.fbx",
+      "archive": "pteranodon-animated.zip",
+      "url": "https://skfb.ly/o6KXA",
+      "license": "CC BY 4.0",
+      "sha256": "64f6722d8fb12dda79abc5a52a1cf407aff306096d37173f2bbce60361f2096e"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/Textures/Pteranodon_Diffuse.png",
+      "archive": "pteranodon-animated.zip",
+      "url": "https://skfb.ly/o6KXA",
+      "license": "CC BY 4.0",
+      "sha256": "dfa1b9650ffee45aafabeb6068f4affa2e5d93a30860703e077302c95f53333b"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/ChistodrakoPteranodon/Textures/Pteranodon_Normal.png",
+      "archive": "pteranodon-animated.zip",
+      "url": "https://skfb.ly/o6KXA",
+      "license": "CC BY 4.0",
+      "sha256": "88d485f8cbf128769fe90823c2a4f27e83af09bd8d3fd0f6b416a96f0697f3e0"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_bend.fbx",
+      "archive": "YughuesPalms.7z",
+      "url": "https://opengameart.org/content/free-palm-treez-v3",
+      "license": "CC0 1.0",
+      "sha256": "c84da0791eb06ede52cc66a17dcb71ac1e7e34e766d1d6aee6ae49363b968e3d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_dual.fbx",
+      "archive": "YughuesPalms.7z",
+      "url": "https://opengameart.org/content/free-palm-treez-v3",
+      "license": "CC0 1.0",
+      "sha256": "08764fdcf75edda0ef610d33544950497781c67533978fce4696063b242314cd"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_dual_bend.fbx",
+      "archive": "YughuesPalms.7z",
+      "url": "https://opengameart.org/content/free-palm-treez-v3",
+      "license": "CC0 1.0",
+      "sha256": "814a6c0425aea95b1350468383be8b1f692373e22b1b34a49e97817c9f63a18b"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_straight.fbx",
+      "archive": "YughuesPalms.7z",
+      "url": "https://opengameart.org/content/free-palm-treez-v3",
+      "license": "CC0 1.0",
+      "sha256": "f61ef164d584eabe3ac86db1e34a8a57d6fc0e7022466334f162c0b7f2daa5ef"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/Models/palm_trio.fbx",
+      "archive": "YughuesPalms.7z",
+      "url": "https://opengameart.org/content/free-palm-treez-v3",
+      "license": "CC0 1.0",
+      "sha256": "e5b0f80d2813334be25e4eda2404c324570f13480d7e39bc15243b8ffa08574d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/License.txt",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "c57c4f7f22e517cd1bc2f404dfff3e528a9ec294ecd6e3f19a7bb206c18b6e45"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/FishingBoat.fbx",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "dd1a82d176297e3c7396e4f8bf2531b71296960cc63429b446eb87a64de95de3"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/SpectatorA.fbx",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "2b885cda37b6d8bfedcbf66a1e852a78414f48ac09cfec0029f3c8800d4267c1"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/SpectatorB.fbx",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "15f4a894ae4cfa43595fcaea7f1144a6548eeec3fbc5c757b3e1fbfb2c2feac8"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Models/SwimmingShark.fbx",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "81ce0653607251f5201e7f8807840c0d06b740873f0979c955302bdde56d1037"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Cigar_Mat_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Cigar_Mat_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_001_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_001_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Clothes_MAT_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_001_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_001_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Eyes_MAT_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_001_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "18952bd4957f13432454b003593901b8cacdac09622ca8374aad91527ca60669"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_001_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_002_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "17ebc77b3b087b5a2570e13d4ea25bb431240c9f7c4ae13b7a250096ca502e11"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_002_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_003_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "17ebc77b3b087b5a2570e13d4ea25bb431240c9f7c4ae13b7a250096ca502e11"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_003_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_004_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3d28df339e3651a33459c6d5b2f70b9a624a6d9819107cc549bd66de4fc5c056"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_004_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "a6875967e4a7a561a2fc9c2dadb67fe2fa45f8a5c82e318c133a564e789f241e"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "17ebc77b3b087b5a2570e13d4ea25bb431240c9f7c4ae13b7a250096ca502e11"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material0_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "8d9746e1c08d3e803454abd344cf7996e16bd2aec081bd0ebbd9a4ff68380d03"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material1_001_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "5bd0218246e03f02f3db8a198087879d181f2352c6320711df555887826828dd"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material1_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "7d79de70f71cbbddb55631c4fcf686a4e5750fe15b440042fab7d7808a5685b5"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material1_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "35845c2cf6f352276fbff2e85a3fbc06d869fbaf75c081f9a68fe05ecefece9e"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material2_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "2c2a5f9a8c25a222ef07c8b9921a8f6d2a8028806fde951c991a93a31de7b93b"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material2_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "6a33e83a9a3c0c0bc1154130b1703d16dfe43715dadcc9c374cb3686a04fe841"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/material3_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "7245cbbb24c993c006fa5528a31ecafc8c0091f0f3f9a1b152c892a3f82d0692"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/phong1_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "f65702e31ccb423c135c62e4ec73daca6aa5e2c98fa0fc231da8b59a29da9e7a"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/phong1_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3cb9d90d0b96c368785589cb465acb6be41050da8e1400c1dac8d96834a62f8d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Skin_MAT_Diffuse.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "4ab371a3a09c6852fb59f2405aa83a7c1a07352dc6f3a01f186e34b87d81af6d"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/LasquetiBoat/Textures/Skin_MAT_Normal.png",
+      "archive": "animated-sharks-circling-fishing-boat-loop.zip",
+      "url": "https://skfb.ly/o9nSO",
+      "license": "CC BY 4.0",
+      "sha256": "3aa180e9c54e61cdc386163a9f1cdb7d1abec013780dac8317ec8311052257bf"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/License.txt",
+      "source": "See D:\\projects\\KeyLearner\\KeyLearner\\UnityPort\\Assets\\ThirdParty\\YughuesPalms\\License.txt",
+      "sha256": "a8c11e923a039acf5e5ca42c48856e8b30d93eea4b8bd0537fba1eb40ca04f90"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/Textures/Palm_Diffuse.png",
+      "source": "See D:\\projects\\KeyLearner\\KeyLearner\\UnityPort\\Assets\\ThirdParty\\YughuesPalms\\Textures\\License.txt",
+      "sha256": "e5b80d632f0ef669bd70d84fa91303231b0007dca13583d0866af144f2252d75"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/YughuesPalms/Textures/Palm_Normal.png",
+      "source": "See D:\\projects\\KeyLearner\\KeyLearner\\UnityPort\\Assets\\ThirdParty\\YughuesPalms\\Textures\\License.txt",
+      "sha256": "acee0c05bd57d240da13e39b1f0d0cdc92850b0d252cb79abc1def2bd7bfb4a4"
+    },
+    {
+      "file": "UnityPort/Assets/ThirdParty/KenneyPirate/Models/cannon-mobile.fbx",
+      "archive": "kenney_pirate-kit_2.1.zip",
+      "member": "Models/FBX format/cannon-mobile.fbx",
+      "sha256": "c65796e72360b6758e526e918a6c07b9b9f8ca6175e29e26881a25792754130b"
     }
   ]
 }

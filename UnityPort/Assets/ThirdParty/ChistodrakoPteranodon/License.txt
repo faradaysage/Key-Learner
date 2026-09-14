@@ -1,0 +1,4 @@
+"Pteranodon (Animated)" (https://skfb.ly/o6KXA) by Chistodrako._. is licensed under Creative Commons Attribution 4.0 International.
+http://creativecommons.org/licenses/by/4.0/
+Source: https://sketchfab.com/3d-models/pteranodon-animated-7d7683df41d1405283f160e81a5dff1b
+Adaptations: GLB-to-FBX conversion; original mesh, rig, flight/walk/standing actions and diffuse/normal maps retained; omitted bone-display helper; Unity materials/pivot/scale.

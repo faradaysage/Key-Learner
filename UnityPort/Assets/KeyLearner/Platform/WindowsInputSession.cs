@@ -134,6 +134,7 @@ namespace KeyLearner.Unity.Platform
             };
         }
         public bool Protected => !unprotected;
+        public bool Active => active;
         public string Status => unprotected ? "Preview / Parent Studio: keyboard protection is disabled." : guard.Diagnostics;
         public WindowsInputSession(bool previewOrStudio, string profileRoot)
         {

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "commercialReleaseStatus": "blocked-until-relicensed-or-replaced",
+  "assets": [
+    {
+      "id": "wildmesh-wolf",
+      "pack": "ULTIMATE ANIMAL PACK |100 ANIMALS | 50% OFF",
+      "creator": "WildMesh 3D",
+      "source": "https://sketchfab.com/3d-models/ultimate-animal-pack-100-animals-50-off-165f755e44fc477fbc4ee41085606dd1",
+      "creditUrl": "https://skfb.ly/pMR9W",
+      "license": "CC-BY-NC-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "authorizedByUser": "2026-09-14",
+      "sourceDirectory": "UnityPort/Assets/ThirdParty/WildMeshAnimals",
+      "category": "wolf",
+      "conversion": "scripts/convert-wildmesh-wolf.py",
+      "usage": [
+        "Sky Speller forest wildlife",
+        "Letter Racer forest roadside wildlife"
+      ],
+      "replacementPoints": [
+        "UnityPort/Assets/KeyLearner/Editor/ContentBuilder.cs",
+        "UnityPort/Assets/KeyLearner/Runtime/ExplorerWorldLife.cs"
+      ],
+      "commercialLicenseEvidence": null
+    }
+  ]
+}

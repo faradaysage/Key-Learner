@@ -14,6 +14,8 @@
     <Compile Include="PointerGestureSafety.cs" />
     <Compile Include="../Studio/DotMath.cs" />
     <Compile Include="../Studio/Subitizing.cs" />
+    <Compile Include="../Studio/LearningBonus.cs" />
+    <Compile Include="../Studio/PreparedSpeechCatalog.cs" />
     <Compile Include="../Studio/InputFocus.cs" />
     <Compile Include="../Studio/GameCatalog.cs" />
     <Compile Include="../Studio/ExplorerWorld.cs" />
@@ -32,6 +34,8 @@
     <Compile Include="../Studio/PlayModels.cs" />
     <Compile Include="../Studio/GlassSheet.cs" />
     <Compile Include="../Studio/FlightModel.cs" />
+    <Compile Include="../Studio/DinosaurModel.cs" />
+    <Compile Include="../Studio/WildlifeMotion.cs" />
     <Compile Include="../Studio/PhysicalKeyboard.cs" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
   </ItemGroup>
