@@ -75,6 +75,11 @@ namespace KeyLearner.Unity
         {
             yield return null;
             yield return null;
+            if(suite.Services.Options.Has("--expect-voice"))
+            {
+                Check(suite.Services.Settings.VoicePackId==suite.Services.Options.Value("--expect-voice"),"Player process restarted with persisted narrator");
+                if(failed)yield break;
+            }
             suite.Select(KeyLearner.Studio.PlayMode.SmashGarden);
             yield return null;
             var smash = suite.CurrentGame;
@@ -135,6 +140,49 @@ namespace KeyLearner.Unity
                 Check(parent.PreviewState.StartsWith("tab=" + tab + " "), "Parent Studio tab " + tab);
                 if (failed)
                     yield break;
+            }
+            if(suite.Services.Options.Has("--voice-verify"))
+            {
+                suite.Services.Settings.Sound=true;
+                suite.Services.Settings.Volume=35;
+                var registry=suite.Services.Store.SpeechPacks;
+                var audio=suite.Services.Audio;
+                var selectedBefore=suite.Services.Settings.VoicePackId;
+                foreach(var pack in registry.Packs)
+                {
+                    parent.PreviewTab(1);
+                    for(int attempt=0;attempt<registry.Packs.Count && suite.Services.Settings.VoicePackId!=pack.Id;attempt++)ParentKey(39);
+                    Check(suite.Services.Settings.VoicePackId==pack.Id,"Options selects "+pack.DisplayName);
+                    if(failed)yield break;
+                    audio.StopSpeech();var started=audio.PreparedStarted;var fallback=audio.FallbackStarted;
+                    ParentKey(32);
+                    double deadline=Time.realtimeSinceStartupAsDouble+15;
+                    while(audio.PreparedStarted==started && Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+                    Check(audio.PreparedStarted>started && audio.LastSpeechKey==VoicePackRegistry.PreviewKey && audio.LastVoicePackId==pack.Id,"Options preview decodes "+pack.DisplayName);
+                    if(failed)yield break;
+                    yield return Shot("voice-"+pack.Id);
+                    while(audio.Pending>0 && Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+                    Check(audio.Pending==0 && audio.FallbackStarted==fallback,"Options preview completes without synthesis: "+pack.DisplayName);
+                    if(failed)yield break;
+                    suite.PreviewStudio(false);yield return null;
+                    var restarted=new Store(suite.Services.Store.Root,speechRoot:Path.Combine(Application.streamingAssetsPath,"Content","Voice"));
+                    Check(restarted.Settings.VoicePackId==pack.Id,"Restart reloads "+pack.DisplayName);
+                    if(failed)yield break;
+                    suite.Select(KeyLearner.Studio.PlayMode.Counting);yield return null;
+                    audio.StopSpeech();started=audio.PreparedStarted;
+                    suite.PreviewGameKey(49);
+                    deadline=Time.realtimeSinceStartupAsDouble+10;
+                    while(audio.PreparedStarted==started && Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+                    Check(audio.PreparedStarted>started && audio.LastVoicePackId==pack.Id,"Counting gameplay speaks with "+pack.DisplayName);
+                    if(failed)yield break;
+                    while(audio.Pending>0 && Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+                    suite.PreviewStudio(true);yield return null;
+                }
+                var finalChoice=suite.Services.Options.Has("--finish-voice")?suite.Services.Options.Value("--finish-voice"):selectedBefore;
+                parent.PreviewTab(1);
+                for(int attempt=0;attempt<registry.Packs.Count && suite.Services.Settings.VoicePackId!=finalChoice;attempt++)ParentKey(39);
+                Check(suite.Services.Settings.VoicePackId==finalChoice,"Options leaves requested narrator selected for restart");
+                if(failed)yield break;
             }
             parent.PreviewCredits();
             yield return Shot("studio-credits");

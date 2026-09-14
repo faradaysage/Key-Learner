@@ -1,4 +1,4 @@
-param([string]$Executable='', [string]$Output='', [switch]$SkipNativeFocus)
+param([string]$Executable='', [string]$Output='', [switch]$SkipNativeFocus, [switch]$VerifyVoices, [string]$ExpectedVoice="", [string]$FinishVoice="")
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 if(!$Executable){$Executable=Join-Path $root 'artifacts/unity-windows/KeyLearner.exe'}
@@ -18,8 +18,11 @@ $log=Join-Path $Output 'player.log'
 $statePath=Join-Path $Output 'ux-state.json'
 $arguments=@('-screen-fullscreen','0','-screen-width','1366','-screen-height','768','--preview','--mute','--data',('"'+$profile+'"'),'--ux-verify',('"'+$Output+'"'),'-logFile',('"'+$log+'"'))
 if(!$SkipNativeFocus){$arguments+='--native-focus'}
+if($VerifyVoices){$arguments=$arguments | Where-Object {$_ -ne '--mute'};$arguments+='--voice-verify'}
+if($ExpectedVoice){$arguments+=@('--expect-voice',$ExpectedVoice)}
+if($FinishVoice){$arguments+=@('--finish-voice',$FinishVoice)}
 $process=Start-Process -FilePath $Executable -ArgumentList $arguments -WindowStyle Normal -PassThru
-$deadline=[DateTime]::UtcNow.AddSeconds(100)
+$deadline=[DateTime]::UtcNow.AddSeconds($(if($VerifyVoices){180}else{100}))
 $minimized=$false;$restored=$false;$focused=$false
 try{
  while(!$process.HasExited -and [DateTime]::UtcNow -lt $deadline){
@@ -33,7 +36,7 @@ try{
   }
   Start-Sleep -Milliseconds 120
  }
- if(!$process.HasExited){$process.Kill();throw 'UX preview exceeded its bounded 100-second deadline.'}
+ if(!$process.HasExited){$process.Kill();throw 'UX preview exceeded its bounded deadline.'}
  if(!(Test-Path -LiteralPath $statePath)){throw 'UX state report was not written. Inspect player.log.'}
  $state=[UnityPreviewWindow]::ReadSharedReport($statePath) | ConvertFrom-Json
  if($state.phase -ne 'complete'){throw ('UX verification failed: '+$state.error+'; '+$state.phase)}

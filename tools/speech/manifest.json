@@ -4739,6 +4739,16 @@
       "trimAligner": "small.en"
     },
     {
+      "id": "word-apollo",
+      "text": "Apollo",
+      "aliases": [
+        "apollo"
+      ],
+      "sources": [
+        "Explicit additional speech vocabulary"
+      ]
+    },
+    {
       "id": "word-apologize",
       "text": "apologize",
       "aliases": [

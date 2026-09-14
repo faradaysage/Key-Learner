@@ -1,6 +1,18 @@
 # KeyLearner: durable project handoff
 
-## Current working checkpoint — 2026-09-14 (not published yet)
+## Current voice integration checkpoint — 2026-09-14 (PR #10)
+
+Active branch is `codex/voice-pack-selection`, PR #10, stacked on immersion PR #9. The voice work below supersedes older all-finalists-complete and built-in-default instructions. The user finalized Blake and put Butter/Lake on hold: do not generate or wait for those held voices.
+
+Blake (`kyutai-Blake`) is imported as the production default. Original narrator (`builtin`) remains selectable and is the explicitly separate same-key fallback. All existing Original WAVs are preserved. Existing explicit voice choices persist; new/unset/invalid choices use Blake. Future packs are additive manifest-driven imports, with no gameplay-specific voice branches.
+
+The user then requested Apollo. Only `word-apollo` was generated in each active voice using the existing local Chatterbox/CUDA environment; each pack now has **4,898 clips**. The explicit shared vocabulary addition is `tools/speech/additional_words.json`; no private CSV/profile is incorporated into the public manifest. Independent cached small.en transcription recognized Apollo in both clips (`artifacts/apollo-transcriptions.json`). Existing 4,897-clip Blake generation output and held packs remain untouched; its extension was generated in `artifacts/voice-packs-apollo` with a Blake-only selection. Runtime import retains provenance and all six recorded Blake seed repairs.
+
+`defaultVoiceId` and `fallbackVoiceId` are independent metadata. The .NET importer accepts explicit `--voices` from a non-running worker, requires full selected-pack validation, retains unselected production packs, checks staged resolution and source fingerprints, and keeps transaction backups. Missing/corrupt selected keys recover to Original without synthesizing known phrases. Normal builds never invoke generation or require Python/models.
+
+Local validation so far: 1,317 checks in each MonoGame/shared regression suite; strict full-pack/corpus verification passes both 4,898-clip datasets. MonoGame actual spelling/counting completed all requests in both voices with zero fallback/overflow; its Options scenario switched, previewed and saved both choices across processes. Unity passed 71 EditMode tests and the final 11 PlayMode tests (including both Apollo decodes). The final Windows build passed three actual-player runs, each with 35 assertions and 16 screenshots; both voices preview/complete, speak during counting, and persist across process restarts (`artifacts/blake-ux-final/{first-run,original-restart,blake-restart}.json`). Real parent saves remained unchanged. MonoGame Options also switched and previewed both narrators across processes. Git LFS object/pointer checks pass; only the new Apollo WAV was added to Original. Hosted CI for this final integration is the remaining publication gate. Restart QA exposed a real stale Options-row issue: Tab then arrow before OnGUI could edit the previous section. Keyboard adjustments now resolve the current tab's rows directly. Preserve this fix.
+
+## Earlier immersion checkpoint — 2026-09-14 (historical)
 
 The Unity migration and keyboard repair are already implemented. PR #8 was merged at `0a44fcb96eb685c8779881f0e53f663d59465374`. Current work is on `codex/immersive-gameplay-audio`, with the immersion implementation preserved in Git while generated speech assets finish repair and verification. Do not restart the migration from the historical MonoGame baseline below, and do not describe this checkpoint as a released build.
 

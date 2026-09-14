@@ -14,8 +14,11 @@ try
     else if(args[0]=="verify")Verify(runtime,Path.Combine(repository,"tools","speech","manifest.json"),args.Contains("--require-packs"));
     else
     {
-        if(args.Length!=5 || args[3]!="--default")throw new ArgumentException("Import requires a completed output directory and explicit --default ID.");
-        Import(repository,Path.GetFullPath(args[2]),args[4]);
+        Require(args.Length>=5 && (args.Length-3)%2==0,"Import requires output directory and --default ID, optionally --voices ID,ID and --fallback ID.");
+        var options=new Dictionary<string,string>(StringComparer.Ordinal);
+        for(int i=3;i<args.Length;i+=2){Require(args[i] is "--default" or "--voices" or "--fallback" && options.TryAdd(args[i],args[i+1]),"Unknown or duplicate import option");}
+        Require(options.ContainsKey("--default"),"An explicit --default ID is required");
+        Import(repository,Path.GetFullPath(args[2]),options["--default"],options.TryGetValue("--voices",out var selected)?selected.Split(','):null,options.GetValueOrDefault("--fallback"));
     }
     return 0;
 }
@@ -54,8 +57,9 @@ static Dictionary<string,JsonElement> Corpus(string file)
     var entries=Read(file).GetProperty("entries").EnumerateArray().ToDictionary(e=>Text(e,"id"),e=>e,StringComparer.Ordinal);
     Require(entries.Count>0,"Empty corpus");return entries;
 }
-static void Catalog(string directory,Dictionary<string,JsonElement> corpus,JsonElement? configuration=null,bool allowAuxiliary=false)
+static void Catalog(string directory,Dictionary<string,JsonElement> corpus,JsonElement? configuration=null,bool allowAuxiliary=false,JsonElement? repairs=null)
 {
+    if(repairs is JsonElement overrides)foreach(var item in overrides.EnumerateObject())Require(corpus.ContainsKey(item.Name) && item.Value.TryGetInt64(out _),"Invalid per-voice seed repair: "+item.Name);
     var clips=Read(Path.Combine(directory,"catalog.json")).GetProperty("clips");
     Require(clips.EnumerateObject().Select(p=>p.Name).ToHashSet(StringComparer.Ordinal).SetEquals(corpus.Keys),"Catalog does not expose the exact required speech IDs: "+directory);
     var reader=new PreparedSpeechCatalog(directory);Require(reader.IsValid && reader.Clips.Count==corpus.Count,"Invalid/ambiguous speech catalog: "+directory);
@@ -69,9 +73,10 @@ static void Catalog(string directory,Dictionary<string,JsonElement> corpus,JsonE
         using(var stream=File.OpenRead(path))Require(VoicePackRegistry.IsRuntimeWave(stream),"Expected mono 24 kHz PCM16 WAV, minimum 0.12 seconds: "+path);
         if(configuration is JsonElement config)
         {
-            var recipe=new Dictionary<string,object?>{["text"]=entry.GetProperty("text"),["generationText"]=entry.TryGetProperty("generationText",out var generation)?generation:entry.GetProperty("text"),["trimPrefix"]=entry.TryGetProperty("trimPrefix",out var trim)?trim:null,["voice"]=config,["generator"]=2};
+            var recipe=new Dictionary<string,object?>{["text"]=entry.GetProperty("text"),["generationText"]=entry.TryGetProperty("generationText",out var generation)?generation:entry.GetProperty("text"),["trimPrefix"]=entry.TryGetProperty("trimPrefix",out var trim)?(object)trim:null,["voice"]=config,["generator"]=2};
             long offset=entry.TryGetProperty("seedOffset",out var seedOffset)?seedOffset.GetInt64():0;
-            if(offset!=0)recipe["seedOffset"]=seedOffset;
+            if(repairs is JsonElement replacements && replacements.TryGetProperty(id,out var replacement))offset=replacement.GetInt64();
+            if(offset!=0)recipe["seedOffset"]=offset;
             if(entry.TryGetProperty("trimAligner",out var aligner))recipe["trimAligner"]=aligner;
             var recipeHash=Convert.ToHexString(SHA256.HashData(Canonical(JsonSerializer.SerializeToElement(recipe))));
             Require(recipeHash.Equals(Text(clip,"recipe"),StringComparison.OrdinalIgnoreCase),"Stale recipe: "+id);
@@ -99,21 +104,27 @@ static void Verify(string runtime,string corpusFile,bool requirePacks,bool verif
         var id=Text(voice,"voiceId");Require(id!=VoicePackRegistry.LegacyId && ids.Add(id),"Invalid/duplicate voice ID");
         Require(voice.GetProperty("readyForIntegration").GetBoolean() && Text(voice,"status")=="complete","Unready production voice: "+id);
         var pack=registry.Packs.SingleOrDefault(p=>p.Id==id);Require(pack!=null,"Registry rejected voice: "+id);
-        Catalog(pack!.AssetRoot,corpus,voice.GetProperty("generationConfiguration"));
+        Catalog(pack!.AssetRoot,corpus,voice.GetProperty("generationConfiguration"),repairs:Repairs(voice));
         foreach(var key in corpus.Keys)Require(registry.Resolve(key,id)?.VoiceId==id,"Runtime fell back instead of resolving requested pack: "+id+" / "+key);
     }
     Require(ids.Count>0 && ids.Contains(Text(manifest,"defaultVoiceId")) && registry.DefaultVoiceId==Text(manifest,"defaultVoiceId"),"Unavailable explicit default voice");
-    Console.WriteLine($"PASS: {ids.Count} complete packs x {corpus.Count} identical IDs, recipes, hashes, PCM and runtime resolution; default {registry.DefaultVoiceId}.");
+    Require(!manifest.TryGetProperty("fallbackVoiceId",out var fallback) || (registry.Packs.Any(p=>p.Id==fallback.GetString()) && registry.FallbackVoiceId==fallback.GetString()),"Unavailable explicit fallback voice");
+    Console.WriteLine($"PASS: {ids.Count} complete packs x {corpus.Count} identical IDs, recipes, hashes, PCM and runtime resolution; default {registry.DefaultVoiceId}; fallback {registry.FallbackVoiceId}.");
 }
-static void Import(string repository,string source,string defaultId)
+static JsonElement? Repairs(JsonElement voice)=>voice.TryGetProperty("repairSeedOffsets",out var repairs)?repairs:null;
+static void Import(string repository,string source,string defaultId,string[]? selected=null,string? fallbackId=null)
 {
     var sourceManifest=Contained(source,"voice-packs.json");var manifestBytes=File.ReadAllBytes(sourceManifest);var manifest=Read(sourceManifest);
-    Require(Text(manifest,"status")=="complete","Generation is active or incomplete. No output was copied or changed.");
-    var worker=Read(Contained(source,"worker-status.json"));Require(Text(worker,"state")=="complete","Generation worker has not completed. No output was copied or changed.");
+    var workerPath=Contained(source,"worker-status.json");var workerBytes=File.ReadAllBytes(workerPath);var worker=Read(workerPath);
+    if(selected==null){Require(Text(manifest,"status")=="complete","Generation is active or incomplete. No output was copied or changed.");Require(Text(worker,"state")=="complete","Generation worker has not completed. No output was copied or changed.");}
+    else {Require(selected.Length>0 && selected.All(id=>!string.IsNullOrWhiteSpace(id)) && selected.Distinct().Count()==selected.Length,"Choose distinct nonempty voice IDs");Require(Text(worker,"state") is "complete" or "incomplete" or "paused","Generation worker is active. Stop generation before importing finalized packs.");}
     var sourceCorpus=Contained(source,Text(manifest,"corpusManifest"));var corpus=Corpus(sourceCorpus);var corpusHash=Hash(sourceCorpus);
     var currentCorpus=Corpus(Path.Combine(repository,"tools","speech","manifest.json"));
     Require(currentCorpus.Count==corpus.Count && corpus.All(p=>currentCorpus.TryGetValue(p.Key,out var current)&&Same(p.Value,current)),"Generated corpus differs from current game corpus");
-    var voices=manifest.GetProperty("voices").EnumerateArray().ToArray();var ids=new HashSet<string>(StringComparer.Ordinal);
+    var voices=manifest.GetProperty("voices").EnumerateArray().ToArray();
+    if(selected!=null){Require(selected.All(id=>voices.Count(v=>Text(v,"voiceId")==id)==1),"Selected voice absent or duplicated in source manifest");voices=voices.Where(v=>selected.Contains(Text(v,"voiceId"),StringComparer.Ordinal)).ToArray();}
+    var snapshots=new Dictionary<string,string>(StringComparer.Ordinal);
+    var ids=new HashSet<string>(StringComparer.Ordinal);
     var sources=new List<(string Id,string Root,JsonElement Voice)>();
     foreach(var voice in voices)
     {
@@ -125,17 +136,34 @@ static void Import(string repository,string source,string defaultId)
         var local=Read(Contained(root,"voice.json"));Require(Text(local,"voiceId")==id && local.GetProperty("readyForIntegration").GetBoolean() && Text(local,"status")=="complete","Pack metadata not finalized: "+id);
         var config=Read(Contained(root,"generation-config.json"));Require(Same(config,voice.GetProperty("generationConfiguration")),"Generation metadata mismatch: "+id);
         var catalog=Contained(root,Text(voice,"catalog"));Require(Path.GetFileName(catalog)=="catalog.json","Invalid catalog filename");
-        Catalog(Path.GetDirectoryName(catalog)!,corpus,config);
+        Require(Same(local.GetProperty("generationConfiguration"),config) && Same(JsonSerializer.SerializeToElement(Repairs(local)),JsonSerializer.SerializeToElement(Repairs(voice))),"Per-voice generation/repair metadata mismatch: "+id);
+        Catalog(Path.GetDirectoryName(catalog)!,corpus,config,repairs:Repairs(voice));
+        foreach(var file in new[]{"voice.json","validation.json","generation-config.json",Text(voice,"catalog"),"CHATTERBOX_LICENSE.txt","reference/SOURCE_PROVENANCE.txt"}){var path=Contained(root,file);snapshots[path]=Hash(path);}
         sources.Add((id,root,voice));
     }
-    Require(ids.Contains(defaultId),"Choose an explicit finalized default voice ID");
+    Require(ids.Contains(defaultId) || new VoicePackRegistry(Contained(repository,"Content/Voice")).Packs.Any(p=>p.Id==defaultId && p.Id!=VoicePackRegistry.LegacyId),"Choose an explicit finalized default voice ID");
     // No writes above this point, and never any writes under the generator output.
     var transaction=Contained(repository,"artifacts/voice-pack-import/"+Guid.NewGuid().ToString("N"));
     Require(!transaction.StartsWith(source.TrimEnd(Path.DirectorySeparatorChar)+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase),"Import staging cannot be inside generator output");
     var staging=Contained(transaction,"new");Directory.CreateDirectory(staging);
     var runtime=Contained(repository,"Content/Voice");File.Copy(Contained(runtime,"catalog.json"),Contained(staging,"catalog.json"));
-    var projected=JsonNode.Parse(manifestBytes)!.AsObject();projected["defaultVoiceId"]=defaultId;projected["corpusCatalog"]="catalog.json";projected.Remove("detail");projected.Remove("corpusManifest");
+    var projected=JsonNode.Parse(manifestBytes)!.AsObject();projected["status"]="complete";projected["defaultVoiceId"]=defaultId;projected["fallbackVoiceId"]=fallbackId??defaultId;projected["corpusCatalog"]="catalog.json";projected.Remove("detail");projected.Remove("corpusManifest");
     var projectedVoices=new JsonArray();
+    // Additive imports preserve previously finalized packs that were not selected this time.
+    var existingManifest=Contained(runtime,"voice-packs.json");
+    if(File.Exists(existingManifest))
+    {
+        Require(Text(Read(existingManifest),"status")=="complete","Existing runtime manifest is not finalized");
+        // Validate retained packs in staging; a selected replacement may repair an old/corrupt corpus.
+        foreach(var existing in Read(existingManifest).GetProperty("voices").EnumerateArray())
+        {
+            var id=Text(existing,"voiceId");if(ids.Contains(id))continue;
+            var previous=Contained(runtime,Text(existing,"packDirectory"));var destination=Contained(staging,"Packs/"+id);
+            foreach(var file in Directory.EnumerateFiles(previous,"*",SearchOption.AllDirectories))
+            {var relative=Path.GetRelativePath(previous,file);var from=Contained(previous,relative);var to=Contained(destination,relative);Directory.CreateDirectory(Path.GetDirectoryName(to)!);File.Copy(from,to);}
+            var retained=JsonNode.Parse(existing.GetRawText())!.AsObject();retained["packDirectory"]="Packs/"+id;projectedVoices.Add(retained);
+        }
+    }
     foreach(var (id,root,voice) in sources)
     {
         var destination=Contained(staging,"Packs/"+id);Directory.CreateDirectory(Contained(destination,"Voice"));
@@ -148,7 +176,7 @@ static void Import(string repository,string source,string defaultId)
     projected["voices"]=projectedVoices;var stagedManifest=Contained(staging,"voice-packs.json");
     File.WriteAllText(stagedManifest,projected.ToJsonString(new JsonSerializerOptions{WriteIndented=true})+Environment.NewLine);
     Verify(staging,sourceCorpus,true,verifyOriginalAudio:false);
-    Require(File.ReadAllBytes(sourceManifest).SequenceEqual(manifestBytes) && Text(Read(Contained(source,"worker-status.json")),"state")=="complete","Source status changed during validation; staged copy retained for inspection, production unchanged");
+    Require(File.ReadAllBytes(sourceManifest).SequenceEqual(manifestBytes) && File.ReadAllBytes(workerPath).SequenceEqual(workerBytes) && Hash(sourceCorpus)==corpusHash && snapshots.All(p=>Hash(p.Key)==p.Value),"Source status changed during validation; staged copy retained for inspection, production unchanged");
     var packs=Contained(runtime,"Packs");var liveManifest=Contained(runtime,"voice-packs.json");var backup=Contained(transaction,"previous-packs");var backupManifest=Contained(transaction,"previous-manifest.json");
     bool movedOld=false,movedNew=false;
     if(File.Exists(liveManifest))File.Copy(liveManifest,backupManifest);
@@ -192,12 +220,14 @@ static void SelfTest(string repository)
                 writer.Write((short)1);writer.Write((short)1);writer.Write(24000);writer.Write(48000);writer.Write((short)2);writer.Write((short)16);writer.Write(System.Text.Encoding.ASCII.GetBytes("data"));writer.Write(9600);
                 for(int i=0;i<4800;i++)writer.Write((short)(id=="first"?1000:2000));
             }
-            var recipe=new{text=entry.text,generationText=entry.text,trimPrefix=(string?)null,voice=config,generator=2};
-            var seed=(42L+Convert.ToUInt32(Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(entry.id)))[..8],16))&0xffffffffL;
+            var offset=id=="second" && entry.id=="number-three"?7:0;
+            var recipe=new Dictionary<string,object?>{{"text",entry.text},{"generationText",entry.text},{"trimPrefix",null},{"voice",config},{"generator",2}};
+            if(offset!=0)recipe["seedOffset"]=offset;
+            var seed=(42L+offset+Convert.ToUInt32(Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(entry.id)))[..8],16))&0xffffffffL;
             clips[entry.id]=new{text=entry.text,file=filename,entry.aliases,sha256=Hash(path),seed,modelFiles=config.GetProperty("modelFiles"),recipe=Convert.ToHexString(SHA256.HashData(Canonical(JsonSerializer.SerializeToElement(recipe)))).ToLowerInvariant()};
         }
         Save(Contained(root,"Voice/catalog.json"),new{clips});Save(Contained(root,"generation-config.json"),config);
-        var metadata=new{voiceId=id,displayName=id,packDirectory=id,catalog="Voice/catalog.json",status="complete",readyForIntegration=true,requiredSpeechCount=entries.Length,corpusSha256=Hash(Contained(source,"corpus-manifest.json")),generationConfiguration=config};
+        var metadata=new{voiceId=id,displayName=id,packDirectory=id,catalog="Voice/catalog.json",status="complete",readyForIntegration=true,requiredSpeechCount=entries.Length,corpusSha256=Hash(Contained(source,"corpus-manifest.json")),generationConfiguration=config,repairSeedOffsets=id=="second"?new Dictionary<string,int>{{"number-three",7}}:new Dictionary<string,int>()};
         voices.Add(metadata);Save(Contained(root,"voice.json"),metadata);
         Save(Contained(root,"validation.json"),new{complete=true,validCount=2,requiredCount=2,missingOrInvalid=Array.Empty<object>(),extraCatalogIds=Array.Empty<string>(),extraFiles=Array.Empty<string>()});
         File.WriteAllText(Contained(root,"CHATTERBOX_LICENSE.txt"),"TEST FIXTURE ONLY");File.WriteAllText(Contained(root,"reference/SOURCE_PROVENANCE.txt"),"TEST PCM; no voice reference or speech model used");
@@ -208,6 +238,19 @@ static void SelfTest(string repository)
     Save(Contained(source,"worker-status.json"),new{state="running"});Manifest("running");
     Refuses(()=>Import(repo,source,"first"),"active generation refused before staging");Require(!Directory.Exists(Contained(repo,"artifacts")),"Active import wrote staging output");
     Manifest("complete");Refuses(()=>Import(repo,source,"first"),"incomplete worker refused");Save(Contained(source,"worker-status.json"),new{state="complete"});
+    // A finalized selected pack can ship while another pack remains on hold.
+    Manifest("incomplete");Save(Contained(source,"worker-status.json"),new{state="incomplete"});
+    var selectedDamaged=Contained(source,"second/Voice/speech-number-three.wav");var selectedBytes=File.ReadAllBytes(selectedDamaged);File.WriteAllText(selectedDamaged,"on hold");
+    Import(repo,source,"first",new[]{"first"},VoicePackRegistry.LegacyId);
+    var selectedRegistry=new VoicePackRegistry(voiceRoot);
+    Require(selectedRegistry.Packs.Count==2 && selectedRegistry.DefaultVoiceId=="first" && selectedRegistry.FallbackVoiceId==VoicePackRegistry.LegacyId,"Selected-ready import must contain only finalized pack plus Original");
+    selectedRegistry.Reject(selectedRegistry.Resolve("number-three","first")!);
+    Require(selectedRegistry.Resolve("number-three","first")?.VoiceId==VoicePackRegistry.LegacyId,"Original same-key fallback failed");
+    Refuses(()=>Import(repo,source,"second",new[]{"second"}),"selected corrupt pack is refused even with explicit selection");
+    File.WriteAllBytes(selectedDamaged,selectedBytes);
+    Import(repo,source,"first",new[]{"second"},VoicePackRegistry.LegacyId);
+    Require(new VoicePackRegistry(voiceRoot).Packs.Count==3,"Adding another selected pack must retain previously imported voice");
+    Manifest("complete");Save(Contained(source,"worker-status.json"),new{state="complete"});
     Import(repo,source,"first");Verify(voiceRoot,Contained(source,"corpus-manifest.json"),true);
     var manifestBefore=File.ReadAllBytes(Contained(voiceRoot,"voice-packs.json"));
     var damaged=Contained(source,"second/Voice/speech-number-three.wav");var bytes=File.ReadAllBytes(damaged);File.WriteAllText(damaged,"bad");

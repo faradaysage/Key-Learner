@@ -33,6 +33,7 @@ public sealed class VoicePackRegistry
     readonly PreparedSpeechCatalog contract;
     public IReadOnlyList<VoicePack> Packs => packs.AsReadOnly();
     public string DefaultVoiceId {get;private set;}=LegacyId;
+    public string FallbackVoiceId {get;private set;}=LegacyId;
     public int RequiredCount => contract.Clips.Count;
     public VoicePackRegistry(string root,Action<string>? diagnostic=null)
     {
@@ -75,9 +76,12 @@ public sealed class VoicePackRegistry
                 var requested=json.GetProperty("defaultVoiceId").GetString()??"";
                 if(byId.ContainsKey(requested))DefaultVoiceId=requested;
                 else Report("default-missing","The declared default voice is unavailable; using the original narrator.");
+                var fallback=json.TryGetProperty("fallbackVoiceId",out var fallbackValue)?fallbackValue.GetString():DefaultVoiceId;
+                if(fallback==LegacyId || (fallback!=null && byId.ContainsKey(fallback)))FallbackVoiceId=fallback;
+                else Report("fallback-missing","The declared fallback voice is unavailable; using the original narrator.");
             }
             catch(Exception e) when(IsContentError(e))
-            {packs.Clear();byId.Clear();contract=legacy.Catalog;DefaultVoiceId=LegacyId;Report("manifest-invalid","Voice-pack metadata is unavailable; using the original narrator.");}
+            {packs.Clear();byId.Clear();contract=legacy.Catalog;DefaultVoiceId=LegacyId;FallbackVoiceId=LegacyId;Report("manifest-invalid","Voice-pack metadata is unavailable; using the original narrator.");}
         }
         // Compatibility data also makes malformed/missing registry metadata nonfatal.
         Add(legacy);
@@ -107,7 +111,7 @@ public sealed class VoicePackRegistry
     {
         var selected=NormalizeChoice(voiceId);
         var result=FromPack(key,selected);
-        return result??(selected!=DefaultVoiceId?FromPack(key,DefaultVoiceId):null);
+        return result??(selected!=FallbackVoiceId?FromPack(key,FallbackVoiceId):null);
     }
     SpeechAsset? FromPack(string key,string voiceId)
     {

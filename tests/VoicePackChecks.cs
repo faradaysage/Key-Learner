@@ -47,6 +47,18 @@ static class VoicePackChecks
             Catalog(Path.Combine(root,"Packs","gamma","Voice"),400);Manifest(root,extra:true);
             registry=new VoicePackRegistry(root);
             check(registry.Packs.Count==4 && registry.Resolve("word-cat","gamma")?.VoiceId=="gamma","adding manifest-backed data discovers another voice without code changes");
+            Manifest(root);
+            var explicitFallback=System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(Path.Combine(root,"voice-packs.json")))!;
+            explicitFallback["fallbackVoiceId"]=VoicePackRegistry.LegacyId;
+            File.WriteAllText(Path.Combine(root,"voice-packs.json"),explicitFallback.ToJsonString());
+            registry=new VoicePackRegistry(root);
+            check(registry.DefaultVoiceId=="alpha" && registry.FallbackVoiceId==VoicePackRegistry.LegacyId,"default and same-key fallback are independent manifest IDs");
+            check(new Store(Path.Combine(root,"fresh-profile"),root,root).Settings.VoicePackId=="alpha","new profile selects manifest default");
+            var originalStore=new Store(profile,root,root);originalStore.Settings.VoicePackId=VoicePackRegistry.LegacyId;originalStore.Save();
+            check(new Store(profile,root,root).Settings.VoicePackId==VoicePackRegistry.LegacyId,"explicit Original narrator choice survives a different manifest default");
+            registry.Reject(registry.Resolve("word-cat","alpha")!);
+            check(registry.Resolve("word-cat","alpha")?.VoiceId==VoicePackRegistry.LegacyId,"default pack decoder failure falls back to same-key Original narrator");
+            check(registry.Resolve(VoicePackRegistry.PreviewKey,VoicePackRegistry.LegacyId)?.VoiceId==VoicePackRegistry.LegacyId,"Original narrator remains directly selectable and previewable");
             Manifest(root,ready:false);registry=new VoicePackRegistry(root);
             check(registry.Packs.All(p=>p.Id!="beta") && registry.NormalizeChoice("beta")=="alpha","unfinished pack is not selectable");
             Catalog(Path.Combine(root,"Packs","beta","Voice"),300,wrongKeys:true);Manifest(root);registry=new VoicePackRegistry(root);

@@ -187,6 +187,9 @@ namespace KeyLearner.Unity
                 return;
             }
             if(tab==1 && e.Key==32){services.Audio.PreviewVoice(S.VoicePackId,S);return;}
+            // Tab and arrow events can arrive before the next OnGUI repaint.
+            // Resolve rows from the current tab, never a stale rendered section.
+            currentRows = Rows();
             if (e.Key == 38)
                 row = Math.Max(0, row - 1);
             if (e.Key == 40)
