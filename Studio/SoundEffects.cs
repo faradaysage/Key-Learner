@@ -14,10 +14,10 @@ public sealed class SoundEffects : IDisposable
         clips["horn"]=Tone(.28,t=>(Math.Sin(Math.PI*2*220*t)+.25*Math.Sin(Math.PI*2*440*t))*Math.Sin(Math.PI*t/.28));
         foreach(var name in new[]{"pop","paint","crack","shatter","cannon","fire","squawk"}){using var s=File.OpenRead(Path.Combine(AppContext.BaseDirectory,"Content","Sounds",name+".wav"));clips[name]=SoundEffect.FromStream(s);}fire=clips["fire"].CreateInstance();fire.IsLooped=true;}catch(Exception e) when(e is IOException or NoAudioHardwareException or InvalidOperationException){}}
     static SoundEffect Tone(double seconds,Func<double,double> wave){var data=new byte[(int)(22050*seconds)*2];for(int i=0;i<data.Length/2;i++){short sample=(short)(Math.Clamp(wave(i/22050d),-1,1)*6500);data[i*2]=(byte)sample;data[i*2+1]=(byte)(sample>>8);}return new SoundEffect(data,22050,AudioChannels.Mono);}
-    public void Play(string name,Settings s,float gain=1)
+    public void Play(string name,Settings s,float gain=1,double minimumInterval=.09)
     {
         Update(s,0,false);var now=KeyboardGuard.Now;
-        if(!s.Sound || !s.EffectsSound || !clips.ContainsKey(name) || playing.Count>=8 || last.TryGetValue(name,out var at)&&now-at<.09)return;
+        if(!s.Sound || !s.EffectsSound || !clips.ContainsKey(name) || playing.Count>=8 || last.TryGetValue(name,out var at)&&now-at<minimumInterval)return;
         last[name]=now;var instance=clips[name].CreateInstance();instance.Volume=Math.Clamp(s.EffectsVolume/100f*s.Volume/100f*gain,0,1);instance.Play();playing.Add(instance);
     }
     public void Update(Settings s,float heat,bool updateFire=true){foreach(var p in playing.Where(p=>p.State==SoundState.Stopped).ToArray()){p.Dispose();playing.Remove(p);}if(!s.Sound || !s.EffectsSound){foreach(var p in playing)p.Stop();}if(fire!=null && updateFire){fire.Volume=s.Sound&&s.EffectsSound?Math.Clamp(heat*.55f*s.EffectsVolume/100f*s.Volume/100f,0,1):0;if(fire.Volume>.001f && fire.State!=SoundState.Playing)fire.Play();if(fire.Volume<=.001f)fire.Stop();}}

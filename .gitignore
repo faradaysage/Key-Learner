@@ -39,3 +39,21 @@ data/private_dictionary.csv
 # Local neural runtime, voice models, and generated QA profiles
 .local/
 artifacts/
+
+# Unity caches and local source acquisitions
+UnityPort/[Ll]ibrary/
+UnityPort/[Tt]emp/
+UnityPort/[Oo]bj/
+UnityPort/[Ll]ogs/
+UnityPort/[Uu]ser[Ss]ettings/
+UnityPort/[Bb]uilds/
+UnityPort/*.csproj
+UnityPort/*.sln
+UnityPort/*.slnx
+_asset_downloads/
+_asset_inbox/
+
+UnityPort/Assets/StreamingAssets/Platform/
+
+# Private task attachments
+.codex-remote-attachments/

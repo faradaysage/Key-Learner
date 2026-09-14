@@ -1,45 +1,48 @@
 # Streaming recognition and living effects
 
-Exact words in Smash Garden are now independent of typing-speed labels. The old deliberate-only gate discarded ordinary fast typing. Physical clusters of three or more held keys still reset the spelling buffer; gesture confidence only limits fuzzy correction.
+The learning contracts below are shared by the preserved MonoGame implementation and the Unity port. `PROJECT_HISTORY.md` records the regression fixes; current source is authoritative. Unity presentation is implemented by `CanvasGame`, its renderer helpers and shared audio/reward services, while recognition, balloon pressure, counting and progression remain engine-independent.
 
-Each complete prefix has a persisted evidence score (0-8). It starts at zero:
-- mom -> says mom immediately, but retains its prefix.
-- Continuing to mommy says mommy immediately.
-- Ending that episode as mommy adds one point to mom's continuation score.
-- Ending an episode as mom subtracts one point.
-- Evidence times observed typing cadence determines a wait, capped by Prefix Pause.
-- Reaching momm removes the pending exact mom candidate.
-- An incompatible next letter resolves mom immediately and starts a new word.
-- Space, Enter, a new incompatible word, or a long pause finishes the learning episode.
-- After a spoken prefix, the buffer remains available for extension until at least three seconds of inactivity (Prefix Pause + one second if larger).
+## Recognition and word rewards
 
-No additional neural network is involved. The existing optional gesture network remains separate. Turning off Adaptive Learning makes all exact matches immediate.
+Exact Smash Garden words are independent of gesture speed labels: the old deliberate-only gate discarded normal fast typing. Physical clusters of three or more held keys reset the spelling buffer; gesture confidence limits fuzzy correction. Optional supervised gesture calibration remains separate from adaptive word timing.
 
-Word Adventure only announces the displayed target and completes on its final letter, without a prefix wait. The next target appears after a short success animation, or immediately on the next keypress.
+Each complete prefix has persisted evidence from 0 to 8. Initially, `mom` is spoken immediately and its prefix remains available for `mommy`. Ending the episode as `mommy` adds continuation evidence to `mom`; ending as `mom` subtracts it. Evidence and observed typing cadence determine a wait capped by Prefix Pause. Reaching `momm` removes the pending exact `mom`; an incompatible letter resolves the shorter word and begins the next one. Space, Enter, incompatible input or a long pause ends the learning episode. After a spoken prefix, extension remains possible for at least three seconds of inactivity, or Prefix Pause plus one second when larger. Turning off Adaptive Learning makes exact matches immediate.
 
-## Keys and effects
+Word Adventure announces only its displayed target and completes on the final required letter. Completion immediately speaks that word and releases colored reward balloons. Popping them adds points; the final balloon earns an all-clear bonus and advances the target. It does **not** skip directly to a new target after a short generic success animation or the next arbitrary keypress. Timed spelling remains a parent choice. Restart spelling resets the guided session's completed/score progression while keeping saved adaptive word habits.
 
-Key icons includes all 1,402 Font Awesome Free 6.7.2 solid icons. Child-friendly choices appear first. F1 defaults to a smiley; all other non-alphanumeric keys have deterministic defaults. Choose a key with the keyboard, search/select an icon, then Save & return. Space remains reserved for fire. Parent chords retain their original behavior. The font and license are bundled under Content/.
+## Keyboard and mouse effects
 
-Space starts a short flame pulse; holding it feeds a continuous themed fireplace. Releasing it lets the fire die down. Additive textured flame particles curl upward, cool through the palette, and shed rising embers. The MIT flame atlas from yomotsu/three-particle-fire is bundled with attribution. Gentle Motion reduces emission.
+The 1,402 Font Awesome Free 6.7.2 solid icons retain deterministic key mappings and the original child-friendly ordering. F1 defaults to a smiley; non-alphanumeric keys have consistent defaults. Parent Studio supports key selection, search, assignment and restoring a key's default. Space remains reserved for fire. Unity stages the original catalog and license under `StreamingAssets/Content/Icons`; the original MonoGame content remains under `Content`.
 
-Ordinary particle bursts are now droplets. An implicit density field joins outer halos and core surfaces. Nearby droplets attract; sufficiently slow contact conserves area/momentum when it fuses. Strong impacts can split larger droplets. Particle budgets are shared between droplets and embers. This is a stylized 2D surface-tension approximation, not a full fluid solver.
+Mouse play keeps its established mapping:
 
-The old default confetti word celebration migrates to upward embers. Explicit alternate effects and custom recipes remain available. Ember shape is value 4 in recipe JSON; prior shape values keep their meanings.
+- Left click fires a projectile from the bottom-center cannon toward the pointer. A hit causes an impact/pop; a miss does not explode just because its lifetime expires.
+- Right click causes the immediate local splash/blast.
+- Pointer motion leaves overlapping additive radial-gradient trails and repels glyph assets. It does not repel effect particles.
+- Mouse Play disables these canvas mouse interactions. Quantity/math games have their own answer controls, right-button rejection and rapid-press protection.
 
-Smash Garden hides its title, instructions, keyboard illustration and diagnostics after the first play input. Discovered words remain visible. Escape can still reveal the parent-chord reminder.
+Space taps make a short flame pulse; holding feeds a themed fire that grows upward, with release allowing it to die down. Nearby assets can ignite. Unity uses the licensed flame atlas and colored flame/smoke/ember systems; Gentle Motion and effect limits reduce activity. The original MIT atlas attribution is preserved.
 
-Icons appear at scattered positions while their key-to-icon mappings remain deterministic. Repeating a visible glyph inflates it with a short squeeze, pressure impulse, and damped settling, with bounded growth. Droplets have contrasting rims and shaded cores. Plasma and Vortex backdrops are original harmonic effects responsive to input; Aurora remains available. Black And White disables decorative background fields.
+Keyboard clusters produce paint; broad mashes fracture connected glass panes; sweeps leave liquid trails. Distinct core/boundary colors, merging surfaces and irregular edges make the liquid legible. The Unity liquid renderer uses its own density/surface passes and honors Liquid Scale. This is a stylized effect, with the shared blob dynamics retained where practical. Glass geometry follows connected crack boundaries, not unrelated decorative shards.
 
+The old default Confetti celebration migrates to upward embers once. Explicit alternate celebrations and data-only recipes remain available. Ember shape has value 4 in recipe JSON; earlier values keep their meanings.
 
-## Balloon rewards and space backdrops
+Smash Garden hides its title, instructions, keyboard illustration and diagnostics after first play input while retaining discovered words. One Escape shows the parent-control reminder without abandoning Canvas/explorer play; G, G returns to the picker. Focus loss clears input fragments, pointer edges, speech and transient effects. Background input is never retained or suppressed; see `protection.md`.
 
-Only the current consecutive key run owns an inflatable glyph. Any different key, including Space, retires that glyph. Returning to its key creates a new one; separated repeated letters are therefore independent. A retired balloon cannot pop or reinflate.
+## Consecutive balloon runs
 
-Each tap adds 0.28 size units. While active, one such step leaks away over Balloon Deflate Seconds (default 3). Retired balloons lose all remaining pressure over that interval. A damped spring preserves the squeeze/inflate/settle movement; extra volume supplies upward lift and a soft ceiling stop. Inflated glyphs remain visible while shrinking. Balloon Pop Size defaults to 3 times normal, configurable from 1.5 to 6. Popping reserves room for a themed ember/confetti reward and expanding ring.
+Only the current consecutive key run owns an inflatable glyph. Any different key, including Space, retires it. Returning to the earlier key creates a new glyph, so separated repeated letters remain independent. A retired balloon cannot pop or reinflate.
 
-Starfield uses forward perspective flight; Rotating Stars uses a slowly rotating 3D cloud. Star Count and Star Speed live under Developer. Gentle Motion slows travel. All star artwork and implementation are original; the references provide motion inspiration:
-- https://samme.github.io/phaser-examples-mirror/demoscene/starfield.html
-- https://mkhj.github.io/Demoscene-effects/effects/starfield/
+Each tap adds 0.28 size units. While active, one step leaks away over Balloon Deflate Seconds (default 3). Retired balloons lose remaining pressure over that interval. A damped spring preserves squeeze/inflate/settle motion, with lift and a soft ceiling. Inflated glyphs remain visible while shrinking. Balloon Pop Size defaults to three times normal and is adjustable from 1.5 to 6. Popping makes room for a themed reward and expanding ring.
 
-Primary Colors and Starfield are the defaults. A versioned migration updates old Aurora/Plasma defaults once, while retaining other existing themes/backdrops and preserving all choices made after migration.
+## Palette and backdrops
+
+Primary Colors and forward Starfield remain defaults. Versioned migrations update earlier Aurora/Plasma defaults once while retaining later parent choices. Black And White suppresses decorative background fields. Aurora, Plasma, Vortex and rotating stars remain intentional parent options.
+
+Starfield suggests forward perspective flight; Rotating Stars uses a rotating cloud. Star Count and Star Speed are in Developer; Gentle Motion slows movement. Original star artwork and harmonic backdrop code are retained/adapted independently of the third-party explorer models. Historical motion references are the [Phaser starfield example](https://samme.github.io/phaser-examples-mirror/demoscene/starfield.html) and [Demoscene starfield](https://mkhj.github.io/Demoscene-effects/effects/starfield/); they are references, not bundled assets.
+
+## Historical renderer details and verification
+
+The MonoGame renderer's implicit density field, area/momentum-preserving blob fusion and impact splitting remain useful implementation references in the preserved source. Unity has a distinct presentation pipeline; a visually similar shader does not prove physical or lifecycle parity. Preview replays must use active gameplay time, inspect diagnostic counts and actual frames, and inspect rendered screenshots.
+
+The Unity acceptance runners cover rapid `milk`, prefix extension, consecutive/nonconsecutive balloon runs, paint, connected glass, swipes, held/tapped fire, sequential counting, Word Adventure's balloon/all-clear phase, misses, quantity/math answers and parent navigation. See `docs/unity-platform.md` and `docs/unity-migration.md` for current results and limitations. Earlier documentation that reversed the mouse buttons or omitted the Word Adventure balloon phase is superseded by this contract.

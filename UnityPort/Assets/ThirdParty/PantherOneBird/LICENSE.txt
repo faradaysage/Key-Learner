@@ -1,0 +1,8 @@
+Bird - Animated by Panther-One (PantherOne)
+Source: https://opengameart.org/content/bird-animated
+Licensed under Creative Commons Attribution 3.0 Unported.
+https://creativecommons.org/licenses/by/3.0/
+
+Downloaded 2026-09-13. Original mesh, UVs, diffuse texture and 30-frame flight rig preserved.
+Changes: converted from Blender to FBX using Blender 4.3.2, restored legacy diffuse texture node, renamed flight clip Flight, excluded scene lights/cameras. Unity materials and scale/pivot adaptation by KeyLearner.
+Credit: Bird - Animated by Panther-One, CC BY 3.0, via OpenGameArt.org.

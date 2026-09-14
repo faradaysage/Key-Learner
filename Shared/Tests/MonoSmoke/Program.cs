@@ -1,0 +1,61 @@
+using KeyLearner.Studio;
+using System.Numerics;
+using System.Text.Json;
+int checks=0;
+void Check(bool ok,string name){if(!ok)throw new Exception("FAIL "+name);Console.WriteLine("PASS "+name);checks++;}
+var root=args.Length>0?args[0]:Path.Combine(Path.GetTempPath(),"KeyLearner-MonoSmoke-"+Guid.NewGuid().ToString("N"));
+Directory.CreateDirectory(root);
+var store=new Store(root);
+Check(GameCatalog.All.Length==12&&(int)PlayMode.CannonHop==11,"persisted catalog IDs");
+store.Settings.Mode=PlayMode.CannonHop;store.Settings.Volume=37;store.Settings.Theme=Mood.Lagoon;store.Settings.DefaultsVersion=1;
+store.Profile.WordCounts["daddy"]=19;store.Profile.PrefixHabits["dad"]=2.5;
+store.MathLearning.For(MathActivity.Hiding).Stage=41;store.MathLearning.For(MathActivity.Hiding).Level=6;
+store.Words.Clear();store.Words.Add(new WordEntry{Word="daddy",Spoken="Daddy",Image="D:/family,pictures/daddy.png",Recording="D:/family,voice/daddy.wav",Adventure=true});
+Check(store.Save(),"Unity Mono JSON initial save");store.Settings.Volume=38;Check(store.Save(),"Unity Mono atomic overwrite");
+Check(File.Exists(Path.Combine(root,"settings.json.bak")),"overwrite preserves backup");
+var loaded=new Store(root);
+Check(loaded.Settings.Mode==PlayMode.CannonHop&&loaded.Settings.Volume==38&&loaded.Settings.Theme==Mood.Lagoon,"settings numeric enum and parent choices roundtrip");
+Check(loaded.Profile.WordCounts["daddy"]==19&&loaded.Profile.PrefixHabits["dad"]==2.5,"word statistics dictionaries roundtrip");
+Check(loaded.MathLearning.For(MathActivity.Hiding).Stage==41&&loaded.MathLearning.For(MathActivity.Hiding).Level==6,"enum-keyed math dictionary roundtrip");
+Check(loaded.Words[0].Recording=="D:/family,voice/daddy.wav","external family paths preserved");
+using(var json=JsonDocument.Parse(File.ReadAllText(Path.Combine(root,"settings.json"))))Check(json.RootElement.GetProperty("Mode").GetInt32()==11,"existing JSON property names and integer modes");
+var snapshot=KeySnapshot.From(Enumerable.Range(0,256));Check(snapshot.Count==256,"Unity bit-popcount full physical snapshot");
+Check(DotPatterns.Count(511)==9&&DotPatterns.Count(0)==0,"Unity quantity popcount extremes");
+var guided=new GuidedSpelling();guided.Start("daddy");guided.Add('d',0);guided.Add('x',5);Check(guided.Progress==1,"patient guided prefix preserved");
+guided.Add('a',20);guided.Add('d',40);guided.Add('d',60);Check(guided.Add('y',80)&&guided.Score==75,"guided repeated spelling and scoring");
+var counting=new CountingRecognizer();for(int i=1;i<10;i++)counting.Add((char)('0'+i),i);Check(counting.Add('1',11)==null&&counting.Add('0',12)==10,"multi-digit counting wait");
+foreach(MathActivity a in Enum.GetValues(typeof(MathActivity)))
+{
+    var progress=new MathProgress();var math=new MathGame(a,progress,701);
+    for(int frame=0;frame<250&&!math.CanAnswer;frame++)math.Step(.1,false);
+    Check(math.CanAnswer,"Mono math phase reaches answer "+a);
+    if(a==MathActivity.MakeNumber){for(int i=0;i<10&&math.CanAnswer;i++)if((math.BuiltMask&(1<<i))==0)math.Cell(i);}
+    else math.Answer(math.Round.Answer);
+    for(int frame=0;frame<100&&math.Stage==1;frame++)math.Step(.1,false);
+    Check(math.Stage==2,"Mono math completion "+a);
+}
+var flight=new FlightModel();flight.Configure(ExplorerKind.Dolphin);flight.SetWord("cat");for(int i=0;i<600;i++)flight.Step(1f/60,0,0,false,true);
+Check(!float.IsNaN(flight.Position.X)&&!float.IsNaN(flight.Position.Y)&&flight.Position.Y<0,"Mono System.Numerics explorer simulation");
+File.WriteAllText(Path.Combine(root,"words.json"),"{malformed");var fallback=new Store(root);Check(fallback.Words.Count>0&&File.ReadAllText(Path.Combine(root,"words.json"))=="{malformed","malformed JSON source preserved");
+var content=Path.Combine(root,"fixture-content");Directory.CreateDirectory(Path.Combine(content,"data"));
+File.WriteAllText(Path.Combine(content,"data","family_dictionary.csv"),"word,image,wav\notter,pictures/otter.png,sounds/otter.wav\n");
+var csvProfile=Path.Combine(root,"csv-profile");var csvStore=new Store(csvProfile,content);var otter=csvStore.Words.Single(w=>w.Word=="otter");
+Check(otter.Image==Path.GetFullPath(Path.Combine(content,"pictures/otter.png"))&&otter.Recording==Path.GetFullPath(Path.Combine(content,"sounds/otter.wav")),"Unity explicit content root preserves relative CSV paths");
+otter.Spoken="Our otter";csvStore.Save();File.WriteAllText(Path.Combine(content,"data","family_dictionary.csv"),"word,image,wav\notter,changed.png,changed.wav\n");
+Check(new Store(csvProfile,content).Words.Single(w=>w.Word=="otter").Spoken=="Our otter","saved parent dictionary supersedes first-run CSV");
+var effects=Path.Combine(root,"effects");Directory.CreateDirectory(effects);
+File.WriteAllText(Path.Combine(effects,"bounded.json"),"{\"Name\":\"Bounded rain\",\"Shape\":999,\"Count\":9999,\"Speed\":99,\"Gravity\":-999,\"Lifetime\":100}");
+var recipe=EffectRecipe.Load(root).Single();
+Check(recipe.Count==400&&recipe.Shape==Celebration.Confetti&&recipe.Speed==3&&recipe.Gravity==-2&&recipe.Lifetime==8,"Unity effect recipes remain bounded data-only content");
+var pointer=new PointerGestureSafety();
+Check(pointer.ObserveTouches(1,1,true,true),"single touch begins one gameplay action");
+Check(!pointer.ObserveTouches(1.05,1,true,false)&&!pointer.AllowsMouse(1.2),"held touch and its emulated mouse cannot duplicate input");
+Check(!pointer.ObserveTouches(2,2,true,true)&&!pointer.ObserveTouches(2.1,1,true,true),"multiple fingers remain blocked until every finger lifts");
+pointer.ObserveTouches(2.2,0,true,false);
+Check(!pointer.AllowsMouse(2.4)&&pointer.AllowsMouse(2.46),"touch mouse exclusion is bounded to 250 milliseconds");
+Check(pointer.ObserveTouches(3,1,true,true),"fresh touch works after completed multi-touch gesture");
+pointer.Reset(4);
+Check(!pointer.ObserveTouches(4.1,1,true,true),"focus reset cannot inherit a held touch");
+pointer.ObserveTouches(4.2,0,false,false);
+Check(pointer.ObserveTouches(4.3,1,true,true),"lifting after focus reset rearms the next touch");
+Console.WriteLine("All "+checks+" Unity Mono runtime checks passed.");

@@ -1,0 +1,11 @@
+# Preserve the exact licensed source bytes recorded in ASSET_MANIFEST.json.
+UnityPort/Assets/ThirdParty/** -text -whitespace
+UnityPort/Assets/StreamingAssets/Notices/** -text -whitespace
+UnityPort/Assets/StreamingAssets/Content/Sounds/*License.txt -text -whitespace
+
+# Unity serializes empty YAML fields with a trailing space. Keep Editor output intact.
+UnityPort/**/*.meta whitespace=-blank-at-eol
+UnityPort/**/*.asset whitespace=-blank-at-eol
+UnityPort/**/*.mat whitespace=-blank-at-eol
+UnityPort/**/*.prefab whitespace=-blank-at-eol
+UnityPort/**/*.unity whitespace=-blank-at-eol

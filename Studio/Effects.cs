@@ -17,7 +17,7 @@ public sealed class EffectRecipe
         Count=Math.Clamp(Count,1,400);
         Speed=Clamp(Speed,0,3,1);Lifetime=Clamp(Lifetime,.5,8,4);Curl=Clamp(Curl,-200,200,18);
         Gravity=Clamp(Gravity,-2,2,1);Trail=Clamp(Trail,0,1,.25);
-        if(!Enum.IsDefined(Shape)) Shape=Celebration.Confetti;
+        if(!Enum.IsDefined(typeof(Celebration),Shape)) Shape=Celebration.Confetti;
     }
     private static double Clamp(double x,double min,double max,double fallback)=>double.IsFinite(x)?Math.Clamp(x,min,max):fallback;
     public static List<EffectRecipe> Load(string root)

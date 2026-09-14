@@ -8,7 +8,13 @@ public static class GameCatalog
         new(PlayMode.Counting,"Counting Stars","Count your way to a fireworks show",2,"Learn",["Numbers"]),
         new(PlayMode.BirdFlight,"Sky Speller","Soar through a world of words",3,"Explore",["Letters","Spelling"],ExplorerKind.Bird),
         new(PlayMode.Racing,"Letter Racer","Boost, steer and collect letters",3,"Explore",["Letters","Spelling"],ExplorerKind.Racer),
-        new(PlayMode.Dolphin,"Ocean Speller","Dive into an underwater adventure",3,"Explore",["Letters","Spelling"],ExplorerKind.Dolphin)
+        new(PlayMode.Dolphin,"Ocean Speller","Dive into an underwater adventure",3,"Explore",["Letters","Spelling"],ExplorerKind.Dolphin),
+        new(PlayMode.Subitizing,"Dot Pop","See the dots. Tap how many.",2,"Learn",["Numbers","Subitizing"]),
+        new(PlayMode.HowManyNow,"How Many Now?","Watch balls join and leave",2,"Learn",["Numbers","Addition","Subtraction"]),
+        new(PlayMode.WhatsHiding,"What's Hiding?","Discover the missing part",3,"Learn",["Numbers","Parts and wholes"]),
+        new(PlayMode.MakeNumber,"Make the Number","Fill a frame, one ball at a time",2,"Learn",["Numbers","Building"]),
+        new(PlayMode.DotDuel,"Dot Duel","Find more, fewer, or the same",2,"Learn",["Numbers","Comparing"]),
+        new(PlayMode.CannonHop,"Cannon Hop","Hop along the number track",4,"Learn",["Numbers","Addition","Subtraction"])
     ];
     public static GameDefinition For(PlayMode mode)=>All.FirstOrDefault(g=>g.Mode==mode)??All[0];
 }

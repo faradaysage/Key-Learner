@@ -1,0 +1,1354 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3589a7107db6e5549b6794dae026978c, type: 3}
+  m_Name: ContentLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::KeyLearner.Unity.ContentLibrary
+  Items:
+  - Category: bush
+    Id: QuaterniusNature_Bush_Common
+    Prefab: {fileID: 730952414685405110, guid: a57151d192672f14d802e4cc0a3775f3, type: 3}
+    Height: 1.5817856
+    Size: {x: 1.9148448, y: 1.5817856, z: 1.9651408}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Bush_Common_Flowers
+    Prefab: {fileID: 5351798481036764502, guid: 23d2e147f8586794d9f47e8516c9ebf0, type: 3}
+    Height: 1.5817856
+    Size: {x: 1.9148448, y: 1.5817856, z: 1.9651408}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Clover_1
+    Prefab: {fileID: 6709210388052954856, guid: db68d17d6272754409f01bc144b4af07, type: 3}
+    Height: 1.1447325
+    Size: {x: 0.7962893, y: 1.1447325, z: 0.76388574}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Clover_2
+    Prefab: {fileID: 6492580443465651, guid: df1b8778ded23fc4b89c2978da0cad70, type: 3}
+    Height: 1.2637854
+    Size: {x: 0.8511282, y: 1.2637854, z: 0.83663434}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_CommonTree_1
+    Prefab: {fileID: 8289357603793924307, guid: 977262859779f9c42aba5a61e6c103bd, type: 3}
+    Height: 7.264785
+    Size: {x: 4.311423, y: 7.264785, z: 4.577714}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_CommonTree_2
+    Prefab: {fileID: 467782145037181289, guid: 38d875e9709cfaf42b2cb7e3a4eafe56, type: 3}
+    Height: 7.642996
+    Size: {x: 4.4643016, y: 7.642996, z: 4.275852}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_CommonTree_3
+    Prefab: {fileID: 8716764189470139507, guid: 901febe6048e64b41b04b1747c372537, type: 3}
+    Height: 9.42519
+    Size: {x: 4.062846, y: 9.42519, z: 4.241077}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_CommonTree_4
+    Prefab: {fileID: 2329794692568514978, guid: adb63e2c9843d9d4c97a03d074d892b8, type: 3}
+    Height: 9.438381
+    Size: {x: 3.8255258, y: 9.438381, z: 3.7553735}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_CommonTree_5
+    Prefab: {fileID: 1467558815141850587, guid: 7dab511cf64c11341820ffa19be02c44, type: 3}
+    Height: 7.00624
+    Size: {x: 3.6711652, y: 7.00624, z: 4.2196503}
+    Yaw: 0
+  - Category: dead-tree
+    Id: QuaterniusNature_DeadTree_1
+    Prefab: {fileID: 6997190718879254248, guid: 24ea6ced404988d4ebb7685e4758cbe2, type: 3}
+    Height: 9.495477
+    Size: {x: 6.1489363, y: 9.495477, z: 5.7486677}
+    Yaw: 0
+  - Category: dead-tree
+    Id: QuaterniusNature_DeadTree_2
+    Prefab: {fileID: 3807533779499544697, guid: 6b6ec45083298c248985c91512fb69e2, type: 3}
+    Height: 11.488231
+    Size: {x: 6.729618, y: 11.488231, z: 6.378536}
+    Yaw: 0
+  - Category: dead-tree
+    Id: QuaterniusNature_DeadTree_3
+    Prefab: {fileID: 8682677972679223493, guid: a06914d843c0f3b468f1f5c094f35901, type: 3}
+    Height: 13.280384
+    Size: {x: 6.3875732, y: 13.280384, z: 6.430059}
+    Yaw: 0
+  - Category: dead-tree
+    Id: QuaterniusNature_DeadTree_4
+    Prefab: {fileID: 6701528660788589907, guid: 5206677a86ca11c48bfc18b81429e011, type: 3}
+    Height: 12.770976
+    Size: {x: 7.9609423, y: 12.770976, z: 7.7324452}
+    Yaw: 0
+  - Category: dead-tree
+    Id: QuaterniusNature_DeadTree_5
+    Prefab: {fileID: 6037764559659672906, guid: 78c7973452171c444914ba94c8cb0f54, type: 3}
+    Height: 16.437382
+    Size: {x: 8.356394, y: 16.437382, z: 8.413267}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Fern_1
+    Prefab: {fileID: 7895991328216649918, guid: c3af103aee6d0694abbcf7a539129bff, type: 3}
+    Height: 2.6887784
+    Size: {x: 9.046188, y: 2.6887784, z: 8.487424}
+    Yaw: 0
+  - Category: flower
+    Id: QuaterniusNature_Flower_3_Group
+    Prefab: {fileID: 6815081908041582694, guid: 4c3e80721596b074c871b42cb533aa2d, type: 3}
+    Height: 2.054835
+    Size: {x: 1.4884765, y: 2.054835, z: 1.591127}
+    Yaw: 0
+  - Category: flower
+    Id: QuaterniusNature_Flower_3_Single
+    Prefab: {fileID: 5233979090823139077, guid: cc1c7f511ba053546815f8b21ee759f2, type: 3}
+    Height: 2.0681937
+    Size: {x: 0.9066099, y: 2.0681937, z: 0.87753606}
+    Yaw: 0
+  - Category: flower
+    Id: QuaterniusNature_Flower_4_Group
+    Prefab: {fileID: 2719145088554831588, guid: 2542b692d6de3cd42b1629375dfc68f5, type: 3}
+    Height: 2.4867682
+    Size: {x: 1.7805257, y: 2.4867682, z: 1.3675287}
+    Yaw: 0
+  - Category: flower
+    Id: QuaterniusNature_Flower_4_Single
+    Prefab: {fileID: 2249037475874604332, guid: 41972290a9ec8de418933ead26554057, type: 3}
+    Height: 2.4191592
+    Size: {x: 1.0722884, y: 2.4191592, z: 0.7728647}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Grass_Common_Short
+    Prefab: {fileID: 7359935075158955758, guid: 7e9df378f8ef89944bfea8bee4679152, type: 3}
+    Height: 1.3341035
+    Size: {x: 0.6388705, y: 1.3341035, z: 0.73726547}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Grass_Common_Tall
+    Prefab: {fileID: 7999239665341201232, guid: 7ef2a86d50d8328428a8647e153cb186, type: 3}
+    Height: 1.8726952
+    Size: {x: 0.89508927, y: 1.8726952, z: 0.99311185}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Grass_Wispy_Short
+    Prefab: {fileID: 8815052770473184793, guid: 58b721a85940422418ed4b3ebc79b06e, type: 3}
+    Height: 1.0718468
+    Size: {x: 1.322186, y: 1.0718468, z: 1.2097443}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Grass_Wispy_Tall
+    Prefab: {fileID: 8349681726058386015, guid: df839fed9e3acd84694804986f2f6833, type: 3}
+    Height: 1.6718024
+    Size: {x: 1.5400727, y: 1.6718024, z: 1.5937159}
+    Yaw: 0
+  - Category: flower
+    Id: QuaterniusNature_Mushroom_Common
+    Prefab: {fileID: 7353934784626011229, guid: 6a269285eedd5d147bafcafb10ca5ff9, type: 3}
+    Height: 0.4634807
+    Size: {x: 0.56370085, y: 0.4634807, z: 0.7791127}
+    Yaw: 0
+  - Category: flower
+    Id: QuaterniusNature_Mushroom_Laetiporus
+    Prefab: {fileID: 8570848967195443635, guid: 90d1e4cdb8a8eca48891d16aea16ddbd, type: 3}
+    Height: 0.7669583
+    Size: {x: 1.3660326, y: 0.7669583, z: 1.1031826}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Round_1
+    Prefab: {fileID: 2367239246721728922, guid: 83c0c08e8454a85448513205fa95287f, type: 3}
+    Height: 0.09547655
+    Size: {x: 0.50003874, y: 0.09547655, z: 0.36702284}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Round_2
+    Prefab: {fileID: 1265447919229834870, guid: 2d4a31be24b72c942a088b565165be8f, type: 3}
+    Height: 0.094229735
+    Size: {x: 0.44947687, y: 0.094229735, z: 0.41105872}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Round_3
+    Prefab: {fileID: 1601530050338135477, guid: 9ec4b8bce6eeac345a3f1f85d74564da, type: 3}
+    Height: 0.09862238
+    Size: {x: 0.4496913, y: 0.09862238, z: 0.4848103}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Round_4
+    Prefab: {fileID: 6150364619135945762, guid: e47b5b3e57fe03445930bd5289cadf52, type: 3}
+    Height: 0.099398635
+    Size: {x: 0.4062811, y: 0.099398635, z: 0.45239767}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Round_5
+    Prefab: {fileID: 1267363477700356572, guid: 755499c2b0a1459429b499ad7a83aeea, type: 3}
+    Height: 0.10082685
+    Size: {x: 0.4185932, y: 0.10082685, z: 0.34625828}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Square_1
+    Prefab: {fileID: 6637961430704635513, guid: e66ed7e1ddbcca446a8fc4d48bcf99d5, type: 3}
+    Height: 0.1299309
+    Size: {x: 0.43463728, y: 0.1299309, z: 0.439643}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Square_2
+    Prefab: {fileID: 7620948456932000885, guid: ab31877f5329f5549be0d93dec8b0a46, type: 3}
+    Height: 0.14044392
+    Size: {x: 0.391096, y: 0.14044392, z: 0.28025424}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Square_3
+    Prefab: {fileID: 3241328025693998079, guid: ac3c3392d99781640a9f3d28de263cfd, type: 3}
+    Height: 0.15893334
+    Size: {x: 0.3733362, y: 0.15893334, z: 0.3187492}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Square_4
+    Prefab: {fileID: 8792191350413702655, guid: c938d639ec7a9014b85ea908f7da4a93, type: 3}
+    Height: 0.16829112
+    Size: {x: 0.3399434, y: 0.16829112, z: 0.29082558}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Square_5
+    Prefab: {fileID: 5425965586496414840, guid: 1cb34fe85d14ae646b5eccc3212fa791, type: 3}
+    Height: 0.15215962
+    Size: {x: 0.3520317, y: 0.15215962, z: 0.4504395}
+    Yaw: 0
+  - Category: pebble
+    Id: QuaterniusNature_Pebble_Square_6
+    Prefab: {fileID: 3259813542222487690, guid: ffabba242c8822d4faa7671a58318aa1, type: 3}
+    Height: 0.13777478
+    Size: {x: 0.46202862, y: 0.13777478, z: 0.26292208}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_Pine_1
+    Prefab: {fileID: 7701173361528382596, guid: 288e45139216e5c489073f4ff65e1793, type: 3}
+    Height: 7.3169174
+    Size: {x: 4.9446983, y: 7.3169174, z: 4.5384035}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_Pine_2
+    Prefab: {fileID: 6226979798144148259, guid: c12938ee6cb60cb47b91225effe562d0, type: 3}
+    Height: 7.376238
+    Size: {x: 5.7280846, y: 7.376238, z: 5.2212067}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_Pine_3
+    Prefab: {fileID: 2666193482092775365, guid: 1c5a58af8c0d60d46b404eb991f7aef0, type: 3}
+    Height: 7.3921986
+    Size: {x: 3.6113946, y: 7.3921986, z: 3.9958036}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_Pine_4
+    Prefab: {fileID: 1813916171169706716, guid: 8837b83e09045aa4887b0adbf9cd74da, type: 3}
+    Height: 10.236431
+    Size: {x: 5.8020244, y: 10.236431, z: 5.3708453}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_Pine_5
+    Prefab: {fileID: 6683907390657818186, guid: 574ae46fdf0212b468a040be01a80cb7, type: 3}
+    Height: 8.723807
+    Size: {x: 6.4201403, y: 8.723807, z: 6.222001}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Plant_1
+    Prefab: {fileID: 2203795618802080380, guid: 38657298a14a8f04091a2b5516c1a6af, type: 3}
+    Height: 1.0135702
+    Size: {x: 1.2733909, y: 1.0135702, z: 1.3860275}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Plant_1_Big
+    Prefab: {fileID: 1211801858563837164, guid: 936c443dd0b17dc4da4b6dd8c7dbf05c, type: 3}
+    Height: 3.7564256
+    Size: {x: 2.8904588, y: 3.7564256, z: 3.1264467}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Plant_7
+    Prefab: {fileID: 5129973829033371281, guid: ff99f8ba774d279468309b244666dc8d, type: 3}
+    Height: 0.24951476
+    Size: {x: 1.0478354, y: 0.24951476, z: 0.962121}
+    Yaw: 0
+  - Category: bush
+    Id: QuaterniusNature_Plant_7_Big
+    Prefab: {fileID: 5890523170259034150, guid: 890cde4b283237446b7b0efeb9094cef, type: 3}
+    Height: 0.25343254
+    Size: {x: 1.31082, y: 0.25343254, z: 1.362174}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Round_Small_1
+    Prefab: {fileID: 1817717164728694291, guid: 6e0d97608633ad64b8364c911724cffd, type: 3}
+    Height: 0.112831816
+    Size: {x: 1.0565139, y: 0.112831816, z: 1.4763588}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Round_Small_2
+    Prefab: {fileID: 2640446475997732625, guid: 70d4315e932eecf48830c35dfc9acc25, type: 3}
+    Height: 0.10466732
+    Size: {x: 1.1395195, y: 0.10466732, z: 1.3542837}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Round_Small_3
+    Prefab: {fileID: 1672493484124133987, guid: a70d8db05b06212499045302469a09d0, type: 3}
+    Height: 0.10927321
+    Size: {x: 1.17903, y: 0.10927321, z: 1.2899947}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Round_Thin
+    Prefab: {fileID: 3144675109151722450, guid: 154782335cfed304b80021a3028eacb1, type: 3}
+    Height: 0.110337295
+    Size: {x: 1.457351, y: 0.110337295, z: 2.0892062}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Round_Wide
+    Prefab: {fileID: 4991345985307091428, guid: d4b6684a5a7a7e64cbe300a92730d620, type: 3}
+    Height: 0.11283182
+    Size: {x: 2.1106143, y: 0.11283182, z: 2.1290364}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Square_Small_1
+    Prefab: {fileID: 3967707569354607748, guid: ff7d1466c5ca6f844a8f97394927e7f6, type: 3}
+    Height: 0.14987022
+    Size: {x: 1.0188843, y: 0.14987022, z: 0.973852}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Square_Small_2
+    Prefab: {fileID: 7852940297808368366, guid: 20fd0f1c53bd8b440a137bdbec538955, type: 3}
+    Height: 0.14933522
+    Size: {x: 0.99272186, y: 0.14933522, z: 0.96606815}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Square_Small_3
+    Prefab: {fileID: 7235421365794147924, guid: 742f5af23dbcd034aa5f6c3796c19740, type: 3}
+    Height: 0.17363301
+    Size: {x: 0.8358606, y: 0.17363301, z: 1.0762888}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Square_Thin
+    Prefab: {fileID: 1929899886232245001, guid: 1adfb79a6388bc144bd16ef16a221953, type: 3}
+    Height: 0.17634793
+    Size: {x: 1.5598805, y: 0.17634793, z: 1.9869368}
+    Yaw: 0
+  - Category: path
+    Id: QuaterniusNature_RockPath_Square_Wide
+    Prefab: {fileID: 6422941271596847125, guid: f58aec51e4ede1440b6ab6b2e9c15cca, type: 3}
+    Height: 0.17634793
+    Size: {x: 2.051581, y: 0.17634793, z: 1.9869368}
+    Yaw: 0
+  - Category: rock
+    Id: QuaterniusNature_Rock_Medium_1
+    Prefab: {fileID: 165540956996997277, guid: 88e94b0ea44e48143b7290d6c925a721, type: 3}
+    Height: 2.2597969
+    Size: {x: 3.2251484, y: 2.2597969, z: 2.989137}
+    Yaw: 0
+  - Category: rock
+    Id: QuaterniusNature_Rock_Medium_2
+    Prefab: {fileID: 2580088067342223629, guid: 2ce280fa5068e4646849739ea39d867d, type: 3}
+    Height: 1.8989753
+    Size: {x: 3.0487604, y: 1.8989753, z: 2.4790719}
+    Yaw: 0
+  - Category: rock
+    Id: QuaterniusNature_Rock_Medium_3
+    Prefab: {fileID: 516122808020315577, guid: e478485a75625ca4fb9ad43fdd7ae901, type: 3}
+    Height: 2.3162832
+    Size: {x: 3.4200845, y: 2.3162832, z: 3.4761105}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_TwistedTree_1
+    Prefab: {fileID: 231966324233455706, guid: e529117e44bfefc40b40f0284f655a1e, type: 3}
+    Height: 16.725496
+    Size: {x: 13.515755, y: 16.725496, z: 11.549364}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_TwistedTree_2
+    Prefab: {fileID: 4354985982836695695, guid: 3bf846f33c21bfa4699a386d0b3ebb9a, type: 3}
+    Height: 18.949203
+    Size: {x: 10.562872, y: 18.949203, z: 9.202587}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_TwistedTree_3
+    Prefab: {fileID: 740642417568274066, guid: b27759770017bce409a06645fcb8bb16, type: 3}
+    Height: 16.07254
+    Size: {x: 11.357495, y: 16.07254, z: 11.505619}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_TwistedTree_4
+    Prefab: {fileID: 6784191791824284423, guid: 8e3c0b287c067af418ace4c44b357a78, type: 3}
+    Height: 18.738235
+    Size: {x: 10.380812, y: 18.738235, z: 11.293086}
+    Yaw: 0
+  - Category: tree
+    Id: QuaterniusNature_TwistedTree_5
+    Prefab: {fileID: 4110262107607412538, guid: 9e1e47e073e00664895224ffac0d51cf, type: 3}
+    Height: 15.662175
+    Size: {x: 9.494712, y: 15.662175, z: 9.387028}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-a
+    Prefab: {fileID: 837717517528390395, guid: c8512cb058d7ead45974c753692c37d8, type: 3}
+    Height: 0.8335409
+    Size: {x: 1.3, y: 0.8335409, z: 1.0281378}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-b
+    Prefab: {fileID: 5677371919745686458, guid: 193df5469083beb458566bf3c21438b5, type: 3}
+    Height: 1.1375
+    Size: {x: 1.828, y: 1.1375, z: 1.14}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-c
+    Prefab: {fileID: 3724795149251690705, guid: 787ac76a86a90d9469ae28b5332afbe3, type: 3}
+    Height: 1.033541
+    Size: {x: 1.2863803, y: 1.033541, z: 1.0281378}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-d
+    Prefab: {fileID: 2094585856120817255, guid: 396ba16e06db2194da2830f2eb02b90a, type: 3}
+    Height: 1.2375001
+    Size: {x: 1.7563803, y: 1.2375001, z: 1.028}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-e
+    Prefab: {fileID: 6739962129764210179, guid: e35f6c9dd30d4314eace5504ee740066, type: 3}
+    Height: 1.1375
+    Size: {x: 1.3, y: 1.1375, z: 1.028}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-f
+    Prefab: {fileID: 7447421213964838357, guid: d8b12a058a55aec46bfc888f0187c4e2, type: 3}
+    Height: 1.1375
+    Size: {x: 1.428, y: 1.1375, z: 1.4058912}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-g
+    Prefab: {fileID: 4577510597437220647, guid: 97d1a98848c525044b274288bdd41ba8, type: 3}
+    Height: 0.7682097
+    Size: {x: 1.4499999, y: 0.7682097, z: 1.178}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-h
+    Prefab: {fileID: 2775987192233088750, guid: 036054279e3a8da4bb74ea5d78ebdb4d, type: 3}
+    Height: 0.7374999
+    Size: {x: 1.3, y: 0.7374999, z: 0.91599995}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-i
+    Prefab: {fileID: 6335316475319757655, guid: 2f7206e0498c9cc4fbc7156577ed5890, type: 3}
+    Height: 0.7374999
+    Size: {x: 1.2863803, y: 0.7374999, z: 1.028}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-j
+    Prefab: {fileID: 3529149975446216912, guid: e35a2cad23cc0b04a8fb706341608b53, type: 3}
+    Height: 1.0375
+    Size: {x: 1.37, y: 1.0375, z: 0.91599995}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-k
+    Prefab: {fileID: 1019550444755886144, guid: 6df8be66725fbef45ad4fa6f6301d5ca, type: 3}
+    Height: 1.1495962
+    Size: {x: 0.920938, y: 1.1495962, z: 1.02}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-l
+    Prefab: {fileID: 1698390273521100782, guid: 33061ea328c62ce4d8974a204e829395, type: 3}
+    Height: 1.0491934
+    Size: {x: 1.0335879, y: 1.0491934, z: 1.02}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-m
+    Prefab: {fileID: 6428058758193474431, guid: e44ebf8d6af8da34a9312605488b56c0, type: 3}
+    Height: 0.7374999
+    Size: {x: 1.428, y: 0.7374999, z: 1.428}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-n
+    Prefab: {fileID: 7921670181335948873, guid: 0c62bc0e0c20a144f9312c62ef6cfd51, type: 3}
+    Height: 1.1375
+    Size: {x: 1.7842715, y: 1.1375, z: 1.3778911}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-o
+    Prefab: {fileID: 176020333612572380, guid: 21a4984616a11134fbf4bd8d6931cd14, type: 3}
+    Height: 1.1375
+    Size: {x: 1.27, y: 1.1375, z: 1.028}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-p
+    Prefab: {fileID: 2687319586488185672, guid: 87156321595fbc042879ddebe8b60fd0, type: 3}
+    Height: 0.9179999
+    Size: {x: 1.2400001, y: 0.9179999, z: 0.99}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-q
+    Prefab: {fileID: 5953872327361621063, guid: 2d86862d2d383744e8efb499786426e5, type: 3}
+    Height: 0.9179999
+    Size: {x: 1.24, y: 0.9179999, z: 0.88558793}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-r
+    Prefab: {fileID: 287987767707812708, guid: 3108e681add2d4542ab5e94ea6c36742, type: 3}
+    Height: 1.1411428
+    Size: {x: 1.0280001, y: 1.1411428, z: 1.02}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-s
+    Prefab: {fileID: 524594919527245401, guid: 5a37ae3a5a833f141a220908c96e7862, type: 3}
+    Height: 1.1375
+    Size: {x: 1.406029, y: 1.1375, z: 1.0863805}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-t
+    Prefab: {fileID: 4661361028263321286, guid: abbdf5e33a10e91478b10755689a9b0a, type: 3}
+    Height: 1.1563306
+    Size: {x: 1.3135879, y: 1.1563306, z: 1.4063803}
+    Yaw: 0
+  - Category: house
+    Id: KenneySuburban_building-type-u
+    Prefab: {fileID: 8527787598223664417, guid: 5997afa3ed4d67441bd98fd701218663, type: 3}
+    Height: 1.1375
+    Size: {x: 1.4280002, y: 1.1375, z: 1.086935}
+    Yaw: 0
+  - Category: driveway
+    Id: KenneySuburban_driveway-long
+    Prefab: {fileID: 7616302243324656732, guid: 9f44da238470d594c90edaa15ac84061, type: 3}
+    Height: 0.01
+    Size: {x: 0.35999998, y: 0.01, z: 0.39999998}
+    Yaw: 0
+  - Category: driveway
+    Id: KenneySuburban_driveway-short
+    Prefab: {fileID: 3300494991840323274, guid: ab2dac09e0922e84e86cb6df12f7a70c, type: 3}
+    Height: 0.01
+    Size: {x: 0.35999998, y: 0.01, z: 0.19999999}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-1x2
+    Prefab: {fileID: 2079223484485227022, guid: f45b45b9092f5a5478d8bb06c3eeb2e6, type: 3}
+    Height: 0.26999998
+    Size: {x: 0.875, y: 0.26999998, z: 0.4375}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-1x3
+    Prefab: {fileID: 916439505613886492, guid: 9130f9a2307d95c40b4e0baa144de998, type: 3}
+    Height: 0.26999998
+    Size: {x: 1.2750001, y: 0.26999998, z: 0.4375}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-1x4
+    Prefab: {fileID: 2538980854257366539, guid: 2efada27118cb734dbfde933a93f2d6a, type: 3}
+    Height: 0.26999998
+    Size: {x: 1.675, y: 0.26999998, z: 0.4375}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-2x2
+    Prefab: {fileID: 5160926171990123722, guid: d47d3fa4b938d634e8e05f87e2a6ca39, type: 3}
+    Height: 0.26999998
+    Size: {x: 0.875, y: 0.26999998, z: 0.8375}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-2x3
+    Prefab: {fileID: 571484782322195716, guid: aa187207f0b13664ab60ee7ddfa07a18, type: 3}
+    Height: 0.26999998
+    Size: {x: 1.2750001, y: 0.26999998, z: 0.8375}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-3x2
+    Prefab: {fileID: 5296573761126373032, guid: d7ad9ac6ff71a8f43bdbe6ab714b5bc4, type: 3}
+    Height: 0.26999998
+    Size: {x: 0.875, y: 0.26999998, z: 1.2375001}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-3x3
+    Prefab: {fileID: 8166245842569892085, guid: 1c5b4df26f82e73458d6ff5ba7bdce3c, type: 3}
+    Height: 0.26999998
+    Size: {x: 1.2750001, y: 0.26999998, z: 1.2375001}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence-low
+    Prefab: {fileID: 7054748728069893705, guid: 8690b4568b796584196a48ab61feaedd, type: 3}
+    Height: 0.17
+    Size: {x: 1.2750001, y: 0.17, z: 0.8375}
+    Yaw: 0
+  - Category: fence
+    Id: KenneySuburban_fence
+    Prefab: {fileID: 1488540484499930413, guid: e0f039cd0a51af749afaaec407e01853, type: 3}
+    Height: 0.26999998
+    Size: {x: 0.47500002, y: 0.26999998, z: 0.075}
+    Yaw: 0
+  - Category: path
+    Id: KenneySuburban_path-long
+    Prefab: {fileID: 4059901694062785945, guid: 669b664d2006d7d4599709cfa2b75ae3, type: 3}
+    Height: 0.01
+    Size: {x: 0.19999999, y: 0.01, z: 0.39999998}
+    Yaw: 0
+  - Category: path
+    Id: KenneySuburban_path-short
+    Prefab: {fileID: 5394876726586931598, guid: 0882e40b959086c49b95c7aaede339db, type: 3}
+    Height: 0.01
+    Size: {x: 0.19999999, y: 0.01, z: 0.19999999}
+    Yaw: 0
+  - Category: path
+    Id: KenneySuburban_path-stones-long
+    Prefab: {fileID: 7728606953193327578, guid: 54baaeac5f4912f4c9900255627af349, type: 3}
+    Height: 0.01
+    Size: {x: 0.14, y: 0.01, z: 0.39999998}
+    Yaw: 0
+  - Category: path
+    Id: KenneySuburban_path-stones-messy
+    Prefab: {fileID: 6673208215561873630, guid: f60d895019611cc4bbf85a9e6fe5ab43, type: 3}
+    Height: 0.01
+    Size: {x: 0.15562412, y: 0.01, z: 0.36135045}
+    Yaw: 0
+  - Category: path
+    Id: KenneySuburban_path-stones-short
+    Prefab: {fileID: 4132730570228800700, guid: 95d399967d69cd547a1b0db0aeef6015, type: 3}
+    Height: 0.01
+    Size: {x: 0.14, y: 0.01, z: 0.19999999}
+    Yaw: 0
+  - Category: planter
+    Id: KenneySuburban_planter
+    Prefab: {fileID: 6062134539698910499, guid: 231cfc1b2a3a0374d925cf7dab2432c4, type: 3}
+    Height: 0.17710954
+    Size: {x: 0.39999998, y: 0.17710954, z: 0.29999998}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-a
+    Prefab: {fileID: 1625071780329865316, guid: 9a0873a748e00c64bb3defac1b0aac51, type: 3}
+    Height: 1.293
+    Size: {x: 0.88358784, y: 1.293, z: 0.93999994}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-b
+    Prefab: {fileID: 6436179433101278379, guid: 55f88523aa3cb7f4aa3b80398ab45c62, type: 3}
+    Height: 1.293
+    Size: {x: 0.97, y: 1.293, z: 0.93999994}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-c
+    Prefab: {fileID: 2271113462743284945, guid: 8bc5b8253c51ce54eb4393a878bdafc2, type: 3}
+    Height: 0.893
+    Size: {x: 0.88358784, y: 0.893, z: 1.0900002}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-d
+    Prefab: {fileID: 6315393491190405663, guid: e7596f52fbbf4c647a1192770c70e6b4, type: 3}
+    Height: 1.293
+    Size: {x: 0.84000003, y: 1.293, z: 0.89999986}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-e
+    Prefab: {fileID: 3431433244997331718, guid: 73742216a1cdc82448cf5df34ffbc090, type: 3}
+    Height: 0.893
+    Size: {x: 1.6400001, y: 0.893, z: 1.0078915}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-f
+    Prefab: {fileID: 482592048439316848, guid: dc1caf15e2929c749a725debeeb76868, type: 3}
+    Height: 1.693
+    Size: {x: 0.84, y: 1.693, z: 1.0300002}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-g
+    Prefab: {fileID: 7125591265763665342, guid: e52c5ff14cea3694799ac378e640cce8, type: 3}
+    Height: 1.693
+    Size: {x: 0.96999997, y: 1.693, z: 0.92200017}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-h
+    Prefab: {fileID: 107161454732324926, guid: a6cf74c26300876458a68f8873ab49c2, type: 3}
+    Height: 1.293
+    Size: {x: 0.8835878, y: 1.293, z: 1.0078912}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-i
+    Prefab: {fileID: 4228279185168329584, guid: 2e9e72aa97993d74483ea988fdfd143e, type: 3}
+    Height: 1.68
+    Size: {x: 1.24, y: 1.68, z: 1.302}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-j
+    Prefab: {fileID: 1678134686345665306, guid: 235f32b7c6f37d847990016b556d08a6, type: 3}
+    Height: 1.693
+    Size: {x: 2.0835881, y: 1.693, z: 1.3399999}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-k
+    Prefab: {fileID: 3976080488091000862, guid: 7bbf6b68a175b644bb36732aaf491e2f, type: 3}
+    Height: 1.4699999
+    Size: {x: 2.0835881, y: 1.4699999, z: 0.9419998}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-l
+    Prefab: {fileID: 5683428363436459818, guid: ccd40be1f79b52d41b3e5bf8cb17bf19, type: 3}
+    Height: 2.27
+    Size: {x: 1.37, y: 2.27, z: 1.402}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-m
+    Prefab: {fileID: 6705827149403409053, guid: f4923fe6978ce2749a171d05361c0679, type: 3}
+    Height: 3.1499999
+    Size: {x: 1.2400001, y: 3.1499999, z: 1.2420001}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-n
+    Prefab: {fileID: 711278601058641973, guid: 6a0a34ed7e054924396ffac00f9da4af, type: 3}
+    Height: 2.48
+    Size: {x: 2.3200002, y: 2.48, z: 1.8199999}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-skyscraper-a
+    Prefab: {fileID: 4525479075632889936, guid: e692786affa34684abce3c451420a27e, type: 3}
+    Height: 2.8799999
+    Size: {x: 1.3599997, y: 2.8799999, z: 1.3600001}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-skyscraper-b
+    Prefab: {fileID: 8379915372306147145, guid: d30cc471c8dedfe4ab630278df5568f0, type: 3}
+    Height: 4.48
+    Size: {x: 1.3599998, y: 4.48, z: 1.3599999}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-skyscraper-c
+    Prefab: {fileID: 6742337727645327164, guid: ebc993f3b49c48146a6ad622f288ff91, type: 3}
+    Height: 4.08
+    Size: {x: 1.2799997, y: 4.08, z: 1.3878913}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-skyscraper-d
+    Prefab: {fileID: 6178788254830371472, guid: c74cc4b11cf3c7a4c82787e28cde0da9, type: 3}
+    Height: 5.4699993
+    Size: {x: 1.2799997, y: 5.4699993, z: 1.3878913}
+    Yaw: 0
+  - Category: commercial
+    Id: KenneyCommercial_building-skyscraper-e
+    Prefab: {fileID: 4504544491381295242, guid: 94696e303568a8a418f32089d581376a, type: 3}
+    Height: 4.08
+    Size: {x: 1.2949997, y: 4.08, z: 1.2420002}
+    Yaw: 0
+  - Category: building-detail
+    Id: KenneyCommercial_detail-awning-wide
+    Prefab: {fileID: 5836365855837209810, guid: fc7ba8a36e48ef6478c8aa00d259ea79, type: 3}
+    Height: 0.39999998
+    Size: {x: 0.79999995, y: 0.39999998, z: 0.14789131}
+    Yaw: 0
+  - Category: building-detail
+    Id: KenneyCommercial_detail-awning
+    Prefab: {fileID: 849840244261072964, guid: 243918a7bac49f240a4898b5c1d12675, type: 3}
+    Height: 0.39999998
+    Size: {x: 0.39999998, y: 0.39999998, z: 0.14789131}
+    Yaw: 0
+  - Category: building-detail
+    Id: KenneyCommercial_detail-overhang-wide
+    Prefab: {fileID: 8723138010038505450, guid: 0f2ed84b3e3fc3c41a2eb5629f1ddf2a, type: 3}
+    Height: 0.39999998
+    Size: {x: 1, y: 0.39999998, z: 0.19999999}
+    Yaw: 0
+  - Category: building-detail
+    Id: KenneyCommercial_detail-overhang
+    Prefab: {fileID: 7926685477753860120, guid: d3bf0b450b934ab43ba8796aa2422c15, type: 3}
+    Height: 0.39999998
+    Size: {x: 0.5, y: 0.39999998, z: 0.19999999}
+    Yaw: 0
+  - Category: parasol
+    Id: KenneyCommercial_detail-parasol-a
+    Prefab: {fileID: 1512168247871699029, guid: 43dbbb3c93f896d4da83b8b64f4eca98, type: 3}
+    Height: 0.45
+    Size: {x: 0.34641013, y: 0.45, z: 0.39999998}
+    Yaw: 0
+  - Category: parasol
+    Id: KenneyCommercial_detail-parasol-b
+    Prefab: {fileID: 8843754349860509867, guid: b2da6c78203389447aff739198064dc6, type: 3}
+    Height: 0.45
+    Size: {x: 0.34641013, y: 0.45, z: 0.39999998}
+    Yaw: 0
+  - Category: farm-building
+    Id: QuaterniusFarm_Barn
+    Prefab: {fileID: 7885117052255398815, guid: a919a140d4292544f910c64812fa63b9, type: 3}
+    Height: 6.0086384
+    Size: {x: 7.726893, y: 6.0086384, z: 8.222447}
+    Yaw: 0
+  - Category: farm-building
+    Id: QuaterniusFarm_BigBarn
+    Prefab: {fileID: 2924935257337863374, guid: 9606a92b5ec6b954fbd496eab7ed5c56, type: 3}
+    Height: 7.886773
+    Size: {x: 7.7268934, y: 7.886773, z: 8.222448}
+    Yaw: 0
+  - Category: farm-small
+    Id: QuaterniusFarm_ChickenCoop
+    Prefab: {fileID: 5615324575942987494, guid: 72656047b61ae3e4b955ce42d47aae18, type: 3}
+    Height: 1.8508588
+    Size: {x: 2.4072092, y: 1.8508588, z: 2.1539958}
+    Yaw: 0
+  - Category: fence
+    Id: QuaterniusFarm_Fence
+    Prefab: {fileID: 7777596732026309155, guid: 17972a7b0edeb154bb1b58389d9fbbd7, type: 3}
+    Height: 1.0970628
+    Size: {x: 5.8901258, y: 1.0970628, z: 0.16550827}
+    Yaw: 0
+  - Category: landmark
+    Id: QuaterniusFarm_Silo
+    Prefab: {fileID: 8404416688792648754, guid: 9698afec6b1e2594dbb9e1bb621ee355, type: 3}
+    Height: 9.068631
+    Size: {x: 3.6675155, y: 9.068631, z: 3.5099945}
+    Yaw: 0
+  - Category: landmark
+    Id: QuaterniusFarm_TowerWindmill
+    Prefab: {fileID: 8981379359652361220, guid: c8dc0e6cdd7da934fa099f48593dec17, type: 3}
+    Height: 11.413267
+    Size: {x: 7.923669, y: 11.413267, z: 4.9905977}
+    Yaw: 0
+  - Category: landmark
+    Id: QuaterniusFarm_WaterTower
+    Prefab: {fileID: 6099613468146218304, guid: 46e22bd3f5700d14c94fd3d4fdfa9362, type: 3}
+    Height: 8.428597
+    Size: {x: 2.5322516, y: 8.428597, z: 2.4894874}
+    Yaw: 0
+  - Category: well
+    Id: QuaterniusFarm_Well
+    Prefab: {fileID: 2194875164095274382, guid: 77ebb20aa4a1f11479e56ce45042a6ab, type: 3}
+    Height: 2.1455517
+    Size: {x: 1.2767435, y: 2.1455517, z: 1.4868833}
+    Yaw: 0
+  - Category: landmark
+    Id: QuaterniusFarm_Windmill
+    Prefab: {fileID: 1188017038359473116, guid: ef48bae675f82e649962ea04b5131616, type: 3}
+    Height: 11.196158
+    Size: {x: 6.5076685, y: 11.196158, z: 1.8978521}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_race
+    Prefab: {fileID: 5374313449525206313, guid: 5fcf03160d3179840960f958134e904d, type: 3}
+    Height: 0.7325443
+    Size: {x: 1.3, y: 0.7325443, z: 2.5597725}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_delivery
+    Prefab: {fileID: 7624200328739103237, guid: 91f0b79cfccacfd4b80c90c8a44111be, type: 3}
+    Height: 1.6499997
+    Size: {x: 1.5, y: 1.6499997, z: 3.2499995}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_hatchback-sports
+    Prefab: {fileID: 5040437194030317430, guid: 8f77d0b1ecfdd8344b323c588a1185ef, type: 3}
+    Height: 1.1
+    Size: {x: 1.3, y: 1.1, z: 2.85}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_race-future
+    Prefab: {fileID: 3794935735482541842, guid: a25520b20b25f8b439b7e3c72e32a33a, type: 3}
+    Height: 0.83254427
+    Size: {x: 1.2, y: 0.83254427, z: 2.6597724}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_sedan-sports
+    Prefab: {fileID: 5229318764811853832, guid: c73a526affffe684d9f60d0e1a2cd765, type: 3}
+    Height: 1.0999999
+    Size: {x: 1.3, y: 1.0999999, z: 2.55}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_sedan
+    Prefab: {fileID: 6928129650897926400, guid: 399c203d7d0ab6c449e7e907d03ca8f0, type: 3}
+    Height: 1.3
+    Size: {x: 1.5, y: 1.3, z: 2.55}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_taxi
+    Prefab: {fileID: 4625995235051700937, guid: f9bf29735ee6a6945a4d879c9bc944ca, type: 3}
+    Height: 1.4999998
+    Size: {x: 1.5, y: 1.4999998, z: 2.7499995}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_tractor
+    Prefab: {fileID: 7979796018295949817, guid: fbe585f397c457f48b536e09a3b28886, type: 3}
+    Height: 1.602053
+    Size: {x: 1.342077, y: 1.602053, z: 2.2015524}
+    Yaw: 0
+  - Category: car
+    Id: KenneyCars_truck
+    Prefab: {fileID: 3080298250868473051, guid: 916759f64932d9a419c6469d3c6e22c6, type: 3}
+    Height: 1.3
+    Size: {x: 1.5, y: 1.3, z: 2.9499996}
+    Yaw: 0
+  - Category: construction
+    Id: KenneyRoads_construction-barrier
+    Prefab: {fileID: 9001130220310434605, guid: 2fb62ea38acd85145b7c0dc7dc5b4f3c, type: 3}
+    Height: 0.13
+    Size: {x: 0.1355, y: 0.13, z: 0.225}
+    Yaw: 0
+  - Category: construction
+    Id: KenneyRoads_construction-cone
+    Prefab: {fileID: 7220384499741322586, guid: 12b0d97bcc82e4b42a5fdfb155cdda2d, type: 3}
+    Height: 0.09375
+    Size: {x: 0.075, y: 0.09375, z: 0.075}
+    Yaw: 0
+  - Category: construction
+    Id: KenneyRoads_construction-fence
+    Prefab: {fileID: 6324041071057111237, guid: c034e164fe69ab54ea409bf1beda2c36, type: 3}
+    Height: 0.17875
+    Size: {x: 0.075, y: 0.17875, z: 0.37500018}
+    Yaw: 0
+  - Category: construction
+    Id: KenneyRoads_construction-light
+    Prefab: {fileID: 6057568671784421186, guid: fd78929bf4c90ee44a4de70cb80f0c98, type: 3}
+    Height: 0.23374997
+    Size: {x: 0.075, y: 0.23374997, z: 0.075}
+    Yaw: 0
+  - Category: prop
+    Id: KenneyRoads_dumpster
+    Prefab: {fileID: 3442027165387884754, guid: bd9c20915cd05034b9e80f0bcc81a934, type: 3}
+    Height: 0.20944178
+    Size: {x: 0.27500004, y: 0.20944178, z: 0.37000012}
+    Yaw: 0
+  - Category: utility
+    Id: KenneyRoads_electricity-pole
+    Prefab: {fileID: 3909287454766269317, guid: 1ba83f5cbeb77d64cbdebf53de9982c2, type: 3}
+    Height: 0.525
+    Size: {x: 0.579085, y: 0.525, z: 0.21422498}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_light-curved-cross
+    Prefab: {fileID: 3472735994806618121, guid: 9fa1ae99519af6449993f5c0d6ecca7e, type: 3}
+    Height: 0.6749999
+    Size: {x: 0.39999998, y: 0.6749999, z: 0.39999998}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_light-curved-double
+    Prefab: {fileID: 1789291642385441608, guid: a3462435ca55c3a4c8979d659b58a5c6, type: 3}
+    Height: 0.6749999
+    Size: {x: 0.049999997, y: 0.6749999, z: 0.39999998}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_light-curved
+    Prefab: {fileID: 3205878487690530063, guid: c7f357a96eb01c1479d3f2f5bd3e41cf, type: 3}
+    Height: 0.6749999
+    Size: {x: 0.049999997, y: 0.6749999, z: 0.225}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_light-square-cross
+    Prefab: {fileID: 7640297952989329234, guid: a1168d07fce68e847a8e2fe311c12321, type: 3}
+    Height: 0.6
+    Size: {x: 0.42499998, y: 0.6, z: 0.42499998}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_light-square-double
+    Prefab: {fileID: 8321814910267368580, guid: af0352b85ec257a4fa34f5bb56965caa, type: 3}
+    Height: 0.6
+    Size: {x: 0.050000004, y: 0.6, z: 0.42499998}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_light-square
+    Prefab: {fileID: 995525744743081912, guid: d6c1265b01af3f040b5ee62f859d57c2, type: 3}
+    Height: 0.6
+    Size: {x: 0.049999997, y: 0.6, z: 0.23750001}
+    Yaw: 0
+  - Category: sign-panel
+    Id: KenneyRoads_road-sign-empty-hanging
+    Prefab: {fileID: 2816946828423019406, guid: e5cc6cd81a2d3054facaef5724e73846, type: 3}
+    Height: 0.47499996
+    Size: {x: 0.089999996, y: 0.47499996, z: 0.295}
+    Yaw: 0
+  - Category: sign-panel
+    Id: KenneyRoads_road-sign-empty
+    Prefab: {fileID: 8464021617154208324, guid: d0680e92edae8da4abca7a0864921f09, type: 3}
+    Height: 0.47500002
+    Size: {x: 0.049999997, y: 0.47500002, z: 0.049999997}
+    Yaw: 0
+  - Category: sign-panel
+    Id: KenneyRoads_road-sign-object-stop
+    Prefab: {fileID: 3746733709372195427, guid: 6fe166a6df48e004caa6b4daf2fc85e8, type: 3}
+    Height: 0.1256476
+    Size: {x: 0.0775, y: 0.1256476, z: 0.1256476}
+    Yaw: 0
+  - Category: sign-panel
+    Id: KenneyRoads_road-sign-object-street
+    Prefab: {fileID: 3231116412087902442, guid: 8409b5531b590294fb305d75f653940b, type: 3}
+    Height: 0.060000017
+    Size: {x: 0.0425, y: 0.060000017, z: 0.19249979}
+    Yaw: 0
+  - Category: sign-panel
+    Id: KenneyRoads_road-sign-object-warning
+    Prefab: {fileID: 7283994982932531493, guid: de51b57679e01b54e82e42064c1fa48d, type: 3}
+    Height: 0.13380659
+    Size: {x: 0.077346034, y: 0.13380659, z: 0.13380659}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_road-sign-stop
+    Prefab: {fileID: 3767667634035711154, guid: 41f29dd4a69b611498233278220348ae, type: 3}
+    Height: 0.49407488
+    Size: {x: 0.0775, y: 0.49407488, z: 0.13821237}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_road-sign-street
+    Prefab: {fileID: 4855759585228560955, guid: 28520d14349b23340b3ccef51e3cc46b, type: 3}
+    Height: 0.47500002
+    Size: {x: 0.19625002, y: 0.47500002, z: 0.19624978}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_road-sign-warning
+    Prefab: {fileID: 486326445897780472, guid: b4cd39bab9182574ba18d057b84a4ca5, type: 3}
+    Height: 0.4985623
+    Size: {x: 0.07734602, y: 0.4985623, z: 0.14718723}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_sign-highway-detailed
+    Prefab: {fileID: 6257134510760405848, guid: a3181029b4f86164eb403e8c199da0f3, type: 3}
+    Height: 0.8221249
+    Size: {x: 0.13237503, y: 0.8221249, z: 0.9999998}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_sign-highway-wide
+    Prefab: {fileID: 2542348909169730956, guid: 9079c50678a1e234da3aef27e79773ba, type: 3}
+    Height: 0.70737493
+    Size: {x: 0.13237503, y: 0.70737493, z: 0.9999998}
+    Yaw: 0
+  - Category: roadfurniture
+    Id: KenneyRoads_sign-highway
+    Prefab: {fileID: 1510645496201460745, guid: e47f131bec3043745ad626959e21cd11, type: 3}
+    Height: 0.70737493
+    Size: {x: 0.13237491, y: 0.70737493, z: 0.9999998}
+    Yaw: 0
+  - Category: dolphin
+    Id: QuaterniusFish_Dolphin
+    Prefab: {fileID: 3660625829484379952, guid: cb0924c7c8500db458945a5d2974a2ed, type: 3}
+    Height: 3.2958267
+    Size: {x: 3.2936676, y: 3.2958267, z: 9.26325}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusFish_Fish1
+    Prefab: {fileID: 4910636381543551987, guid: 4eac20827e771184c93b6eeae92b29fc, type: 3}
+    Height: 2.647712
+    Size: {x: 1.3044031, y: 2.647712, z: 8.0159645}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusFish_Fish2
+    Prefab: {fileID: 5913323383809407870, guid: 9e70cd02b759fc8449f48eca957416c1, type: 3}
+    Height: 6.089591
+    Size: {x: 2.88476, y: 6.089591, z: 10.003754}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusFish_Fish3
+    Prefab: {fileID: 9003254599071146879, guid: 3a2b96b84464ea3439aa9335be2579f4, type: 3}
+    Height: 4.0885277
+    Size: {x: 2.3288789, y: 4.0885277, z: 7.851348}
+    Yaw: 0
+  - Category: ray
+    Id: QuaterniusFish_Manta_ray
+    Prefab: {fileID: 7844635890102128333, guid: 8a825fd2b1445e94c9e9e4ad583131d9, type: 3}
+    Height: 3.9327824
+    Size: {x: 8.388597, y: 3.9327824, z: 11.718496}
+    Yaw: 0
+  - Category: shark
+    Id: QuaterniusFish_Shark
+    Prefab: {fileID: 7919252198938487719, guid: 306e77f48f59e3e4a888644c7bb13be7, type: 3}
+    Height: 5.3190947
+    Size: {x: 5.923305, y: 5.3190947, z: 15.849467}
+    Yaw: 0
+  - Category: whale
+    Id: QuaterniusFish_Whale
+    Prefab: {fileID: 8834175027587129376, guid: f740764b9bb3af4469c6e8937cf79096, type: 3}
+    Height: 3.91641
+    Size: {x: 4.0625725, y: 3.91641, z: 10.199139}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_BlueTang
+    Prefab: {fileID: 1170593773490526142, guid: 06fead0a8e44fb84fa7b7499fda20a37, type: 3}
+    Height: 2.9016042
+    Size: {x: 3.541909, y: 2.9016042, z: 4.793627}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_ButterflyFish
+    Prefab: {fileID: 7058549533378964373, guid: fc247adfc90d7174ea4f811a36015031, type: 3}
+    Height: 2.9173303
+    Size: {x: 3.6129942, y: 2.9173303, z: 4.7824802}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_Clownfish
+    Prefab: {fileID: 9011843011242277577, guid: 934f50a8f064d5649a89bc4def47c01e, type: 3}
+    Height: 3.0697713
+    Size: {x: 4.5806093, y: 3.0697713, z: 5.2323265}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_CoralGrouper
+    Prefab: {fileID: 1332098849353344778, guid: 6f08d13b29dafd142814e51b68de5fcb, type: 3}
+    Height: 2.7026522
+    Size: {x: 3.5770807, y: 2.7026522, z: 5.2444305}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_Goldfish
+    Prefab: {fileID: 4506452504808630812, guid: 96c14eceffe216e49aef987e68b59028, type: 3}
+    Height: 4.6388273
+    Size: {x: 3.6503768, y: 4.6388273, z: 5.614237}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_Koi
+    Prefab: {fileID: 2233506049373237985, guid: 1bcf2be5102731049a008207a802374e, type: 3}
+    Height: 4.640167
+    Size: {x: 3.5509286, y: 4.640167, z: 5.643891}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_MandarinFish
+    Prefab: {fileID: 3257739264627415768, guid: 1c5e21dc87a85c14fac0914816448d83, type: 3}
+    Height: 1.948311
+    Size: {x: 2.8727376, y: 1.948311, z: 4.4029965}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_MoorishIdol
+    Prefab: {fileID: 7321916026057943363, guid: 354b7c2c8d9b54e4fbe3e9e1de0a1402, type: 3}
+    Height: 2.984518
+    Size: {x: 3.5593395, y: 2.984518, z: 4.330439}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_ParrotFish
+    Prefab: {fileID: 9163040041134240326, guid: ce3260f77aa78ab4f9ca9933c7e1fdaf, type: 3}
+    Height: 3.0832691
+    Size: {x: 3.9695108, y: 3.0832691, z: 5.7729425}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_Puffer
+    Prefab: {fileID: 7554947071542720364, guid: e0e06dc3057dbac4a96e52894d5b50de, type: 3}
+    Height: 2.7251284
+    Size: {x: 3.680358, y: 2.7251284, z: 3.9968405}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_RoyalGramma
+    Prefab: {fileID: 1888528824009580569, guid: 80936858d43092d438990b8383c775bb, type: 3}
+    Height: 1.9495702
+    Size: {x: 2.876313, y: 1.9495702, z: 4.401441}
+    Yaw: 0
+  - Category: fish
+    Id: QuaterniusCuteFish_Tetra
+    Prefab: {fileID: 1424996241286582928, guid: 8dad1bbe8a6332345bd59e67c0da51f9, type: 3}
+    Height: 1.8038905
+    Size: {x: 3.2415771, y: 1.8038905, z: 5.232271}
+    Yaw: 0
+  - Category: bird
+    Id: PantherOneBird_Bird
+    Prefab: {fileID: 6212285216786800319, guid: 45a6ae5a890f6034997a9538b2f2aee5, type: 3}
+    Height: 0.74469995
+    Size: {x: 1.1838729, y: 0.74469995, z: 0.61773443}
+    Yaw: 0
+  - Category: seaweed
+    Id: MohabinsSeaweed_Seaweed_Mohabins
+    Prefab: {fileID: 8367771452245781908, guid: 471037d8fd8ba5b4187384b9eb2c99ce, type: 3}
+    Height: 5.5910597
+    Size: {x: 2.179593, y: 5.5910597, z: 2.135777}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__00_A_CoralReef
+    Prefab: {fileID: 1352474688151209125, guid: 613d7b95736eb5e43825df3f479b0417, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet2__00_B_CoralReef
+    Prefab: {fileID: 1918473705343629058, guid: 5c78adedfde7b5341a84bf77acd00ef4, type: 3}
+    Height: 1.0578048
+    Size: {x: 0.7553351, y: 1.0578048, z: 0.6290746}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__00_C_CoralReef
+    Prefab: {fileID: 5632584370229961606, guid: 6874232caa073004a9e1185e1216904e, type: 3}
+    Height: 2.1436884
+    Size: {x: 1.8061955, y: 2.1436884, z: 1.101248}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet4__00_D_CoralReef
+    Prefab: {fileID: 5174869471041768337, guid: 6d039f1467a17d841956c27dd29330ae, type: 3}
+    Height: 1.0945112
+    Size: {x: 0.71005374, y: 1.0945112, z: 0.7100538}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet5__00_E_CoralReef
+    Prefab: {fileID: 6127889856475267229, guid: 26c2b1b4d0831bf429c95594823aa54f, type: 3}
+    Height: 1.2632498
+    Size: {x: 1.4952036, y: 1.2632498, z: 1.6668154}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet6__00_F_CoralReef
+    Prefab: {fileID: 5246327628443665481, guid: 16646c0af5504054c89a0334bb689542, type: 3}
+    Height: 1.0481936
+    Size: {x: 1.5195168, y: 1.0481936, z: 1.3105634}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__01_A_CoralReef_001
+    Prefab: {fileID: 6128194417952105707, guid: 5a00e1a8bed3b2642883be3ff31656ac, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet2__01_B_CoralReef_001
+    Prefab: {fileID: 4086506622575733560, guid: 243f930825ae4f843885d116918556b4, type: 3}
+    Height: 1.0578048
+    Size: {x: 0.7553351, y: 1.0578048, z: 0.6290746}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__01_C_CoralReef_001
+    Prefab: {fileID: 6196637931094751857, guid: a33e3f564b4ed4943b59137ec0b9bdb0, type: 3}
+    Height: 2.0715873
+    Size: {x: 1.4096359, y: 2.0715873, z: 0.8003597}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet4__01_D_CoralReef_001
+    Prefab: {fileID: 2598190037922926950, guid: 729586d4d5ab1e24aaaa8de4db3d197d, type: 3}
+    Height: 1.0945112
+    Size: {x: 0.71005374, y: 1.0945112, z: 0.7100538}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet5__01_E_CoralReef_001
+    Prefab: {fileID: 7542633154573166271, guid: 569542112df0afe47a606339ac621d3b, type: 3}
+    Height: 1.2632498
+    Size: {x: 1.4952036, y: 1.2632498, z: 1.6668154}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet6__01_F_CoralReef_001
+    Prefab: {fileID: 6575989471163445600, guid: 8ce06ff80eab2bc4582839fe2dc55b3d, type: 3}
+    Height: 1.0481936
+    Size: {x: 1.5195168, y: 1.0481936, z: 1.3105634}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__02_A_CoralReef_002
+    Prefab: {fileID: 4603478835051962978, guid: b4c473d619d321244a1c03a111a458bc, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet2__02_B_CoralReef_002
+    Prefab: {fileID: 2361154410288566701, guid: 3a4e409b026980d4b9896f1f480fe79b, type: 3}
+    Height: 1.0578048
+    Size: {x: 0.7553351, y: 1.0578048, z: 0.6290746}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__02_C_CoralReef_005
+    Prefab: {fileID: 720209026946250342, guid: 49783dfe7c7ef7648b63b597cf0f3fbc, type: 3}
+    Height: 2.0715873
+    Size: {x: 1.4096359, y: 2.0715873, z: 0.8003597}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet4__02_D_CoralReef_002
+    Prefab: {fileID: 8741927978355534460, guid: f8cfe85e1247c884f943ced237dd8401, type: 3}
+    Height: 1.0945112
+    Size: {x: 0.71005374, y: 1.0945112, z: 0.7100538}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet5__02_E_CoralReef_002
+    Prefab: {fileID: 6776927192796215306, guid: 2fa1661b17127744faff6bc5e282440c, type: 3}
+    Height: 1.2632498
+    Size: {x: 1.4952036, y: 1.2632498, z: 1.6668154}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet6__02_F_CoralReef_002
+    Prefab: {fileID: 7395210267841895393, guid: e5ad90260ed7b724d8479b625e27bc6d, type: 3}
+    Height: 1.0481936
+    Size: {x: 1.5195168, y: 1.0481936, z: 1.3105634}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__03_A_CoralReef_003
+    Prefab: {fileID: 3302117534260974662, guid: ed1742020543d9047bc7783a6e769200, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet2__03_B_CoralReef_003
+    Prefab: {fileID: 8432141760043980850, guid: f53af66f5781fee408341aef03097683, type: 3}
+    Height: 1.0578048
+    Size: {x: 0.7553351, y: 1.0578048, z: 0.6290746}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__03_C_CoralReef_006
+    Prefab: {fileID: 8651085247677144586, guid: 161c56899974410449491df3eb6e151c, type: 3}
+    Height: 2.1436884
+    Size: {x: 1.8061955, y: 2.1436884, z: 1.101248}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet4__03_D_CoralReef_003
+    Prefab: {fileID: 2059259017493893098, guid: bafd7ae52362d7542be211c4f47cff9b, type: 3}
+    Height: 1.0945112
+    Size: {x: 0.71005374, y: 1.0945112, z: 0.7100538}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet5__03_E_CoralReef_003
+    Prefab: {fileID: 2923060006330582652, guid: 75de64a3aa7664b40ac5aa4345d51938, type: 3}
+    Height: 1.2632498
+    Size: {x: 1.4952037, y: 1.2632498, z: 1.6668154}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet6__03_F_CoralReef_003
+    Prefab: {fileID: 3337849266854171216, guid: 94c6dfa3354cfe2498080d8c0002420a, type: 3}
+    Height: 1.0481936
+    Size: {x: 1.5195168, y: 1.0481936, z: 1.3105634}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__04_A_CoralReef_004
+    Prefab: {fileID: 1992862974822029353, guid: 9d2ec452d99778e45839f4fc9586818c, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet2__04_B_CoralReef_004
+    Prefab: {fileID: 2733397362884147495, guid: 6095fd6b2bed9864b803cc7c3656570d, type: 3}
+    Height: 1.0578048
+    Size: {x: 0.7553351, y: 1.0578048, z: 0.6290746}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__04_C_CoralReef_007
+    Prefab: {fileID: 8366400271185915084, guid: c48e9889984eaf749bc5c501f94ca73c, type: 3}
+    Height: 2.0715873
+    Size: {x: 1.4096359, y: 2.0715873, z: 0.8003597}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet5__04_E_CoralReef_004
+    Prefab: {fileID: 8939407797743628821, guid: b5ee3c2034cbe8f409046614cf133f7c, type: 3}
+    Height: 1.2632498
+    Size: {x: 1.4952037, y: 1.2632498, z: 1.6668154}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet6__04_F_CoralReef_004
+    Prefab: {fileID: 172072731989501059, guid: 9029bbcf94993c149bc8bb9467b9a14b, type: 3}
+    Height: 1.0481936
+    Size: {x: 1.5195168, y: 1.0481936, z: 1.3105634}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__05_A_CoralReef_005
+    Prefab: {fileID: 8460524844534585344, guid: b6723517eec62884d81069b2ab4e1208, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__05_C_CoralReef_008
+    Prefab: {fileID: 1816949072760827216, guid: 6ef89a5e37ca183429dbdeb1fb95002d, type: 3}
+    Height: 2.1436884
+    Size: {x: 1.8061955, y: 2.1436884, z: 1.101248}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__06_A_CoralReef_006
+    Prefab: {fileID: 1601348749127275084, guid: 39f085afb7a2e024c892932a3badfd1b, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__06_C_CoralReef_009
+    Prefab: {fileID: 1850393540758054899, guid: d957df095bd81b74085834ff58957b00, type: 3}
+    Height: 2.0715873
+    Size: {x: 1.4096359, y: 2.0715873, z: 0.8003597}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet1__07_A_CoralReef_007
+    Prefab: {fileID: 5350384973195360583, guid: c0e1bca3c073fe2429064a9d59541c14, type: 3}
+    Height: 0.6518087
+    Size: {x: 0.43703473, y: 0.6518087, z: 0.6235315}
+    Yaw: 0
+  - Category: coral
+    Id: MiniPolyCoral_CoralReefSet3__07_C_CoralReef_010
+    Prefab: {fileID: 8861631280585379035, guid: 9884d2135ca0e1e4293f24ede6719e65, type: 3}
+    Height: 2.1436884
+    Size: {x: 1.8061955, y: 2.1436884, z: 1.101248}
+    Yaw: 0
+  AuthoredItems: []

@@ -6,7 +6,7 @@ public sealed partial class StudioGame
         guard?.ResetInput();held.Clear();previous=default; // Do not sample keyboard state while the window is inactive.
         previousMouse=Microsoft.Xna.Framework.Input.Mouse.GetState();
         parentHold.Reset();escapeExit.Reset();optionsTaps.Reset();gameShortcut.Reset();analyzer.Reset();recognizer.Reset();counting.Reset();guided.Start(target);flight.ResetInputGestures();
-        voice?.Stop();canvas.Clear();keyGlow.Clear();playStarted=false;awaitingBalloons=false;
+        ResetDotSession();ResetMath();voice?.Stop();canvas.Clear();keyGlow.Clear();playStarted=false;awaitingBalloons=false;
         hero="";celebrateUntil=hintUntil=flightCelebration=0;wordImage?.Dispose();wordImage=null;
         if(calibration>=0){calibration=-1;parent=true;notice="Calibration stopped when the window changed. Start a new sample to continue.";}
         ResetElapsedTime();resumeClears++;

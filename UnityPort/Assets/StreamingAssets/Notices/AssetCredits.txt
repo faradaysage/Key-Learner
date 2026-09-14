@@ -1,0 +1,22 @@
+KeyLearner game art credits
+
+Bird - Animated by Panther-One, CC BY 3.0, via OpenGameArt.org.
+https://opengameart.org/content/bird-animated
+https://creativecommons.org/licenses/by/3.0/
+Converted to FBX; original model, texture, rig and flight retained; Unity materials/pivot/scale adapted.
+
+Coral Reef Kit by MiniPoly, CC BY 3.0, via Poly Pizza.
+https://poly.pizza/bundle/Coral-Reef-Kit-ghN8EmbYa6
+https://poly.pizza/u/MiniPoly
+https://creativecommons.org/licenses/by/3.0/
+Original models and embedded atlases retained; Unity materials/pivot/scale/composition adapted.
+
+Nature, Farm Buildings, Animated Fish and Animated Cute Fish: Quaternius, CC0 1.0.
+https://quaternius.com/
+Cars, City Suburban, City Commercial and City Roads: Kenney, CC0 1.0.
+https://kenney.nl/
+Seaweed: Mohabins, CC0 1.0, via Poly Pizza.
+https://poly.pizza/m/oYxUdpyc4u
+https://creativecommons.org/publicdomain/zero/1.0/
+
+All original notices and the complete source ledger ship in the game's StreamingAssets/Notices folder.

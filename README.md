@@ -1,10 +1,20 @@
 # KeyLearner: a little world of discovery
 
-A Windows native, offline keyboard playground inspired by Scott Hanselman's Baby Smash. This revision replaces the active application shell with a MonoGame studio, gesture-aware learning, controlled speech, and a parent-only settings interface. The original source is retained for reference; only Studio/**/*.cs is compiled. No sibling Bepu checkout is required.
+An offline Windows learning playground inspired by Scott Hanselman's Baby Smash, with twelve games, gesture-aware learning, bounded offline speech, and parent settings. The Unity URP implementation lives alongside the preserved MonoGame application. Both share tested C# learning, progression, scoring, movement, and JSON save contracts; no sibling Bepu checkout is required.
+
+See [Unity build, run, and extension instructions](UnityPort/README.md), [migration evidence](docs/unity-migration.md), [gameplay gallery](docs/unity-gallery.md), and [asset credits](THIRD_PARTY_ASSETS.md). Local Unity Windows output is under artifacts/unity-windows/; the commands below still build and run the preserved MonoGame version.
 
 ## Install on a laptop
 
-The Windows installer workflow produces a self-contained x64 setup EXE and SHA-256 checksum under its **KeyLearner-Windows-installer** artifact. Download, unzip, and run setup. Subsequent installers update the same per-user installation and retain the parent profile. No .NET installation is required. See [installer builds and upgrades](docs/installer.md).
+Download the **INSTALL-KeyLearner-Unity-Windows** artifact from the latest successful [Windows installer Actions run](https://github.com/faradaysage/Key-Learner/actions/workflows/windows-installer.yml) for the migration PR. Extract the ZIP and run its setup EXE; the portable player and CI artifacts are not needed for installation. [PR #8](https://github.com/faradaysage/Key-Learner/pull/8) links the current verified installer. The older 3.0.0 prerelease predates the current input and diagnostic work.
+
+The package updates the existing per-user installation and retains the parent profile; no separate .NET installation is required. The KeyLearner splash and picker show the running version/build. If keys do not respond, use the mouse-accessible **Open diagnostics & close** button and follow [keyboard diagnostic instructions](docs/unity-input-diagnostics.md). The protected-hook delivery correction selects the single legacy Unity input backend; diagnostics report `inputBackend=legacy-only`. Target-device physical-keyboard acceptance remains pending.
+
+[CI setup and artifacts](docs/unity-ci.md) explains Unity Personal activation, tests, caching and installer upgrade checks. [Verification](docs/unity-verification.md) documents remaining acceptance limits. See [installer builds and upgrades](docs/installer.md).
+
+## Visual math
+
+Five pointer-first activities extend Dot Pop: **How Many Now?**, **What's Hiding?**, **Make the Number**, **Dot Duel**, and **Cannon Hop**. Find them under Numbers in the existing game picker. They start with concrete quantities, give patient visual explanations after mistakes, and gradually introduce arithmetic within 10. [Progression, controls, and reproducible visual tests](docs/visual-math.md).
 
 ## Try it
 
@@ -16,7 +26,7 @@ Build with .NET 8 or newer:
 Inspect without capturing the keyboard:
 
     dotnet run -c Release -- --preview
-    dotnet run -c Release -- --preview --studio
+    dotnet run -c Release -- --studio
 
 Normal play uses fullscreen and a session keyboard guard:
 
@@ -34,7 +44,7 @@ Hold exactly one Ctrl key, one Alt key, and:
 
 Hold an exact combination for **two seconds**. No release is required. Left or right modifiers work. Additional physical keys restart the timer; Caps/Num/Scroll Lock indicators are ignored. Release all keys after an action before triggering another. Ctrl+Shift+O is also accepted for options.
 
-Escape alone shows a small reminder. It does not leave play. The studio supports mouse input, Tab to switch sections, arrows to select/adjust settings, and Enter to edit. The key-to-text mapping in text fields currently assumes US QWERTY. Chord timing is intentionally not a child-adjustable preference.
+One unmodified Escape shows the parent-control reminder without leaving Canvas/explorer play. Dot Pop stays in its game; visual math retains Escape as its Back route. Two completed, unmodified G taps within 1.2 seconds open the picker from any game. The studio supports mouse input, Tab to switch sections, arrows to select/adjust settings, and Enter to edit. The key-to-text mapping in text fields currently assumes US QWERTY. Chord timing is intentionally not a child-adjustable preference.
 
 See [streaming recognition and living effects](docs/streaming-and-effects.md) for the updated prefix-learning behavior, deterministic icons, fireplace and merging droplets.
 
@@ -93,7 +103,7 @@ Generated previews and test profiles go in artifacts/ and are ignored by Git. No
 
 Parent Studio > Play & safety toggles gesture effects, mouse play, growing fire, and the separate effects volume. Deliberate/rapid keys make letters and icons; overlapping clusters splat paint; broad mashing builds glass damage (quiet heals it); straight keyboard traces make larger deforming liquid drops. Gesture labels are estimates from timing, overlap and keyboard location, with optional parent-trained refinement.
 
-Move the pointer to repel letters/icons and reward balloons. Left click blasts nearby assets; right click launches a cannon toward the pointer. In Word Adventure both clicks launch the cannon. Effects particles are unaffected by repulsion. Holding Space grows the themed fireplace; assets in its depth ignite.
+Move the pointer to repel letters/icons and reward balloons. Left click fires the cannon in Smash Garden and Word Adventure; right click makes a local blast. Cannonballs travel until their first swept collision or until they leave the canvas. Effects particles are unaffected by repulsion. Holding Space grows the themed fireplace; assets in its depth ignite.
 
 Counting launches one rocket per number over a four-second launch window, with approximately 0.75-second flights. Concurrent number shows overlap. Word Adventure releases 2–16 balloons based on word length and difficult letters. Each pop earns 10 points; clearing a round adds 5 points per balloon and a short screen shake (disabled by Gentle Motion). Finish the balloon round to get the next word. Scores last for the current game session.
 
@@ -111,9 +121,9 @@ Effects recordings and their CC0 sources are documented in Content/Sounds/ATTRIB
 
 Additional replay scenarios: `cluster`, `glass`, `swipe`, `fireworks`, `word-balloons`, `word-pop`. Use `--preview --scenario word-pop --seconds 5 --screenshot <path>` for an integrated cannon/scoring test. `scripts/test-accessibility.ps1` explicitly tests real Windows shortcut flags and guardian restoration after killing its own probe process; it does not capture the keyboard.
 
-## Native-resolution graphics and Sky Speller
+## Preserved MonoGame graphics history
 
-This iteration uses MonoGame's existing 3D GPU pipeline; it does not migrate to Unity. The logical play area remains 1440 by 900, but it now renders to the display resolution at the selected render scale. Liquid density accumulation, surface lighting and wet paint shading run in GPU effects. Glass uses a connected convex partition: new fractures are clipped to an existing piece, pressure grows the network, and those exact polygons rotate and fall after the sheet is sufficiently divided. Refraction and reflection are screen-space approximations, not ray tracing. Letters and icons use cached, lit extrusions of the bundled font silhouettes.
+This section describes the earlier MonoGame renderer, retained alongside the new Unity implementation. The current Unity rendering and imported art are documented in [the migration report](docs/unity-migration.md). The MonoGame version uses its existing 3D GPU pipeline. The logical play area remains 1440 by 900, but it now renders to the display resolution at the selected render scale. Liquid density accumulation, surface lighting and wet paint shading run in GPU effects. Glass uses a connected convex partition: new fractures are clipped to an existing piece, pressure grows the network, and those exact polygons rotate and fall after the sheet is sufficiently divided. Refraction and reflection are screen-space approximations, not ray tracing. Letters and icons use cached, lit extrusions of the bundled font silhouettes.
 
 **Graphics tab:** render scale, liquid resolution, terrain detail, 3D assets, toon shading, glass shading, multisample edge smoothing, VSync and flight assistance. Its six-second benchmark exercises a fixed native-resolution workload, restores the previous settings afterwards, includes update/physics time, synchronizes GPU work with readback, and reports a 95th-percentile frame time. It suggests High/Balanced/Performance settings; applying and saving remains a parent choice. This estimate is not a guarantee for every laptop or workload.
 
@@ -130,7 +140,11 @@ Additional preview scenarios: `flight`, `quick-options`, `twenty-keys`, `fractur
 References: [MonoGame 3D rendering](https://docs.monogame.net/articles/getting_to_know/whatis/graphics/WhatIs_3DRendering.html), [custom GPU effects](https://docs.monogame.net/articles/getting_started/content_pipeline/custom_effects.html), [Microsoft keyboard ghosting explanation](https://www.microsoft.com/applied-sciences/projects/anti-ghosting).
 
 
-## Input recovery and separate learning (2.0.22)
+## Preserved MonoGame release history
+
+The following versioned sections describe the pre-port implementation. Shared behavior remains relevant, while Unity presentation and current verification are documented above.
+
+### Input recovery and separate learning (2.0.22)
 
 Key releases now match the physical scan code from the original press, even if Windows changes its virtual-key label after Num Lock or Shift changes. Pause/Break become complete taps; overrun packets and extended synthetic Shift do not become held keys. Main and keypad Enter retain independent physical references. An injected release that repairs state cancels chord authorization rather than completing it. Parent Studio displays repair counts without recording keystrokes.
 
@@ -144,7 +158,7 @@ Clusters and mashing require a fresh burst of overlapping distinct presses withi
 
 Regressions include translated key releases, Pause without key-up, strict options recovery, independent tap sequences, separate learning resets, and legacy profile migration. Integrated previews: `native-recovery`, `ten-o`. These do not replace acceptance testing on the laptop's physical keyboard and touchpad.
 
-## Current key snapshots and clean resume (2.0.23)
+### Current key snapshots and clean resume (2.0.23)
 
 The protected input layer publishes a 256-key snapshot independently of its bounded event queue. Parent controls check that snapshot every frame; speech, spelling and gesture recognition cannot consume or suppress it. Shortcuts no longer reconstruct a clean press/release sequence from gameplay history. Caps/Num/Scroll Lock count only while physically pressed, not while their indicator is on. Ten O taps also reset the input ledger to recover parent controls.
 
@@ -155,7 +169,7 @@ This snapshot is maintained by the native input interceptor, not claimed as a st
 Validation scenarios: `options`, `shift-options`, `extra-key`, `quick-options` (short holds rejected), `native-recovery`, `window-resume` (actual SDL hide/show with queued speech and effects), `ten-o`, and `twenty-keys`.
 
 
-## Explorer games and patient spelling (2.0.24)
+### Explorer games and patient spelling (2.0.24)
 
 The game picker includes **Sky Speller**, **Letter Racer** and **Ocean Speller**. All three collect letters in order, speak the completed word and award letter/word points, with score at the upper right. Existing parent controls and clean-resume behavior are unchanged.
 
@@ -172,7 +186,7 @@ Bird/racing journeys move through forest, lakes, mountains, city, river, town an
 New replay scenarios: `racing`, `dolphin`, `flight-loop` (5 seconds), `region-City`, `region-Mountains`, `region-River`, `patient-red` (10 seconds), `spelling-timeout`, `cannon-miss`. The current development session could not initialize OpenGL for either this build or the previous installer, so this iteration's rendered scenes and GPU performance have not been visually validated here. Simulation tests and the Release/installer build are checked separately.
 
 
-## Focus isolation and the game picker (2.0.25)
+### Focus isolation and the game picker (2.0.25)
 
 Launch opens a child-accessible game picker. During play, tap **G, then G** within 1.2 seconds (release between taps). Arrows select, Enter plays, Tab cycles All / Explore / Letters / Numbers, and cards support hover and click. The three explorer cards use in-engine previews; canvas games use illustrations. Mode selection is no longer buried in parent options. `GameCatalog` supplies each game's display name, description, suggested starting age, type, topics, and optional movement kind.
 
@@ -182,4 +196,17 @@ Explorer architecture separates `LetterCourse` (progress, score, completion inte
 
 With assistance enabled, releasing directional controls recovers upright treetop flight, including from inverted/high flight. Mountain terrain has two high banks around a winding valley and gates lead through it. Car terrain is tessellated outside the road using shared shoulder vertices; no ground triangle crosses the asphalt. Shoulders resist steering and reduce speed, tires kick up dirt off road, and shoreline collision prevents entering water. Letter meshes face the camera without horizontal mirroring. Green start rings and gold finish markers distinguish endpoints; completing a word releases an exploding word/particle reward, a synthesized power-up chime, a brief shake (disabled by Gentle Motion), and a score bonus before the next word appears.
 
-Verification: regression tests cover missing key-up/focus changes, no background Caps/password history, repeated GG input, every mode's metadata, inverted high-flight recovery, valley banks, glyph orientation, shoulder tessellation, shoreline collision and one-time reward scoring. The local preview currently fails inside MonoGame OpenGL initialization before game code; the new visuals and real lock-screen interaction still require verification on a working graphics session. No antivirus settings were changed.
+Verification: regression tests cover missing key-up/focus changes, no background Caps/password history, repeated GG input, every mode's metadata, inverted high-flight recovery, valley banks, glyph orientation, shoulder tessellation, shoreline collision and one-time reward scoring. That historical MonoGame preview failed inside OpenGL initialization before game code. The Unity migration has since built and exercised the Windows Direct3D player; current evidence is in docs/unity-platform.md and docs/unity-migration.md. Physical lock-screen acceptance remains separate. No antivirus settings were changed.
+
+
+### Dot Pop: toddler subitizing (2.0.26)
+
+Choose **Dot Pop** from the game picker (second page, or the Numbers filter). No keyboard is needed to answer: click or touch one of ten large, fixed 0–9 buttons. A mute/unmute button is the only in-game control besides the answers. The stage number sits at the top right. The 720×1080 portrait composition fills the available height or width without stretching; landscape displays have quiet side margins. Monitor orientation is not changed.
+
+READY → SET → GO → dots → HOW MANY? Each correct answer launches a rapid volley, pops precisely the occupied cells, and starts the next stage after a fixed 1.12-second reward, even for nine. Zero is an empty grid, with its own completion burst. Wrong answers cause only a small, silent shake and restore the same dots for an untimed retry. Multi-touch clusters, held clicks, and countdown/reward taps cannot submit a stream of answers. Ready/Set/Go are displayed; How many? is spoken when sound is enabled. Effects use the existing cannon/pop sounds. Gentle Motion removes the shake.
+
+Difficulty increases only on correct first attempts: 12 successes with 0–3 grouped dots; 16 with 0–4 varied patterns; 16 with 5–6 grouped patterns; 16 with 7–9 grouped patterns; then 20 with 5–9 increasingly irregular patterns. These are untimed. At 80 first-attempt successes, dots display for four seconds, decreasing by 45 ms per further success to a 400 ms floor. The answer buttons never time out. Retries advance the stage but not difficulty. Stage and difficulty are session-local; restarting the application starts gently again.
+
+`DotPatterns` represents all 512 3×3 masks, including zero. Selection balances quantities, favors the least-seen eligible masks, then less familiar rotation/reflection families, and avoids the immediately previous pattern. This prevents the many five-dot masks from crowding out zero and nine. `SubitizingGame` owns progression and timers, and `DotLayout` shares portrait geometry between rendering and hit testing. Visibility changes restart the current pattern from READY and cancel sound/volley effects without losing earned progression.
+
+Preview scenarios: `dots-visible`, `dots-correct`, `dots-retry`. Use `--preview --mode dots --portrait` for a portrait window. Pure regression tests exercise the full pattern universe, difficulty tiers, retries, timers, zero/nine reward timing, duplicate answer rejection, focus reset and portrait/landscape hit mapping. Native touch hardware and the GPU presentation still require a working graphics session; no antivirus exceptions are needed for this mode.

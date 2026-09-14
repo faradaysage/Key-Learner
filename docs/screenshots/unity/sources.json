@@ -1,0 +1,22 @@
+{
+  "racer-town": "unity-final-town/mode-04",
+  "racer-city": "unity-final-city/mode-04",
+  "cannon-hop": "unity-acceptance/mode-11",
+  "sky-forest": "unity-final-explorers/mode-03",
+  "glass": "unity-final-glass-early/glass",
+  "parent-studio": "unity-ux-final/studio-0",
+  "hiding": "unity-acceptance/mode-08",
+  "make-number": "unity-acceptance/mode-09",
+  "liquid": "unity-acceptance/swipe",
+  "word-adventure": "unity-acceptance/word-balloons",
+  "sky-mountains": "unity-final-mountains/mode-03",
+  "smash": "unity-acceptance/icons",
+  "ocean": "unity-final-explorers/mode-05",
+  "picker": "unity-ux-final/picker-explore",
+  "dot-duel": "unity-acceptance/mode-10",
+  "fire": "unity-acceptance/fire",
+  "how-many": "unity-acceptance/mode-07",
+  "sky-city": "unity-final-sky-city/mode-03",
+  "counting": "unity-acceptance/counting",
+  "dot-pop": "unity-acceptance/mode-06"
+}

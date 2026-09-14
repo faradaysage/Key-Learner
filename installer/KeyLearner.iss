@@ -8,6 +8,16 @@
 #define InstallerDir "..\artifacts\installer"
 #endif
 
+#ifdef UnityPort
+#define PlayArguments "-screen-fullscreen 1"
+#define StudioArguments "-screen-fullscreen 0 --studio"
+#define LaunchWindowFlags "runmaximized"
+#else
+#define PlayArguments ""
+#define StudioArguments "--preview --studio"
+#define LaunchWindowFlags ""
+#endif
+
 [Setup]
 ; Permanent identity: never change this between releases.
 AppId={{D5C654D0-1B14-4479-B771-20BD264731A8}
@@ -41,15 +51,24 @@ VersionInfoVersion={#AppVersion}
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Shortcuts:"; Flags: unchecked
 
 [Files]
+#ifdef UnityPort
+Source: "{#PublishDir}\*"; DestDir: "{app}"; Excludes: "*_BackUpThisFolder_ButDontShipItWithYourGame,*_BackUpThisFolder_ButDontShipItWithYourGame\*,*_BurstDebugInformation_DoNotShip,*_BurstDebugInformation_DoNotShip\*,*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
+#else
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+#endif
 
 [Icons]
-Name: "{group}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
-Name: "{group}\KeyLearner Parent Studio"; Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio"; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"
-Name: "{autodesktop}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; WorkingDir: "{app}"; Tasks: desktopicon; AppUserModelID: "KeyLearner.Desktop"
+Name: "{group}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; Parameters: "{#PlayArguments}"; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"; Flags: {#LaunchWindowFlags}
+Name: "{group}\KeyLearner Parent Studio"; Filename: "{app}\KeyLearner.exe"; Parameters: "{#StudioArguments} --data ""{localappdata}\KeyLearner"""; WorkingDir: "{app}"; AppUserModelID: "KeyLearner.Desktop"; Flags: {#LaunchWindowFlags}
+Name: "{autodesktop}\KeyLearner"; Filename: "{app}\KeyLearner.exe"; Parameters: "{#PlayArguments}"; WorkingDir: "{app}"; Tasks: desktopicon; AppUserModelID: "KeyLearner.Desktop"; Flags: {#LaunchWindowFlags}
 
 [Run]
-Filename: "{app}\KeyLearner.exe"; Parameters: "--preview --studio"; Description: "Open the parent studio"; Flags: nowait postinstall skipifsilent unchecked
+Filename: "{app}\KeyLearner.exe"; Parameters: "{#StudioArguments} --data ""{localappdata}\KeyLearner"""; Description: "Open the parent studio"; Flags: nowait postinstall skipifsilent unchecked {#LaunchWindowFlags}
 
 ; Profiles live separately under LocalAppData\KeyLearner. Neither upgrades nor
 ; uninstall remove dictionaries, recordings, settings, or learned preferences.
+
+
+#ifdef UnityPort
+#include "LegacyMonoGameFiles.iss"
+#endif

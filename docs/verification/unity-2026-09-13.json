@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-13",
+  "repositoryBranch": "codex/visual-dot-math",
+  "baselineCommit": "bb7e5fd",
+  "implementation": "All twelve minigames migrated; original MonoGame preserved.",
+  "acceptance": "Automated/visual/upgrade checks completed; unresolved native Unity crash and target-device physical-input limits remain.",
+  "build": {
+    "unity": "6000.6.0f1",
+    "urp": "17.6.0",
+    "platform": "Windows x64 Mono",
+    "configuration": "Release, BuildOptions.None",
+    "buildErrors": 0,
+    "reportedBytes": 260091692,
+    "runtimeAssemblySha256": {
+      "KeyLearner.Domain.dll": "31F14B3AB841543F024499D6CAB13E46BA85F7202594821D859BC68C0AA3B95F",
+      "Assembly-CSharp.dll": "CA20E11BE273844829DD12D2DEB96DA5F76EC0230E93BAAE24C8D2FC4AEAA39F"
+    },
+    "installer": "artifacts/installer/KeyLearner-3.0.0-win-x64-setup.exe",
+    "installerBytes": 81628898,
+    "installerSha256": "9a2c5a580d9c78209fa25c5d56819a7740ba810430fade4c3d3a465ec897bab9"
+  },
+  "checks": {
+    "originalModelChecks": 1193,
+    "sharedDllModelChecks": 1193,
+    "actualUnityMonoChecks": 36,
+    "scriptCompilationWarnings": 0,
+    "scriptCompilationErrors": 0,
+    "actualUnityAuthoredOverrideChecks": 7,
+    "sourceAssetHashes": 396,
+    "sourceAssetHashMismatches": 0,
+    "uxAssertions": 24,
+    "nativePointerCases": 7,
+    "additionalDotPopLaunches": 10,
+    "realProfileFilesUnchanged": true
+  },
+  "gameplay": {
+    "schemaVersion": 1,
+    "verifiedAtUtc": "2026-09-13T06:11:56.5672951Z",
+    "passed": true,
+    "totalCases": 33,
+    "passedCases": 33,
+    "firstPassPassed": 32,
+    "correctedFixtureReruns": 1,
+    "firstPassResultReport": "artifacts/unity-acceptance/results.json",
+    "correctedFixtureResultReport": "artifacts/unity-acceptance-balloon-fixture/results.json",
+    "firstPassFailure": {
+      "case": "balloon-sequence",
+      "passed": false,
+      "error": "Expected glyphs=[3-9], observed mode=SmashGarden glyphs=2 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=1 liquidRT=1229x768 popped=0 largest=1.58 flames=0 fire=0.",
+      "screenshot": "artifacts/unity-acceptance/balloon-sequence.png",
+      "log": "artifacts/unity-acceptance/balloon-sequence.log"
+    },
+    "explanation": "All cases exercised the same final Windows build. The first pass passed 32 cases; its only failure was an unintended gesture in the balloon-sequence fixture. The rerun isolates repeated-letter behavior by disabling gestures solely in that disposable profile. Original failed evidence is retained. No gameplay source or binary changed for the rerun.",
+    "runtimeAssemblySha256": {
+      "KeyLearner.Domain.dll": "31F14B3AB841543F024499D6CAB13E46BA85F7202594821D859BC68C0AA3B95F",
+      "Assembly-CSharp.dll": "CA20E11BE273844829DD12D2DEB96DA5F76EC0230E93BAAE24C8D2FC4AEAA39F"
+    },
+    "cases": [
+      {
+        "case": "mode-00",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=0 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 4.0033021,
+        "screenshot": "artifacts/unity-acceptance/mode-00.png",
+        "log": "artifacts/unity-acceptance/mode-00.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-01",
+        "passed": true,
+        "diagnostic": "mode=WordAdventure glyphs=0 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 5.37570143,
+        "screenshot": "artifacts/unity-acceptance/mode-01.png",
+        "log": "artifacts/unity-acceptance/mode-01.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-02",
+        "passed": true,
+        "diagnostic": "mode=Counting glyphs=0 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 4.12030172,
+        "screenshot": "artifacts/unity-acceptance/mode-02.png",
+        "log": "artifacts/unity-acceptance/mode-02.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-03",
+        "passed": true,
+        "diagnostic": "explorer=Bird letters=3 score=30 words=0 position=<-13.64631, 58.03544, -336.7181> segments=30 swimmers=0",
+        "p95Milliseconds": 5.17529774,
+        "screenshot": "artifacts/unity-acceptance/mode-03.png",
+        "log": "artifacts/unity-acceptance/mode-03.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-04",
+        "passed": true,
+        "diagnostic": "explorer=Racer letters=3 score=30 words=0 position=<-95.38457, 7, -560.0316> segments=10 swimmers=0",
+        "p95Milliseconds": 5.01840305,
+        "screenshot": "artifacts/unity-acceptance/mode-04.png",
+        "log": "artifacts/unity-acceptance/mode-04.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-05",
+        "passed": true,
+        "diagnostic": "explorer=Dolphin letters=2 score=20 words=0 position=<-8.470872, -39.65702, -244.5008> segments=24 swimmers=1032",
+        "p95Milliseconds": 6.66349888,
+        "screenshot": "artifacts/unity-acceptance/mode-05.png",
+        "log": "artifacts/unity-acceptance/mode-05.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-06",
+        "passed": true,
+        "diagnostic": "DotPop phase=Answer stage=1 mastery=0 quantity=3 mask=200 errors=0",
+        "p95Milliseconds": 4.0608983,
+        "screenshot": "artifacts/unity-acceptance/mode-06.png",
+        "log": "artifacts/unity-acceptance/mode-06.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-07",
+        "passed": true,
+        "diagnostic": "HowManyNow phase=AwaitAnswer stage=1 level=1 answer=2 choices=1,2 errors=0 built=3",
+        "p95Milliseconds": 4.15680265,
+        "screenshot": "artifacts/unity-acceptance/mode-07.png",
+        "log": "artifacts/unity-acceptance/mode-07.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-08",
+        "passed": true,
+        "diagnostic": "Hiding phase=AwaitAnswer stage=1 level=1 answer=2 choices=1,2 errors=0 built=3",
+        "p95Milliseconds": 4.02619743,
+        "screenshot": "artifacts/unity-acceptance/mode-08.png",
+        "log": "artifacts/unity-acceptance/mode-08.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-09",
+        "passed": true,
+        "diagnostic": "MakeNumber phase=AwaitAnswer stage=1 level=1 answer=3 choices=1,3 errors=0 built=0",
+        "p95Milliseconds": 3.95840406,
+        "screenshot": "artifacts/unity-acceptance/mode-09.png",
+        "log": "artifacts/unity-acceptance/mode-09.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-10",
+        "passed": true,
+        "diagnostic": "Duel phase=AwaitAnswer stage=1 level=1 answer=0 choices=0,1,2 errors=0 built=3",
+        "p95Milliseconds": 3.78419781,
+        "screenshot": "artifacts/unity-acceptance/mode-10.png",
+        "log": "artifacts/unity-acceptance/mode-10.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "mode-11",
+        "passed": true,
+        "diagnostic": "CannonHop phase=AwaitAnswer stage=1 level=1 answer=2 choices=1,2 errors=0 built=3",
+        "p95Milliseconds": 4.27380228,
+        "screenshot": "artifacts/unity-acceptance/mode-11.png",
+        "log": "artifacts/unity-acceptance/mode-11.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "rapid-milk",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=0 score=0 completed=0 count=1 pending= balloons=0 recognized=1 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 5.24469995,
+        "screenshot": "artifacts/unity-acceptance/rapid-milk.png",
+        "log": "artifacts/unity-acceptance/rapid-milk.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "icons",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=8 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=1.00 flames=0 fire=0",
+        "p95Milliseconds": 4.32979727,
+        "screenshot": "artifacts/unity-acceptance/icons.png",
+        "log": "artifacts/unity-acceptance/icons.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "balloon",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=1 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=2 largest=1.34 flames=0 fire=0",
+        "p95Milliseconds": 4.39519596,
+        "screenshot": "artifacts/unity-acceptance/balloon.png",
+        "log": "artifacts/unity-acceptance/balloon.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "balloon-sequence",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=3 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=1.58 flames=0 fire=0",
+        "p95Milliseconds": 1.99029899,
+        "screenshot": "artifacts/unity-acceptance-balloon-fixture/balloon-sequence.png",
+        "log": "artifacts/unity-acceptance-balloon-fixture/balloon-sequence.log",
+        "sourceResultReport": "artifacts/unity-acceptance-balloon-fixture/results.json",
+        "fixtureCorrection": "Only this disposable profile sets GestureEffects=false. The original Q-to-Z sequence legitimately triggered Sweep; gesture-specific scenarios remain enabled."
+      },
+      {
+        "case": "cluster",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=0 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=9 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 6.69460058,
+        "screenshot": "artifacts/unity-acceptance/cluster.png",
+        "log": "artifacts/unity-acceptance/cluster.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "glass",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=0 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=24 cracks=18 shattered=1 drops=0 liquidRT=inactive popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 10.4973993,
+        "screenshot": "artifacts/unity-acceptance/glass.png",
+        "log": "artifacts/unity-acceptance/glass.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "swipe",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=30 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=8 liquidRT=1229x768 popped=0 largest=1.00 flames=0 fire=0",
+        "p95Milliseconds": 4.92099619,
+        "screenshot": "artifacts/unity-acceptance/swipe.png",
+        "log": "artifacts/unity-acceptance/swipe.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "fire",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=6 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=1.00 flames=347 fire=371",
+        "p95Milliseconds": 4.50869465,
+        "screenshot": "artifacts/unity-acceptance/fire.png",
+        "log": "artifacts/unity-acceptance/fire.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "counting",
+        "passed": true,
+        "diagnostic": "mode=Counting glyphs=0 score=0 completed=0 count=25 pending= balloons=0 recognized=0 rockets=300 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=1229x768 popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 4.14960337,
+        "screenshot": "artifacts/unity-acceptance/counting.png",
+        "log": "artifacts/unity-acceptance/counting.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "word-balloons",
+        "passed": true,
+        "diagnostic": "mode=WordAdventure glyphs=3 score=55 completed=1 count=1 pending= balloons=3 recognized=1 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=1.00 flames=0 fire=0",
+        "p95Milliseconds": 5.89980125,
+        "screenshot": "artifacts/unity-acceptance/word-balloons.png",
+        "log": "artifacts/unity-acceptance/word-balloons.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "word-pop",
+        "passed": true,
+        "diagnostic": "mode=WordAdventure glyphs=0 score=100 completed=1 count=1 pending= balloons=0 recognized=1 rockets=0 blasts=3 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=3 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 7.27300167,
+        "screenshot": "artifacts/unity-acceptance/word-pop.png",
+        "log": "artifacts/unity-acceptance/word-pop.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "guided-mommy",
+        "passed": true,
+        "diagnostic": "mode=WordAdventure glyphs=5 score=75 completed=1 count=1 pending= balloons=5 recognized=1 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=1.00 flames=0 fire=0",
+        "p95Milliseconds": 4.76470375,
+        "screenshot": "artifacts/unity-acceptance/guided-mommy.png",
+        "log": "artifacts/unity-acceptance/guided-mommy.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "patient-red",
+        "passed": true,
+        "diagnostic": "mode=WordAdventure glyphs=3 score=55 completed=1 count=1 pending= balloons=3 recognized=1 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=1.00 flames=0 fire=0",
+        "p95Milliseconds": 5.57650185,
+        "screenshot": "artifacts/unity-acceptance/patient-red.png",
+        "log": "artifacts/unity-acceptance/patient-red.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "cannon-miss",
+        "passed": true,
+        "diagnostic": "mode=SmashGarden glyphs=0 score=0 completed=0 count=1 pending= balloons=0 recognized=0 rockets=0 blasts=0 shots=0 paint=0 cracks=1 shattered=0 drops=0 liquidRT=inactive popped=0 largest=0.00 flames=0 fire=0",
+        "p95Milliseconds": 4.20629978,
+        "screenshot": "artifacts/unity-acceptance/cannon-miss.png",
+        "log": "artifacts/unity-acceptance/cannon-miss.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "dots-correct",
+        "passed": true,
+        "diagnostic": "DotPop phase=Answer stage=2 mastery=1 quantity=2 mask=5 errors=0",
+        "p95Milliseconds": 4.104599,
+        "screenshot": "artifacts/unity-acceptance/dots-correct.png",
+        "log": "artifacts/unity-acceptance/dots-correct.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "dots-retry",
+        "passed": true,
+        "diagnostic": "DotPop phase=Answer stage=2 mastery=0 quantity=2 mask=5 errors=0",
+        "p95Milliseconds": 4.14599609,
+        "screenshot": "artifacts/unity-acceptance/dots-retry.png",
+        "log": "artifacts/unity-acceptance/dots-retry.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "math-complete-7",
+        "passed": true,
+        "diagnostic": "HowManyNow phase=AwaitAnswer stage=2 level=1 answer=3 choices=2,3 errors=0 built=2",
+        "p95Milliseconds": 3.79490495,
+        "screenshot": "artifacts/unity-acceptance/math-complete-7.png",
+        "log": "artifacts/unity-acceptance/math-complete-7.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "math-complete-8",
+        "passed": true,
+        "diagnostic": "Hiding phase=AwaitAnswer stage=2 level=1 answer=1 choices=1,3 errors=0 built=2",
+        "p95Milliseconds": 3.97769976,
+        "screenshot": "artifacts/unity-acceptance/math-complete-8.png",
+        "log": "artifacts/unity-acceptance/math-complete-8.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "math-complete-9",
+        "passed": true,
+        "diagnostic": "MakeNumber phase=AwaitAnswer stage=2 level=1 answer=3 choices=2,3 errors=0 built=0",
+        "p95Milliseconds": 3.9964993,
+        "screenshot": "artifacts/unity-acceptance/math-complete-9.png",
+        "log": "artifacts/unity-acceptance/math-complete-9.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "math-complete-10",
+        "passed": true,
+        "diagnostic": "Duel phase=AwaitAnswer stage=2 level=1 answer=0 choices=0,1,2 errors=0 built=1",
+        "p95Milliseconds": 3.95060229,
+        "screenshot": "artifacts/unity-acceptance/math-complete-10.png",
+        "log": "artifacts/unity-acceptance/math-complete-10.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      },
+      {
+        "case": "math-complete-11",
+        "passed": true,
+        "diagnostic": "CannonHop phase=AwaitAnswer stage=2 level=1 answer=3 choices=2,3 errors=0 built=2",
+        "p95Milliseconds": 4.04559946,
+        "screenshot": "artifacts/unity-acceptance/math-complete-11.png",
+        "log": "artifacts/unity-acceptance/math-complete-11.log",
+        "sourceResultReport": "artifacts/unity-acceptance/results.json"
+      }
+    ]
+  },
+  "nativePointer": [
+    {
+      "case": "mode-6-1366x768",
+      "passed": true,
+      "answerTargets": 1,
+      "rightIgnored": true,
+      "reportLockExercised": true,
+      "rapidSecondPressIgnored": null,
+      "evidence": "artifacts/unity-pointer-acceptance/mode-6-1366x768"
+    },
+    {
+      "case": "mode-7-1366x768",
+      "passed": true,
+      "answerTargets": 1,
+      "rightIgnored": true,
+      "reportLockExercised": false,
+      "rapidSecondPressIgnored": null,
+      "evidence": "artifacts/unity-pointer-acceptance/mode-7-1366x768"
+    },
+    {
+      "case": "mode-8-1366x768",
+      "passed": true,
+      "answerTargets": 1,
+      "rightIgnored": true,
+      "reportLockExercised": false,
+      "rapidSecondPressIgnored": null,
+      "evidence": "artifacts/unity-pointer-acceptance/mode-8-1366x768"
+    },
+    {
+      "case": "mode-9-1366x768",
+      "passed": true,
+      "answerTargets": 3,
+      "rightIgnored": true,
+      "reportLockExercised": false,
+      "rapidSecondPressIgnored": true,
+      "evidence": "artifacts/unity-pointer-acceptance/mode-9-1366x768"
+    },
+    {
+      "case": "mode-10-1366x768",
+      "passed": true,
+      "answerTargets": 1,
+      "rightIgnored": true,
+      "reportLockExercised": false,
+      "rapidSecondPressIgnored": null,
+      "evidence": "artifacts/unity-pointer-acceptance/mode-10-1366x768"
+    },
+    {
+      "case": "mode-11-1366x768",
+      "passed": true,
+      "answerTargets": 1,
+      "rightIgnored": true,
+      "reportLockExercised": false,
+      "rapidSecondPressIgnored": null,
+      "evidence": "artifacts/unity-pointer-acceptance/mode-11-1366x768"
+    },
+    {
+      "case": "mode-6-720x1080",
+      "passed": true,
+      "answerTargets": 1,
+      "rightIgnored": true,
+      "reportLockExercised": true,
+      "rapidSecondPressIgnored": null,
+      "evidence": "artifacts/unity-pointer-acceptance/mode-6-720x1080"
+    }
+  ],
+  "steering": {
+    "passed": true,
+    "heldMilliseconds": 1200,
+    "acknowledgedSamples": 14,
+    "deltaRightPixels": 463.95880135000004,
+    "rightReleased": true,
+    "capture": "artifacts/unity-steering-acceptance/gameplay.png"
+  },
+  "dotStability": [
+    {
+      "run": "run-01",
+      "seconds": 18.0018616,
+      "frames": 6807,
+      "p95ms": 4.22609854,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-02",
+      "seconds": 18.000845,
+      "frames": 6546,
+      "p95ms": 4.35329485,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-03",
+      "seconds": 18.001976,
+      "frames": 6901,
+      "p95ms": 4.24450111,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-04",
+      "seconds": 18.0015869,
+      "frames": 7049,
+      "p95ms": 4.09509611,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-05",
+      "seconds": 18.0017738,
+      "frames": 7174,
+      "p95ms": 4.09659863,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-06",
+      "seconds": 18.0002804,
+      "frames": 7149,
+      "p95ms": 4.20219707,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-07",
+      "seconds": 18.0028343,
+      "frames": 6882,
+      "p95ms": 4.23680592,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-08",
+      "seconds": 18.0000725,
+      "frames": 7060,
+      "p95ms": 3.9809947,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-09",
+      "seconds": 18.0017376,
+      "frames": 7147,
+      "p95ms": 4.0741992,
+      "error": "",
+      "runtimeErrors": []
+    },
+    {
+      "run": "run-10",
+      "seconds": 18.0008774,
+      "frames": 7190,
+      "p95ms": 4.08010197,
+      "error": "",
+      "runtimeErrors": []
+    }
+  ],
+  "accessibility": {
+    "passed": true,
+    "normalRestored": true,
+    "crashGuardianRestored": true,
+    "onlyOwnedBitsChanged": true,
+    "finalStateRestored": true,
+    "profileFilesUnchanged": true,
+    "error": ""
+  },
+  "installerUpgrade": {
+    "passed": true,
+    "installVersion": "2.0.27",
+    "upgradeVersion": "3.0.0",
+    "uninstalled": true,
+    "error": "",
+    "profileFilesUnchanged": true,
+    "obsoleteFilesRemoved": 300,
+    "unlistedCustomFilePreserved": true,
+    "destination": "artifacts/unity-installer-acceptance-final/installed"
+  },
+  "nativeEngineRisk": {
+    "resolved": false,
+    "observedCrashCount": 1,
+    "nativeException": "0xC0000005, null read",
+    "fault": "UnityPlayer.dll+0x109CD3F",
+    "stack": "LocalKeywordInfo vector assign -> VariantUploadData -> ShaderVariantMonitor::FrameFinished",
+    "newerStable6000_6PatchFound": false,
+    "recurrenceInFinalSuiteAndTenRepeats": false
+  },
+  "hardware": {
+    "os": "Windows 11",
+    "gpu": "NVIDIA Quadro RTX 4000",
+    "graphicsApi": "Direct3D11",
+    "resolution": [
+      1366,
+      768
+    ],
+    "renderScale": 1,
+    "terrainDetail": 64,
+    "msaaSmaa": true,
+    "gentleMotion": false,
+    "flightAssist": true,
+    "timingCaveat": "Unity reported unreliable VSync/FrameStatistics and used CPU timestamps. Short-run intervals do not establish physical refresh rate or another laptop performance."
+  },
+  "remainingManualAcceptance": [
+    "Physical parent authorization under keyboard mashing",
+    "Laptop touchpad escape routes",
+    "Secure-desktop focus recovery"
+  ],
+  "manualAssetDownloadsOutstanding": 0
+}

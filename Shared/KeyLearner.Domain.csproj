@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AssemblyName>KeyLearner.Domain</AssemblyName>
+    <Description>Engine-independent KeyLearner learning, state, movement, input safety and profile logic.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Compatibility.cs" />
+    <Compile Include="PointerGestureSafety.cs" />
+    <Compile Include="../Studio/DotMath.cs" />
+    <Compile Include="../Studio/Subitizing.cs" />
+    <Compile Include="../Studio/InputFocus.cs" />
+    <Compile Include="../Studio/GameCatalog.cs" />
+    <Compile Include="../Studio/ExplorerWorld.cs" />
+    <Compile Include="../Studio/ExplorerMovement.cs" />
+    <Compile Include="../Studio/LetterCourse.cs" />
+    <Compile Include="../Studio/GuidedSpelling.cs" />
+    <Compile Include="../Studio/KeySnapshot.cs" />
+    <Compile Include="../Studio/InputModel.cs" />
+    <Compile Include="../Studio/Learning.cs" />
+    <Compile Include="../Studio/Settings.cs" />
+    <Compile Include="../Studio/Effects.cs" />
+    <Compile Include="../Studio/BlobWorld.cs" />
+    <Compile Include="../Studio/BalloonMotion.cs" />
+    <Compile Include="../Studio/StarfieldMotion.cs" />
+    <Compile Include="../Studio/InputRecovery.cs" />
+    <Compile Include="../Studio/PlayModels.cs" />
+    <Compile Include="../Studio/GlassSheet.cs" />
+    <Compile Include="../Studio/FlightModel.cs" />
+    <Compile Include="../Studio/PhysicalKeyboard.cs" />
+    <PackageReference Include="System.Text.Json" Version="8.0.6" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+Seaweed by Mohabins
+CC0 1.0 Universal Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/
+Source: https://poly.pizza/m/oYxUdpyc4u
+
+FBX manually supplied by the user. License recorded in the user approved migration source list. No automated access to Poly Pizza was used. Source geometry preserved; Unity URP material and pivot adaptation.
