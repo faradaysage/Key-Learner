@@ -145,7 +145,7 @@ public sealed partial class StudioGame : Game
         var fonts=new[]{Content.Load<SpriteFont>("Fonts/StudioRounded"),Content.Load<SpriteFont>("Fonts/StudioClassic"),Content.Load<SpriteFont>("Fonts/StudioBold")};
         iconFont=Content.Load<SpriteFont>("Fonts/StudioIcons");icons=new();
         flightRenderer=new(GraphicsDevice,fonts[0]);
-        canvas=new(GraphicsDevice,fonts,S);canvas.PaintShader=Content.Load<Effect>("Shaders/Paint");canvas.ToonShader=Content.Load<Effect>("Shaders/Toon");flightRenderer.ToonShader=Content.Load<Effect>("Shaders/Toon");canvas.Fields.Configure(Content.Load<Effect>("Shaders/LiquidDensity"),Content.Load<Effect>("Shaders/LiquidSurface")); voice=new(store.Root);
+        canvas=new(GraphicsDevice,fonts,S);canvas.PaintShader=Content.Load<Effect>("Shaders/Paint");canvas.ToonShader=Content.Load<Effect>("Shaders/Toon");flightRenderer.ToonShader=Content.Load<Effect>("Shaders/Toon");canvas.Fields.Configure(Content.Load<Effect>("Shaders/LiquidDensity"),Content.Load<Effect>("Shaders/LiquidSurface")); voice=new(store.Root,store.SpeechPacks);
         parent=startStudio;picker=!preview || scenario is "picker" or "picker-select"; recipes=EffectRecipe.Load(store.Root); ChooseTarget();
         if(scenario is "word-balloons" or "word-pop"){S.Mode=PlayMode.WordAdventure;target="cat";Celebrate(store.Words.First(w=>w.Word=="cat"));}
         if(scenario is "racing" or "dolphin"){S.Mode=scenario=="racing"?PlayMode.Racing:PlayMode.Dolphin;ChooseTarget();}
@@ -542,7 +542,7 @@ public sealed partial class StudioGame : Game
     }
     private string[] PropertiesForTab() => tab switch {
         0=>["Theme","Font","Sound","GentleMotion","ShowKeyboard","FontScale","Backdrop"],
-        1=>["WindowsVoice","SpeechRate","Volume","SpeakLetters","PiperExecutable","PiperModel","KeyVoiceChannels","WordVoiceChannels"],
+        1=>["VoicePackId","WindowsVoice","SpeechRate","Volume","SpeakLetters","PiperExecutable","PiperModel","KeyVoiceChannels","WordVoiceChannels"],
         2=>["ForgivingSpelling","AdaptiveLearning","WordPause","PrefixPause","UseGestureCalibration"],
         8=>["RenderScale","LiquidScale","TerrainDetail","ExtrudedAssets","GlassShader","SmoothEdges","VSync"],
         7=>["GestureEffects","MousePlay","GrowingFire","EffectsSound","EffectsVolume","MouseTrailSize"],
@@ -554,7 +554,7 @@ public sealed partial class StudioGame : Game
         Text(tab switch {0=>"Small changes. A whole new mood.",1=>"A familiar voice makes a difference.",2=>"Follow their intent, at their pace.",6=>"A little puff. A big celebration.",8=>"A sharper world. Tuned to this laptop.",_=>"Fine-tune the feel."},55,275,Color.White,.78f,title);
         var descriptions=tab switch {
             0=>"Smash for exploration. Word Adventure for early spelling. Counting for number sequences.",
-            1=>"Recordings first, optional offline Piper second, installed Windows speech as fallback.",
+            1=>"Choose a narrator. Family recordings play first; custom text keeps its offline fallback.",
             8=>"Native output and GPU shading. Render scale 1 = native display resolution.",
             2=>"Mistakes are forgiven only when typing looks deliberate and a correction is unambiguous.",
             6=>"Pop size is a multiple of normal size. Deflate seconds is the time to lose one puff.",
@@ -563,7 +563,7 @@ public sealed partial class StudioGame : Game
         for(var i=0;i<names.Length;i++)
         {
             var index=i; var property=typeof(Settings).GetProperty(names[i])!;
-            var y=374+i*49;
+            var y=(tab==1?365:374)+i*(tab==1?44:49);
             Button(new(55,y,1050,42),Nice(property.Name)+"   /   "+Display(property),()=>{row=index;ChangeProperty(property,1);},row==i);
         }
         if(tab==8){DrawBenchmarkControls();Button(new(55,737,490,42),"Toon asset shading / "+(S.ToonAssets?"On":"Off"),()=>S.ToonAssets=!S.ToonAssets);Button(new(565,737,490,42),"Flight assistance / "+(S.FlightAssist?"On":"Off"),()=>S.FlightAssist=!S.FlightAssist);}
@@ -571,8 +571,8 @@ public sealed partial class StudioGame : Game
         if(tab==6){Text("Switching keys retires the old balloon. Return to that key to start a fresh one.",55,500,Color.White*.6f,.45f);Text("Inflated balloons float upward; a steady rhythm earns a sparkling pop.",55,535,Color.White*.6f,.45f);}
         if(tab==1)
         {
-            Button(new(1140,374,240,48),"Try this voice",()=>voice?.Say("Hello little explorer. Milk. Mommy. Let's play.",S));
-            Text("All voices play locally.",1140,443,Color.White*.5f,.42f);
+            Button(new(1140,374,240,48),"Try this voice",()=>voice?.PreviewVoice(S.VoicePackId,S));
+            Text("Space: preview narrator.",1140,443,Color.White*.5f,.42f);
             Text("No subscription needed.",1140,470,Color.White*.5f,.42f);
             Text(voice?.Status??"",55,779,canvas.Palette[0],.43f,maxWidth:1280);
         }
@@ -653,9 +653,10 @@ public sealed partial class StudioGame : Game
         var next=names[(Array.IndexOf(names,current)+1)%names.Length];
         if(Enum.TryParse<Celebration>(next,out var builtin)) {entry.Effect=builtin;entry.EffectPreset="";} else entry.EffectPreset=next;
     }
-    private static string Nice(string name)=> name=="AdaptiveLearning"?"Learn word habits":System.Text.RegularExpressions.Regex.Replace(name,"([a-z])([A-Z])","$1 $2");
+    private static string Nice(string name)=> name=="VoicePackId"?"Narrator":name=="WindowsVoice"?"Custom Windows voice":name=="SpeechRate"?"Custom speech rate":name=="AdaptiveLearning"?"Learn word habits":System.Text.RegularExpressions.Regex.Replace(name,"([a-z])([A-Z])","$1 $2");
     private string Display(PropertyInfo p)
     {
+        if(p.Name=="VoicePackId")return store.SpeechPacks.DisplayName(S.VoicePackId);
         var value=p.GetValue(S);
         return value switch {bool b=>b?"On":"Off",double d=>d.ToString("0.##",CultureInfo.InvariantCulture),string s=>s.Length>0?s:"Automatic / not configured",_=>Nice(value?.ToString()??"")};
     }
@@ -664,6 +665,11 @@ public sealed partial class StudioGame : Game
         var type=p.PropertyType;
         if(type==typeof(bool)) p.SetValue(S,!(bool)p.GetValue(S)!);
         else if(type.IsEnum) {var values=Enum.GetValues(type);var index=Array.IndexOf(values.Cast<object>().ToArray(),p.GetValue(S));p.SetValue(S,values.GetValue((index+direction+values.Length)%values.Length));}
+        else if(p.Name=="VoicePackId")
+        {
+            var values=store.SpeechPacks.Packs.Select(v=>v.Id).ToArray();var index=Array.IndexOf(values,store.SpeechPacks.NormalizeChoice(S.VoicePackId));
+            voice?.SelectVoice(S,values[(index+direction+values.Length)%values.Length]);
+        }
         else if(p.Name=="WindowsVoice")
         {
             var values=new[]{""}.Concat(voice?.Voices??[]).ToArray(); var index=Array.IndexOf(values,S.WindowsVoice);
@@ -694,6 +700,7 @@ public sealed partial class StudioGame : Game
             if(key==191) Edit("Search dictionary",query,v=>{query=v;wordIndex=0;});
             return;
         }
+        if(tab==1 && key==32){voice?.PreviewVoice(S.VoicePackId,S);return;}
         var props=PropertiesForTab();
         if(key==38) row=(row-1+props.Length)%props.Length;
         if(key==40) row=(row+1)%props.Length;

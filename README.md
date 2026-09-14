@@ -224,3 +224,8 @@ Explorer ambience and motion sounds respond to movement and vehicle type and bec
 
 
 **Noncommercial art notice:** builds containing the WildMesh wolf are restricted to noncommercial use until it is separately licensed or replaced. The source code remains MIT; third-party art keeps its own licenses. See [the exact restricted-asset register](NONCOMMERCIAL_ASSETS.md) before any commercial release.
+
+
+## Narrator packs
+
+Parent Studio's Voice tab now has a data-driven Narrator selector and **Try this voice** preview (Space). Selection applies immediately; Save & Return persists it. The original narrator remains the only production voice while the separate Blake/Butter/Lake generation job finishes. No incomplete speech packs are shipped. See [voice-pack integration and validation commands](docs/VOICE_PACK_INTEGRATION.md). Normal builds need Git LFS, .NET and Unity; they never run Python or speech generation.

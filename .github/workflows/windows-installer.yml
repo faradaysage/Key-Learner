@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          lfs: true
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
@@ -35,6 +36,10 @@ jobs:
         run: |
           dotnet run --project tools/KeyLearner.SpeechVerify -c Release -- .
           if ($LASTEXITCODE -ne 0) { throw 'Prepared speech catalog verification failed' }
+          dotnet run --project tools/KeyLearner.VoicePacks -c Release -- verify .
+          if ($LASTEXITCODE -ne 0) { throw 'Voice-pack validation failed' }
+          dotnet run --project tools/KeyLearner.VoicePacks -c Release -- self-test .
+          if ($LASTEXITCODE -ne 0) { throw 'Voice-pack import regression failed' }
       - name: Shared Unity domain regression tests
         shell: pwsh
         run: |
@@ -145,6 +150,7 @@ jobs:
         if: steps.scope.outputs.enabled == 'true'
         with:
           persist-credentials: false
+          lfs: true
       - name: Resolve player and installer version
         if: steps.scope.outputs.enabled == 'true'
         id: version
@@ -181,6 +187,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          lfs: true
       - name: Restore prepared shared domain and Windows helper
         uses: actions/download-artifact@v4
         with:
@@ -350,6 +357,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          lfs: true
       - name: Download Unity Windows player from this run
         uses: actions/download-artifact@v4
         with:

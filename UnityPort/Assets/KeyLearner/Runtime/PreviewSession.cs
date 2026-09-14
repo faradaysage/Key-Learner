@@ -152,6 +152,7 @@ namespace KeyLearner.Unity
             yield return null;
             var saved = JsonSerializer.Deserialize<Settings>(File.ReadAllText(Path.Combine(suite.Services.Store.Root, "settings.json")));
             Check(saved.GentleMotion == suite.Services.Settings.GentleMotion, "Parent Studio saves isolated profile");
+            Check(saved.VoicePackId == suite.Services.Settings.VoicePackId, "Parent Studio saves stable narrator ID");
             if (failed)
                 yield break;
             suite.PreviewStudio(true);
@@ -189,6 +190,8 @@ namespace KeyLearner.Unity
                     yield break;
                 yield return Shot("studio-focus-recovered");
             }
+            // Without the native-focus branch, the simulated transition needs its normal Update frame.
+            yield return null;
             Check(Time.timeScale==0,"source animation and particles pause in Parent Studio");
             if(failed)yield break;
             suite.PreviewStudio(false);
