@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          lfs: true
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
@@ -35,6 +36,10 @@ jobs:
         run: |
           dotnet run --project tools/KeyLearner.SpeechVerify -c Release -- .
           if ($LASTEXITCODE -ne 0) { throw 'Prepared speech catalog verification failed' }
+          dotnet run --project tools/KeyLearner.VoicePacks -c Release -- verify .
+          if ($LASTEXITCODE -ne 0) { throw 'Voice-pack validation failed' }
+          dotnet run --project tools/KeyLearner.VoicePacks -c Release -- self-test .
+          if ($LASTEXITCODE -ne 0) { throw 'Voice-pack import regression failed' }
       - name: Shared Unity domain regression tests
         shell: pwsh
         run: |
@@ -145,6 +150,7 @@ jobs:
         if: steps.scope.outputs.enabled == 'true'
         with:
           persist-credentials: false
+          lfs: true
       - name: Resolve player and installer version
         if: steps.scope.outputs.enabled == 'true'
         id: version
@@ -181,6 +187,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          lfs: true
       - name: Restore prepared shared domain and Windows helper
         uses: actions/download-artifact@v4
         with:
@@ -208,8 +215,10 @@ jobs:
           unityVersion: auto
           customImage: unityci/editor:ubuntu-6000.6.0f1-windows-mono-3.2.2@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71
           testMode: editmode
+          # No debugger attaches in CI. Disable its socket to avoid Mono shutdown exit 1.
+          # https://docs.unity3d.com/6000.0/Documentation/Manual/EditorCommandLineArguments.html#debugging
           # Lifecycle/geometry tests disable cameras; rendering acceptance uses the real Windows player.
-          customParameters: -nographics -job-worker-count 2 -gc-helper-count 2
+          customParameters: -nographics -disableManagedDebugger -job-worker-count 2 -gc-helper-count 2
           coverageOptions: ''
           artifactsPath: artifacts/unity-tests/editmode
           githubToken: ''
@@ -226,8 +235,10 @@ jobs:
           unityVersion: auto
           customImage: unityci/editor:ubuntu-6000.6.0f1-windows-mono-3.2.2@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71
           testMode: playmode
+          # No debugger attaches in CI. Disable its socket to avoid Mono shutdown exit 1.
+          # https://docs.unity3d.com/6000.0/Documentation/Manual/EditorCommandLineArguments.html#debugging
           # Lifecycle/geometry tests disable cameras; rendering acceptance uses the real Windows player.
-          customParameters: -nographics -job-worker-count 2 -gc-helper-count 2
+          customParameters: -nographics -disableManagedDebugger -job-worker-count 2 -gc-helper-count 2
           coverageOptions: ''
           artifactsPath: artifacts/unity-tests/playmode
           githubToken: ''
@@ -280,7 +291,7 @@ jobs:
           customImage: unityci/editor:ubuntu-6000.6.0f1-windows-mono-3.2.2@sha256:88bc798f2912de3b7474a43d3b2da415d7466daeac11fbaa661543b87c57bd71
           targetPlatform: StandaloneWindows64
           buildMethod: KeyLearner.Unity.Editor.ProjectSetup.BuildWindows
-          customParameters: -keyLearnerVersion ${{ needs.unity-preflight.outputs.version }}
+          customParameters: -disableManagedDebugger -keyLearnerVersion ${{ needs.unity-preflight.outputs.version }}
           versioning: Custom
           version: ${{ needs.unity-preflight.outputs.version }}
           allowDirtyBuild: true
@@ -350,6 +361,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          lfs: true
       - name: Download Unity Windows player from this run
         uses: actions/download-artifact@v4
         with:

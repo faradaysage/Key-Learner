@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "updatedAt": "2026-09-14T22:51:51.927066\u002B00:00",
+  "status": "complete",
+  "encoding": {
+    "format": "WAV",
+    "subtype": "PCM_16",
+    "channels": 1,
+    "sampleRate": 24000
+  },
+  "voices": [
+    {
+      "schema": 1,
+      "voiceId": "kyutai-Blake",
+      "displayName": "Blake",
+      "sourceCollection": "Kyutai Voice Donations",
+      "sourceReferenceId": "Blake",
+      "sourceUrl": "https://huggingface.co/kyutai/tts-voices/resolve/323332d33f997de8394f24a193e1a76df720e01a/voice-donations/Blake_enhanced.wav",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://huggingface.co/kyutai/tts-voices/resolve/323332d33f997de8394f24a193e1a76df720e01a/README.md",
+      "provenance": "Volunteer submission through Unmute Voice Donation Project. Enhanced version cleaned by ai-coustics per source README; original preserved alongside.",
+      "reference": {
+        "file": "reference/Blake_enhanced.wav",
+        "sha256": "5134c1d55280d5e96be6969eec7698e6c2c2b115b497a4848960a9375a5e2767",
+        "originalFilename": "Blake.wav",
+        "variant": "enhanced"
+      },
+      "model": {
+        "repository": "ResembleAI/chatterbox",
+        "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+        "package": "chatterbox-tts==0.1.7",
+        "files": {
+          "ve.safetensors": "f0921cab452fa278bc25cd23ffd59d36f816d7dc5181dd1bef9751a7fb61f63c",
+          "t3_cfg.safetensors": "914cb1696f47527fe8852ca8f1fe1fa63cb34f76f9c715e84e067b744dd0da81",
+          "s3gen.safetensors": "2b78103c654207393955e4900aac14a12de8ef25f4b09424f1ef91941f161d4e",
+          "tokenizer.json": "d71e3a44eabb1784df9a68e9f95b251ecbf1a7af6a9f50835856b2ca9d8c14a5",
+          "conds.pt": "6552d70568833628ba019c6b03459e77fe71ca197d5c560cef9411bee9d87f4e"
+        }
+      },
+      "generationConfiguration": {
+        "schema": 1,
+        "model": "ResembleAI/chatterbox",
+        "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+        "package": "chatterbox-tts==0.1.7",
+        "voice": "External reference: kyutai-Blake",
+        "seed": 314159,
+        "settings": {
+          "exaggeration": 0.45,
+          "cfg_weight": 0.4,
+          "temperature": 0.7,
+          "repetition_penalty": 1.2,
+          "min_p": 0.05,
+          "top_p": 1
+        },
+        "runtime": {
+          "format": "WAV",
+          "subtype": "PCM_16",
+          "channels": 1
+        },
+        "master": {
+          "format": "WAV",
+          "subtype": "FLOAT"
+        },
+        "watermark": "PerTh preserved",
+        "voiceId": "kyutai-Blake",
+        "reference": {
+          "file": "reference/Blake_enhanced.wav",
+          "sha256": "5134c1d55280d5e96be6969eec7698e6c2c2b115b497a4848960a9375a5e2767"
+        },
+        "modelFiles": {
+          "ve.safetensors": "f0921cab452fa278bc25cd23ffd59d36f816d7dc5181dd1bef9751a7fb61f63c",
+          "t3_cfg.safetensors": "914cb1696f47527fe8852ca8f1fe1fa63cb34f76f9c715e84e067b744dd0da81",
+          "s3gen.safetensors": "2b78103c654207393955e4900aac14a12de8ef25f4b09424f1ef91941f161d4e",
+          "tokenizer.json": "d71e3a44eabb1784df9a68e9f95b251ecbf1a7af6a9f50835856b2ca9d8c14a5",
+          "conds.pt": "6552d70568833628ba019c6b03459e77fe71ca197d5c560cef9411bee9d87f4e"
+        },
+        "packBuilder": 1,
+        "encoding": {
+          "format": "WAV",
+          "subtype": "PCM_16",
+          "channels": 1,
+          "sampleRate": 24000
+        },
+        "trimPolicy": "Existing production context/Whisper alignment, version 1"
+      },
+      "requiredSpeechCount": 4899,
+      "corpusSha256": "501aeeb7b9271d9f76395f8a96bba27ea4dce8a890a74313a2f6b4a2ed1ce4fa",
+      "catalog": "Voice/catalog.json",
+      "runtimeDirectory": "Voice",
+      "status": "complete",
+      "readyForIntegration": true,
+      "validCount": 4899,
+      "runtime": {
+        "python": "3.11.16 (main, Sep  1 2026, 14:15:24) [MSC v.1944 64 bit (AMD64)]",
+        "torch": "2.6.0\u002Bcu124",
+        "numpy": "1.26.4",
+        "soundfile": "0.14.0",
+        "chatterbox": "0.1.7",
+        "device": "cuda",
+        "cuda": "12.4",
+        "gpu": "Quadro RTX 4000"
+      },
+      "repairSeedOffsets": {
+        "letter-d": 1,
+        "letter-n": 24,
+        "word-dave": 104,
+        "word-mad": 104,
+        "word-pot": 104,
+        "word-yell": 104
+      },
+      "packDirectory": "Packs/kyutai-Blake",
+      "manifestFile": "Packs/kyutai-Blake/voice.json"
+    }
+  ],
+  "defaultVoiceId": "kyutai-Blake",
+  "fallbackVoiceId": "builtin",
+  "corpusCatalog": "catalog.json"
+}

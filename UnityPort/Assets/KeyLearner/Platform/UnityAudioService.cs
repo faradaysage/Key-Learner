@@ -18,7 +18,7 @@ namespace KeyLearner.Unity.Platform
     {
         sealed class Request
         {
-            public string Text, Recording, Executable, Model, Voice; public int Rate, Volume; public bool Key; public double Time;
+            public string Text, Recording, Executable, Model, Voice, SpeechKey, PackId; public VoicePackRegistry.SpeechAsset Asset; public bool SkipRecording; public int Rate, Volume; public bool Key; public double Time;
         }
         sealed class Lane
         {
@@ -40,7 +40,9 @@ namespace KeyLearner.Unity.Platform
         readonly ConcurrentQueue<string> replies = new ConcurrentQueue<string>();
         readonly object pipeGate = new object();
         readonly string cache, streaming;
-        readonly PreparedSpeechCatalog preparedSpeech;
+        public VoicePackRegistry SpeechPacks {get;}
+        public string LastSpeechKey {get;private set;}="";
+        public string LastVoicePackId {get;private set;}="";
         NamedPipeClientStream pipe; StreamWriter writer; Process helper, piper; Thread speechThread, prepareThread;
         volatile bool disposed;
         bool ready;
@@ -73,12 +75,12 @@ namespace KeyLearner.Unity.Platform
         public string Status { get; private set; } = "Warming offline Windows speech";
         public string[] Voices { get; private set; } = Array.Empty<string>();
         static double Now => KeyboardGuard.Now;
-        public UnityAudioService(GameObject owner, string profileRoot)
+        public UnityAudioService(GameObject owner, string profileRoot, VoicePackRegistry speechPacks = null)
         {
             cache = Path.Combine(profileRoot, "voice-cache");
             Directory.CreateDirectory(cache);
             streaming = Application.streamingAssetsPath;
-            preparedSpeech = new PreparedSpeechCatalog(Path.Combine(streaming,"Content","Voice"));
+            SpeechPacks = speechPacks ?? new VoicePackRegistry(Path.Combine(streaming,"Content","Voice"), message => UnityEngine.Debug.LogWarning(message));
             for (int i = 0; i < lanes.Length; i++)
                 lanes[i] = new Lane { Source = Source(owner, "Voice " + i) };
             for (int i = 0; i < effects.Length; i++)
@@ -147,13 +149,15 @@ namespace KeyLearner.Unity.Platform
             }
         }
         static string Encode(string text) => Convert.ToBase64String(Encoding.UTF8.GetBytes(text ?? ""));
-        public void Say(string text, Settings settings, string recording = "", bool key = false, bool brisk = false)
+        public void Say(string text, Settings settings, string recording = "", bool key = false, bool brisk = false, string voicePackId = null)
+            => Enqueue(text,settings,recording,key,brisk,voicePackId);
+        void Enqueue(string text, Settings settings, string recording = "", bool key = false, bool brisk = false, string voicePackId = null, string speechKey = null)
         {
             if (disposed || !settings.Sound || string.IsNullOrWhiteSpace(text))
                 return;
             keyChannels = Math.Max(1, Math.Min(5, settings.KeyVoiceChannels));
             wordChannels = Math.Max(1, Math.Min(3, settings.WordVoiceChannels));
-            var request = new Request { Text = text, Recording = recording, Executable = brisk ? "" : settings.PiperExecutable, Model = brisk ? "" : settings.PiperModel, Voice = settings.WindowsVoice, Rate = brisk ? Math.Max(3, Math.Min(8, settings.SpeechRate + 5)) : settings.SpeechRate, Volume = settings.Volume, Key = key, Time = Now };
+            var request = new Request { Text = text, Recording = recording, Executable = brisk ? "" : settings.PiperExecutable, Model = brisk ? "" : settings.PiperModel, Voice = settings.WindowsVoice, Rate = brisk ? Math.Max(3, Math.Min(8, settings.SpeechRate + 5)) : settings.SpeechRate, Volume = settings.Volume, Key = key, Time = Now, SpeechKey = speechKey ?? SpeechPacks.KeyForText(text), PackId = SpeechPacks.NormalizeChoice(voicePackId ?? settings.VoicePackId) };
             Requested++;
             var queue = key ? keys : words;
             if (queue.Count >= (key ? 8 : 32))
@@ -162,6 +166,30 @@ namespace KeyLearner.Unity.Platform
                 return;
             }
             queue.Enqueue(request);
+        }
+        public void SayKey(string speechKey,Settings settings,string voicePackId=null)
+        {
+            var text=SpeechPacks.TextForKey(speechKey);
+            if(text!=null)Enqueue(text,settings,voicePackId:voicePackId,speechKey:speechKey);
+            else SpeechPacks.Resolve(speechKey,voicePackId??settings.VoicePackId);
+        }
+        public void SelectVoice(Settings settings,string voiceId)
+        {
+            var next=SpeechPacks.NormalizeChoice(voiceId);
+            if(settings.VoicePackId!=next)StopSpeech();
+            settings.VoicePackId=next;
+        }
+        public void PreviewVoice(string voiceId,Settings settings)
+        {StopSpeech();SayKey(VoicePackRegistry.PreviewKey,settings,voiceId);}
+        AudioClip LoadSpeech(Request request)
+        {
+            for(int attempt=0;attempt<3;attempt++)
+            {
+                var wav=FindAudio(request);if(wav==null)return null;
+                var clip=LoadClip(wav,true);if(clip!=null)return clip;
+                if(request.Asset!=null)SpeechPacks.Reject(request.Asset);else request.SkipRecording=true;
+            }
+            return null;
         }
         public void Update(Settings settings)
         {
@@ -209,8 +237,9 @@ namespace KeyLearner.Unity.Platform
                 if (queue.Count == 0)
                     continue;
                 var request = queue.Peek();
-                string wav = FindAudio(request);
-                AudioClip clip = wav == null ? null : LoadClip(wav, true);
+                AudioClip clip = LoadSpeech(request);
+                if(clip==null && request.SpeechKey!=null)
+                {queue.Dequeue();Completed++;Status="Prepared speech unavailable.";continue;}
                 if (clip == null && !ready)
                 {
                     if (Now - request.Time > 2)
@@ -233,7 +262,7 @@ namespace KeyLearner.Unity.Platform
                 }
                 else
                     Send("SPEAK\t" + i + "\t" + lane.Ticket + "\t" + (int)(request.Volume * (key ? .7 : 1)) + "\t" + request.Rate + "\t" + Encode(request.Voice) + "\t" + Encode(request.Text.Length == 1 ? request.Text.ToUpperInvariant() : request.Text));
-                if (clip != null && preparedSpeech.Find(request.Text) == wav) PreparedStarted++;
+                if (clip != null && request.Asset != null) {PreparedStarted++;LastSpeechKey=request.Asset.Key;LastVoicePackId=request.Asset.VoiceId;}
                 if (clip == null) FallbackStarted++;
                 Started++;
             }
@@ -265,10 +294,10 @@ namespace KeyLearner.Unity.Platform
         }
         string FindAudio(Request request)
         {
-            if (File.Exists(request.Recording))
+            request.Asset=null;
+            if (!request.SkipRecording && File.Exists(request.Recording))
                 return request.Recording;
-            var generated = preparedSpeech.Find(request.Text);
-            if (generated != null) return generated;
+            if(request.SpeechKey!=null){request.Asset=SpeechPacks.Resolve(request.SpeechKey,request.PackId);return request.Asset?.Path;}
             var bundle = Path.Combine(streaming, "Content", "Voice", request.Text.ToLowerInvariant() + ".wav");
             var fallback = Simple(request.Text) && File.Exists(bundle) ? bundle : null;
             if (!File.Exists(request.Model))
@@ -445,7 +474,7 @@ namespace KeyLearner.Unity.Platform
                     return clip;
                 }
             }
-            catch (Exception e) when (e is IOException || e is ArgumentException) { return null; }
+            catch (Exception e) when (e is IOException || e is ArgumentException || e is UnauthorizedAccessException) { return null; }
         }
         // Keep a large vocabulary from retaining thousands of decoded clips. Active lanes
         // are protected; soundscape loops belong to the separate permanent effects cache.

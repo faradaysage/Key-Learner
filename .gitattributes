@@ -9,3 +9,7 @@ UnityPort/**/*.asset whitespace=-blank-at-eol
 UnityPort/**/*.mat whitespace=-blank-at-eol
 UnityPort/**/*.prefab whitespace=-blank-at-eol
 UnityPort/**/*.unity whitespace=-blank-at-eol
+
+# Production narration only; generated packs, masters and caches stay separate.
+Content/Voice/speech-*.wav filter=lfs diff=lfs merge=lfs -text
+Content/Voice/Packs/**/*.wav filter=lfs diff=lfs merge=lfs -text

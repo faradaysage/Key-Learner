@@ -72,7 +72,7 @@ This is a working playground foundation, not a validated developmental assessmen
 
 Speech uses reusable, capped overlapping channels: four for key feedback and two reserved for words by default. New input never cancels audio already playing. Parent Voice settings can adjust the caps. Short queues absorb bursts; sustained overload is bounded.
 
-Both engines now prefer committed Chatterbox recordings for the shipped vocabulary and instructions. These are ordinary mono PCM WAV files; the game and normal builds require no Python, PyTorch, CUDA, Chatterbox installation, or downloaded speech model. Family recordings still take priority. Prepared speech uses a fixed narrator; Parent Studio voice/rate choices control fallback synthesis for new family text.
+Both engines now prefer committed Chatterbox recordings for the shipped vocabulary and instructions. These are ordinary mono PCM WAV files; the game and normal builds require no Python, PyTorch, CUDA, Chatterbox installation, or downloaded speech model. Family recordings still take priority. Prepared speech defaults to Blake; Parent Studio offers Blake and Original narrator. Voice/rate controls for custom fallback synthesis still apply to new family text.
 
 Speech generation is an explicit developer operation: run `tools/setup-speech.ps1`, generate/review the twenty-line sample reel with `tools/generate-speech.ps1 -Samples`, then generate missing or changed clips with `tools/generate-speech.ps1 -KeepGoing`. See [prepared speech tooling](tools/speech/README.md) for the stable manifest, isolated Python 3.11 environment, CUDA verification, model/license pins, incremental hashes and lossless masters. CI verifies committed speech using the .NET verifier; it never generates speech.
 
@@ -224,3 +224,8 @@ Explorer ambience and motion sounds respond to movement and vehicle type and bec
 
 
 **Noncommercial art notice:** builds containing the WildMesh wolf are restricted to noncommercial use until it is separately licensed or replaced. The source code remains MIT; third-party art keeps its own licenses. See [the exact restricted-asset register](NONCOMMERCIAL_ASSETS.md) before any commercial release.
+
+
+## Narrator packs
+
+Parent Studio's Voice tab now has a data-driven Narrator selector and **Try this voice** preview (Space). Selection applies immediately; Save & Return persists it. Blake is the default production voice (4,899 clips, including Apollo and Athena). Original narrator remains intact, selectable, and the same-key fallback. Butter and Lake are on hold and can be added later through manifest-backed imports; no incomplete pack ships. See [voice-pack integration and validation commands](docs/VOICE_PACK_INTEGRATION.md). Normal builds need Git LFS, .NET and Unity; they never run Python or speech generation.

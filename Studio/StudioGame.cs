@@ -145,7 +145,7 @@ public sealed partial class StudioGame : Game
         var fonts=new[]{Content.Load<SpriteFont>("Fonts/StudioRounded"),Content.Load<SpriteFont>("Fonts/StudioClassic"),Content.Load<SpriteFont>("Fonts/StudioBold")};
         iconFont=Content.Load<SpriteFont>("Fonts/StudioIcons");icons=new();
         flightRenderer=new(GraphicsDevice,fonts[0]);
-        canvas=new(GraphicsDevice,fonts,S);canvas.PaintShader=Content.Load<Effect>("Shaders/Paint");canvas.ToonShader=Content.Load<Effect>("Shaders/Toon");flightRenderer.ToonShader=Content.Load<Effect>("Shaders/Toon");canvas.Fields.Configure(Content.Load<Effect>("Shaders/LiquidDensity"),Content.Load<Effect>("Shaders/LiquidSurface")); voice=new(store.Root);
+        canvas=new(GraphicsDevice,fonts,S);canvas.PaintShader=Content.Load<Effect>("Shaders/Paint");canvas.ToonShader=Content.Load<Effect>("Shaders/Toon");flightRenderer.ToonShader=Content.Load<Effect>("Shaders/Toon");canvas.Fields.Configure(Content.Load<Effect>("Shaders/LiquidDensity"),Content.Load<Effect>("Shaders/LiquidSurface")); voice=new(store.Root,store.SpeechPacks);
         parent=startStudio;picker=!preview || scenario is "picker" or "picker-select"; recipes=EffectRecipe.Load(store.Root); ChooseTarget();
         if(scenario is "word-balloons" or "word-pop"){S.Mode=PlayMode.WordAdventure;target="cat";Celebrate(store.Words.First(w=>w.Word=="cat"));}
         if(scenario is "racing" or "dolphin"){S.Mode=scenario=="racing"?PlayMode.Racing:PlayMode.Dolphin;ChooseTarget();}
@@ -398,6 +398,7 @@ public sealed partial class StudioGame : Game
         private static string ReadArg(string[] args,string name) {var i=Array.IndexOf(args,name);return i>=0 && i+1<args.Length?args[i+1]:"";}
     private void PrepareReplay()
     {
+        if(scenario=="voice-options"){replay.Enqueue(new(39,true,.3));replay.Enqueue(new(39,false,.35));replay.Enqueue(new(32,true,.5));replay.Enqueue(new(32,false,.55));}
         if(scenario=="game-picker"){replay.Enqueue(new(71,true,.2));replay.Enqueue(new(71,false,.3));replay.Enqueue(new(71,true,.45));replay.Enqueue(new(71,false,.55));}
         if(scenario=="picker-select"){picker=true;replay.Enqueue(new(39,true,.4));replay.Enqueue(new(39,false,.5));replay.Enqueue(new(13,true,.7));replay.Enqueue(new(13,false,.8));}
         if(scenario=="flight-loop"){replay.Enqueue(new(40,true,.1));replay.Enqueue(new(32,true,.1));replay.Enqueue(new(40,false,3.1));}
@@ -460,10 +461,10 @@ public sealed partial class StudioGame : Game
     }
     private void VerifyReplay()
     {
-        var success=scenario switch {"math-pointer"=>math?.Stage==2&&picker&&!parent,"math-complete"=>math!=null&&math.Stage>=2&&mathPreviewActions==1,"math-round"=>math!=null,"dots-correct"=>dots.Stage>=2,"dots-retry"=>dots.Stage>=2 && dots.Mastery==0,"dots-visible"=>dots.DotsVisible && dots.Stage==1,"picker" or "game-picker"=>picker && !parent,"picker-select"=>!picker && S.Mode==PlayMode.WordAdventure,"cannon-miss"=>canvas.CannonShots==0 && canvas.Blasts==0,"patient-red"=>hero=="red" && recognizedCount==1,"spelling-timeout"=>guided.Progress==1,"racing"=>flight.Kind==ExplorerKind.Racer && flight.Position.Z< -100,"dolphin"=>flight.Kind==ExplorerKind.Dolphin && flight.Position.Y<0 && flight.Position.Z< -100,"flight-loop"=>float.IsFinite(flight.Position.Y),"shift-options"=>parent,"window-resume"=>lifecycleStage==2 && resumeClears>=2 && lifecycleVerified && voice?.Pending==0 && held.Count==0 && hero=="" && canvas.ParticleCount==0 && canvas.GlyphCount==0,"ten-o"=>parent,"native-recovery"=>parent && hero=="milk" && canvas.PaintCount==0 && canvas.ShatterCount==0,"twenty-keys"=>held.Count==20 && maximumHeld==20,"quick-options"=>!parent,"benchmark"=>!benchmarking && benchmarkFrames.Count>30 && recommendation.Length>0,"fracture"=>true,"flight"=>flight.Position.Z< -40,"cluster"=>canvas.PaintCount>0,"glass"=>canvas.ShatterCount>0,"swipe"=>canvas.Fields.Blobs.Drops.Any(d=>d.Wobble>0),"fireworks"=>canvas.RocketsLaunched==(replaySeconds>=5?10:8),"word-balloons"=>canvas.RewardRemaining==3,"word-pop"=>canvas.Score==45 && canvas.RewardRemaining==0,"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
+        var success=scenario switch {"voice-options"=>parent && tab==1 && voice!=null && voice.PreparedStarted==1 && voice.Completed==1 && voice.FallbackStarted==0 && voice.LastVoicePackId==S.VoicePackId && voice.LastSpeechKey==VoicePackRegistry.PreviewKey,"math-pointer"=>math?.Stage==2&&picker&&!parent,"math-complete"=>math!=null&&math.Stage>=2&&mathPreviewActions==1,"math-round"=>math!=null,"dots-correct"=>dots.Stage>=2,"dots-retry"=>dots.Stage>=2 && dots.Mastery==0,"dots-visible"=>dots.DotsVisible && dots.Stage==1,"picker" or "game-picker"=>picker && !parent,"picker-select"=>!picker && S.Mode==PlayMode.WordAdventure,"cannon-miss"=>canvas.CannonShots==0 && canvas.Blasts==0,"patient-red"=>hero=="red" && recognizedCount==1,"spelling-timeout"=>guided.Progress==1,"racing"=>flight.Kind==ExplorerKind.Racer && flight.Position.Z< -100,"dolphin"=>flight.Kind==ExplorerKind.Dolphin && flight.Position.Y<0 && flight.Position.Z< -100,"flight-loop"=>float.IsFinite(flight.Position.Y),"shift-options"=>parent,"window-resume"=>lifecycleStage==2 && resumeClears>=2 && lifecycleVerified && voice?.Pending==0 && held.Count==0 && hero=="" && canvas.ParticleCount==0 && canvas.GlyphCount==0,"ten-o"=>parent,"native-recovery"=>parent && hero=="milk" && canvas.PaintCount==0 && canvas.ShatterCount==0,"twenty-keys"=>held.Count==20 && maximumHeld==20,"quick-options"=>!parent,"benchmark"=>!benchmarking && benchmarkFrames.Count>30 && recommendation.Length>0,"fracture"=>true,"flight"=>flight.Position.Z< -40,"cluster"=>canvas.PaintCount>0,"glass"=>canvas.ShatterCount>0,"swipe"=>canvas.Fields.Blobs.Drops.Any(d=>d.Wobble>0),"fireworks"=>canvas.RocketsLaunched==(replaySeconds>=5?10:8),"word-balloons"=>canvas.RewardRemaining==3,"word-pop"=>canvas.Score==45 && canvas.RewardRemaining==0,"balloon"=>canvas.PoppedCount>=1,"balloon-sequence"=>canvas.GlyphCount==3 && canvas.CountGlyph("Q")==2,"milk"=>hero=="milk","rapid-milk"=>hero=="milk" && lastRecognitionLag<.001,"guided-mommy"=>hero=="mommy" && recognizedCount==1 && lastRecognitionLag<.001,"fire"=>canvas.Fields.FireLevel>.15f && playStarted,"fire-tap"=>!canvas.Fields.SpaceHeld && canvas.Fields.FireLevel<.01f,"icons"=>icons.NameFor(112,new Settings())=="face-smile" && playStarted,"mommy"=>hero=="mommy","options"=>parent,"extra-key"=>!parent,"counting"=>hero=="10" && counting.Expected==11,_=>true};
         if(scenario is "rapid-milk" or "mommy" or "balloon" && S.Sound)success=success && voice!=null && voice.Started==voice.Requested && voice.Completed==voice.Requested && voice.Overflow==0;
         if(!success) throw new InvalidOperationException("Preview scenario failed: "+scenario+"; hero="+hero+"; parent="+parent);
-        if(screenshot!=null && voice!=null) File.WriteAllLines(screenshot+".audio.txt",new[]{ $"requested={voice.Requested}; started={voice.Started}; prepared={voice.PreparedStarted}; fallback={voice.FallbackStarted}; completed={voice.Completed}; overflow={voice.Overflow}; peak={voice.PeakOverlap}; max delay={voice.MaximumStartDelay:0.000}s"}.Concat(voice.Trace));
+        if(screenshot!=null && voice!=null) File.WriteAllLines(screenshot+".audio.txt",new[]{ $"requested={voice.Requested}; started={voice.Started}; prepared={voice.PreparedStarted}; fallback={voice.FallbackStarted}; completed={voice.Completed}; overflow={voice.Overflow}; peak={voice.PeakOverlap}; max delay={voice.MaximumStartDelay:0.000}s; voice={voice.LastVoicePackId}; key={voice.LastSpeechKey}"}.Concat(voice.Trace));
         if(scenario.Length>0 && screenshot!=null) File.WriteAllText(screenshot+".verified.txt","PASS "+scenario+"; voice="+voice?.Status+"; mean draw="+(renderSeconds/Math.Max(1,renderFrames)*1000).ToString("0.0")+"ms");
     }
     private void DrawPlay()
@@ -542,7 +543,7 @@ public sealed partial class StudioGame : Game
     }
     private string[] PropertiesForTab() => tab switch {
         0=>["Theme","Font","Sound","GentleMotion","ShowKeyboard","FontScale","Backdrop"],
-        1=>["WindowsVoice","SpeechRate","Volume","SpeakLetters","PiperExecutable","PiperModel","KeyVoiceChannels","WordVoiceChannels"],
+        1=>["VoicePackId","WindowsVoice","SpeechRate","Volume","SpeakLetters","PiperExecutable","PiperModel","KeyVoiceChannels","WordVoiceChannels"],
         2=>["ForgivingSpelling","AdaptiveLearning","WordPause","PrefixPause","UseGestureCalibration"],
         8=>["RenderScale","LiquidScale","TerrainDetail","ExtrudedAssets","GlassShader","SmoothEdges","VSync"],
         7=>["GestureEffects","MousePlay","GrowingFire","EffectsSound","EffectsVolume","MouseTrailSize"],
@@ -554,7 +555,7 @@ public sealed partial class StudioGame : Game
         Text(tab switch {0=>"Small changes. A whole new mood.",1=>"A familiar voice makes a difference.",2=>"Follow their intent, at their pace.",6=>"A little puff. A big celebration.",8=>"A sharper world. Tuned to this laptop.",_=>"Fine-tune the feel."},55,275,Color.White,.78f,title);
         var descriptions=tab switch {
             0=>"Smash for exploration. Word Adventure for early spelling. Counting for number sequences.",
-            1=>"Recordings first, optional offline Piper second, installed Windows speech as fallback.",
+            1=>"Choose a narrator. Family recordings play first; custom text keeps its offline fallback.",
             8=>"Native output and GPU shading. Render scale 1 = native display resolution.",
             2=>"Mistakes are forgiven only when typing looks deliberate and a correction is unambiguous.",
             6=>"Pop size is a multiple of normal size. Deflate seconds is the time to lose one puff.",
@@ -563,7 +564,7 @@ public sealed partial class StudioGame : Game
         for(var i=0;i<names.Length;i++)
         {
             var index=i; var property=typeof(Settings).GetProperty(names[i])!;
-            var y=374+i*49;
+            var y=(tab==1?365:374)+i*(tab==1?44:49);
             Button(new(55,y,1050,42),Nice(property.Name)+"   /   "+Display(property),()=>{row=index;ChangeProperty(property,1);},row==i);
         }
         if(tab==8){DrawBenchmarkControls();Button(new(55,737,490,42),"Toon asset shading / "+(S.ToonAssets?"On":"Off"),()=>S.ToonAssets=!S.ToonAssets);Button(new(565,737,490,42),"Flight assistance / "+(S.FlightAssist?"On":"Off"),()=>S.FlightAssist=!S.FlightAssist);}
@@ -571,8 +572,8 @@ public sealed partial class StudioGame : Game
         if(tab==6){Text("Switching keys retires the old balloon. Return to that key to start a fresh one.",55,500,Color.White*.6f,.45f);Text("Inflated balloons float upward; a steady rhythm earns a sparkling pop.",55,535,Color.White*.6f,.45f);}
         if(tab==1)
         {
-            Button(new(1140,374,240,48),"Try this voice",()=>voice?.Say("Hello little explorer. Milk. Mommy. Let's play.",S));
-            Text("All voices play locally.",1140,443,Color.White*.5f,.42f);
+            Button(new(1140,374,240,48),"Try this voice",()=>voice?.PreviewVoice(S.VoicePackId,S));
+            Text("Space: preview narrator.",1140,443,Color.White*.5f,.42f);
             Text("No subscription needed.",1140,470,Color.White*.5f,.42f);
             Text(voice?.Status??"",55,779,canvas.Palette[0],.43f,maxWidth:1280);
         }
@@ -653,9 +654,10 @@ public sealed partial class StudioGame : Game
         var next=names[(Array.IndexOf(names,current)+1)%names.Length];
         if(Enum.TryParse<Celebration>(next,out var builtin)) {entry.Effect=builtin;entry.EffectPreset="";} else entry.EffectPreset=next;
     }
-    private static string Nice(string name)=> name=="AdaptiveLearning"?"Learn word habits":System.Text.RegularExpressions.Regex.Replace(name,"([a-z])([A-Z])","$1 $2");
+    private static string Nice(string name)=> name=="VoicePackId"?"Narrator":name=="WindowsVoice"?"Custom Windows voice":name=="SpeechRate"?"Custom speech rate":name=="AdaptiveLearning"?"Learn word habits":System.Text.RegularExpressions.Regex.Replace(name,"([a-z])([A-Z])","$1 $2");
     private string Display(PropertyInfo p)
     {
+        if(p.Name=="VoicePackId")return store.SpeechPacks.DisplayName(S.VoicePackId);
         var value=p.GetValue(S);
         return value switch {bool b=>b?"On":"Off",double d=>d.ToString("0.##",CultureInfo.InvariantCulture),string s=>s.Length>0?s:"Automatic / not configured",_=>Nice(value?.ToString()??"")};
     }
@@ -664,6 +666,11 @@ public sealed partial class StudioGame : Game
         var type=p.PropertyType;
         if(type==typeof(bool)) p.SetValue(S,!(bool)p.GetValue(S)!);
         else if(type.IsEnum) {var values=Enum.GetValues(type);var index=Array.IndexOf(values.Cast<object>().ToArray(),p.GetValue(S));p.SetValue(S,values.GetValue((index+direction+values.Length)%values.Length));}
+        else if(p.Name=="VoicePackId")
+        {
+            var values=store.SpeechPacks.Packs.Select(v=>v.Id).ToArray();var index=Array.IndexOf(values,store.SpeechPacks.NormalizeChoice(S.VoicePackId));
+            voice?.SelectVoice(S,values[(index+direction+values.Length)%values.Length]);
+        }
         else if(p.Name=="WindowsVoice")
         {
             var values=new[]{""}.Concat(voice?.Voices??[]).ToArray(); var index=Array.IndexOf(values,S.WindowsVoice);
@@ -694,6 +701,7 @@ public sealed partial class StudioGame : Game
             if(key==191) Edit("Search dictionary",query,v=>{query=v;wordIndex=0;});
             return;
         }
+        if(tab==1 && key==32){voice?.PreviewVoice(S.VoicePackId,S);return;}
         var props=PropertiesForTab();
         if(key==38) row=(row-1+props.Length)%props.Length;
         if(key==40) row=(row+1)%props.Length;

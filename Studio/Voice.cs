@@ -9,7 +9,8 @@ namespace KeyLearner.Studio;
 /// <summary>Bounded polyphony. New input never cancels audio already playing.</summary>
 public sealed class Voice : IDisposable
 {
-    private sealed record Request(string Text,string Recording,string Executable,string Model,string Selected,int Rate,int Volume,bool Key,double Time);
+    private sealed record Request(string Text,string Recording,string Executable,string Model,string Selected,int Rate,int Volume,bool Key,double Time,string? SpeechKey,string PackId)
+    { public VoicePackRegistry.SpeechAsset? Asset; public bool SkipRecording; }
     private sealed class Lane
     {
         public SpeechSynthesizer? Synth;
@@ -24,7 +25,9 @@ public sealed class Voice : IDisposable
     private readonly ConcurrentDictionary<string,byte> preparing=new();
     private readonly Thread worker;
     private readonly string cache;
-    private readonly PreparedSpeechCatalog preparedSpeech=new(Path.Combine(AppContext.BaseDirectory,"Content","Voice"));
+    public VoicePackRegistry SpeechPacks {get;}
+    public string LastSpeechKey {get;private set;}="";
+    public string LastVoicePackId {get;private set;}="";
     private volatile bool stopping;
     private Process? process;
     public int Pending=>keys.Count+words.Count+lanes.Count(l=>l.Request!=null);
@@ -41,8 +44,9 @@ public sealed class Voice : IDisposable
     public List<string> Trace {get;}=new();
     private int keyChannels=4,wordChannels=2;
     private static double Now=>Stopwatch.GetTimestamp()/(double)Stopwatch.Frequency;
-    public Voice(string root)
+    public Voice(string root,VoicePackRegistry? speechPacks=null)
     {
+        SpeechPacks=speechPacks??new VoicePackRegistry(Path.Combine(AppContext.BaseDirectory,"Content","Voice"),message=>Debug.WriteLine(message));
         cache=Path.Combine(root,"voice-cache");Directory.CreateDirectory(cache);
         // Warm reusable synthesizers before play instead of constructing one per keystroke.
         foreach(var lane in lanes)
@@ -55,22 +59,39 @@ public sealed class Voice : IDisposable
         if(File.Exists(warm)){try{using var stream=File.OpenRead(warm);using var audio=SoundEffect.FromStream(stream);}catch(Exception e){Debug.WriteLine(e);}}
         worker=new Thread(PrepareAudio){IsBackground=true,Name="KeyLearner offline voice cache"};worker.Start();
     }
-    public void Say(string text,Settings settings,string recording="",bool key=false,bool brisk=false)
+    public void Say(string text,Settings settings,string recording="",bool key=false,bool brisk=false,string? voicePackId=null)
+        => Enqueue(text,settings,recording,key,brisk,voicePackId);
+    void Enqueue(string text,Settings settings,string recording="",bool key=false,bool brisk=false,string? voicePackId=null,string? speechKey=null)
     {
         if(!settings.Sound || string.IsNullOrWhiteSpace(text))return;
         keyChannels=Math.Clamp(settings.KeyVoiceChannels,1,5);wordChannels=Math.Clamp(settings.WordVoiceChannels,1,3);
-        var r=new Request(text,recording,brisk?"":settings.PiperExecutable,brisk?"":settings.PiperModel,settings.WindowsVoice,brisk?Math.Clamp(settings.SpeechRate+5,3,8):settings.SpeechRate,settings.Volume,key,Now);
+        var r=new Request(text,recording,brisk?"":settings.PiperExecutable,brisk?"":settings.PiperModel,settings.WindowsVoice,brisk?Math.Clamp(settings.SpeechRate+5,3,8):settings.SpeechRate,settings.Volume,key,Now,speechKey??SpeechPacks.KeyForText(text),SpeechPacks.NormalizeChoice(voicePackId??settings.VoicePackId));
         Requested++;
         var queue=key?keys:words;
         if(queue.Count>=(key?8:32)){Overflow++;Log("overflow "+text);return;}
         queue.Enqueue(r);Update();
     }
+    public void SayKey(string speechKey,Settings settings,string? voicePackId=null)
+    {
+        var text=SpeechPacks.TextForKey(speechKey);
+        if(text!=null)Enqueue(text,settings,voicePackId:voicePackId,speechKey:speechKey);
+        else SpeechPacks.Resolve(speechKey,voicePackId??settings.VoicePackId);
+    }
+    public void SelectVoice(Settings settings,string voiceId)
+    {
+        var next=SpeechPacks.NormalizeChoice(voiceId);
+        if(settings.VoicePackId!=next)Stop();
+        settings.VoicePackId=next;
+    }
+    public void PreviewVoice(string voiceId,Settings settings)
+    {Stop();SayKey(VoicePackRegistry.PreviewKey,settings,voiceId);}
     private void Log(string line){if(Trace.Count>=256)Trace.RemoveAt(0);Trace.Add(line);}
     private string Destination(Request r)=>Path.Combine(cache,Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(r.Model+File.GetLastWriteTimeUtc(r.Model).Ticks+r.Text)))+".wav");
     private string? FindAudio(Request r)
     {
-        if(File.Exists(r.Recording))return r.Recording;
-        var generated=preparedSpeech.Find(r.Text);if(generated!=null)return generated;
+        r.Asset=null;
+        if(!r.SkipRecording && File.Exists(r.Recording))return r.Recording;
+        if(r.SpeechKey!=null){r.Asset=SpeechPacks.Resolve(r.SpeechKey,r.PackId);return r.Asset?.Path;}
         var bundled=Path.Combine(AppContext.BaseDirectory,"Content","Voice",r.Text.ToLowerInvariant()+".wav");
         string? fallback=r.Text.All(char.IsAsciiLetterOrDigit) && File.Exists(bundled)?bundled:null;
         if(!File.Exists(r.Model))return fallback;
@@ -99,17 +120,28 @@ public sealed class Voice : IDisposable
             var r=queue.Dequeue();lane.Prompt=null;lane.Request=r;Interlocked.Exchange(ref lane.Busy,1);
             try
             {
-                var wav=FindAudio(r);
-                if(wav!=null)
+                bool played=false;
+                for(int attempt=0;attempt<3 && !played;attempt++)
                 {
+                    var wav=FindAudio(r);if(wav==null)break;
                     try
                     {
                         using var stream=File.OpenRead(wav);lane.Clip=SoundEffect.FromStream(stream);lane.Audio=lane.Clip.CreateInstance();
-                        lane.Audio.Volume=r.Volume/100f*(r.Key?.7f:1);lane.Audio.Play();if(preparedSpeech.Find(r.Text)==wav)PreparedStarted++;Status="Offline voice · overlapping playback";
+                        lane.Audio.Volume=r.Volume/100f*(r.Key?.7f:1);lane.Audio.Play();played=true;
+                        if(r.Asset!=null){PreparedStarted++;LastSpeechKey=r.Asset.Key;LastVoicePackId=r.Asset.VoiceId;}
+                        Status="Offline voice · overlapping playback";
                     }
-                    catch(Exception e) when(e is not OutOfMemoryException){lane.Audio?.Dispose();lane.Clip?.Dispose();lane.Audio=null;lane.Clip=null;Speak(lane,r);}
+                    catch(Exception e) when(e is not OutOfMemoryException)
+                    {
+                        lane.Audio?.Dispose();lane.Clip?.Dispose();lane.Audio=null;lane.Clip=null;
+                        if(r.Asset!=null)SpeechPacks.Reject(r.Asset);else r.SkipRecording=true;
+                    }
                 }
-                else Speak(lane,r);
+                if(!played)
+                {
+                    if(r.SpeechKey!=null){Status="Prepared speech unavailable.";lane.Request=null;Interlocked.Exchange(ref lane.Busy,0);Completed++;continue;}
+                    Speak(lane,r);
+                }
                 Started++;MaximumStartDelay=Math.Max(MaximumStartDelay,Now-r.Time);Log("start "+r.Text);
             }
             catch(Exception e) when(e is not OutOfMemoryException){Status="Voice unavailable: "+e.Message;Log("failed "+r.Text);lane.Request=null;Interlocked.Exchange(ref lane.Busy,0);}

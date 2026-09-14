@@ -1,6 +1,6 @@
 # Prepared speech (development only)
 
-The game plays ordinary WAV assets. Neither engine invokes Python, Chatterbox, PyTorch, CUDA, Hugging Face, or this generator. Family recordings take priority; existing Windows/Piper fallback remains available only when a family adds text outside the prepared catalog. Voice selection in Parent Studio affects that fallback, not the fixed prepared narrator.
+The game plays ordinary WAV assets. Neither engine invokes Python, Chatterbox, PyTorch, CUDA, Hugging Face, or this generator. Family recordings take priority; existing Windows/Piper fallback remains available only when a family adds text outside the prepared catalog. Voice selection in Parent Studio chooses Blake or Original narrator; custom Windows/Piper controls affect only unknown family text.
 
 ## Setup on Windows
 
@@ -15,7 +15,7 @@ The generator loads no model at all when everything is unchanged, or when verify
 
 ## Inventory and voice
 
-`manifest.json` has stable semantic IDs and aliases for 4,897 distinct clips: all 26 letters, 0–100, every mathematical instruction template, default keyboard icon names, feedback, parent voice preview, and the deduplicated public app/CPB/custom dictionaries. `build_manifest.py` explicitly reads only those public CSV files; it never reads `private_dictionary.csv` or parent profiles. Add future required phrases there or extend the manifest intentionally. Arbitrary future family text and custom icon labels cannot be enumerated in advance and keep the existing recording/fallback path.
+`manifest.json` has stable semantic IDs and aliases for 4,899 distinct clips: all 26 letters, 0–100, every mathematical instruction template, default keyboard icon names, feedback, parent voice preview, and the deduplicated public app/CPB/custom dictionaries. `build_manifest.py` explicitly reads only those public CSV files; it never reads `private_dictionary.csv` or parent profiles. Explicit shared additions such as Apollo and Athena live in `additional_words.json`; this does not import any private CSV or profile. Add future required phrases there or extend the manifest intentionally. Arbitrary future family text and custom icon labels cannot be enumerated in advance and keep the existing recording/fallback path.
 
 `voice.json` pins model repository, immutable model revision, default speaker conditioning, seed, sampling parameters and WAV formats. No human reference voice has been copied or cloned. Any later voice-reference addition must have documented permission/license and include its content hash in the recipe before generation. The generator leaves Chatterbox's PerTh watermarker enabled; it does not explicitly remove watermarks. Letter-context trimming is recorded, and no watermark-detection claim is made for those short excerpts.
 
