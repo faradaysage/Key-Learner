@@ -57,41 +57,7 @@ namespace KeyLearner.Unity.Editor
             var stripping = GraphicsSettings.GetRenderPipelineSettings<URPShaderStrippingSetting>();
             if (stripping != null)
                 stripping.stripUnusedPostProcessingVariants = false;
-            var graphics = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/GraphicsSettings.asset").FirstOrDefault();
-            if (graphics)
-            {
-                var so = new SerializedObject(graphics);
-                var fog = so.FindProperty("m_FogStripping");
-                if (fog != null)
-                    fog.intValue = 1;
-                var array = so.FindProperty("m_AlwaysIncludedShaders");
-                for (int i = array.arraySize - 1; i >= 0; i--)
-                {
-                    var shader = array.GetArrayElementAtIndex(i).objectReferenceValue as Shader;
-                    if (shader && shader.name == "GUI/Text Shader")
-                    {
-                        array.GetArrayElementAtIndex(i).objectReferenceValue = null;
-                        array.DeleteArrayElementAtIndex(i);
-                    }
-                }
-                foreach (string name in new[] { "KeyLearner/Terrain", "KeyLearner/Water", "KeyLearner/Particle", "KeyLearner/Sky", "KeyLearner/SoftCloud", "KeyLearner/SeabedCaustics", "Universal Render Pipeline/Lit", "Universal Render Pipeline/Unlit" })
-                {
-                    var shader = Shader.Find(name);
-                    if (!shader)
-                        continue;
-                    bool exists = false;
-                    for (int i = 0; i < array.arraySize; i++)
-                        if (array.GetArrayElementAtIndex(i).objectReferenceValue == shader)
-                            exists = true;
-                    if (!exists)
-                    {
-                        int n = array.arraySize;
-                        array.InsertArrayElementAtIndex(n);
-                        array.GetArrayElementAtIndex(n).objectReferenceValue = shader;
-                    }
-                }
-                so.ApplyModifiedPropertiesWithoutUndo();
-            }
+            PreserveRuntimeShaders();
             ContentBuilder.Build();
             // Configure imports and project settings repeatedly, but keep authored scene edits.
             const string scenePath = "Assets/KeyLearner/Scenes/KeyLearner.unity";
@@ -155,6 +121,45 @@ namespace KeyLearner.Unity.Editor
             AssetDatabase.SaveAssets();
             Debug.Log("KEYLEARNER_CONFIGURED " + Application.unityVersion);
         }
+        // Incremental builds must retain newly introduced runtime-only shaders too.
+        static void PreserveRuntimeShaders()
+        {
+            var graphics = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/GraphicsSettings.asset").FirstOrDefault();
+            if (graphics)
+            {
+                var so = new SerializedObject(graphics);
+                var fog = so.FindProperty("m_FogStripping");
+                if (fog != null)
+                    fog.intValue = 1;
+                var array = so.FindProperty("m_AlwaysIncludedShaders");
+                for (int i = array.arraySize - 1; i >= 0; i--)
+                {
+                    var shader = array.GetArrayElementAtIndex(i).objectReferenceValue as Shader;
+                    if (shader && shader.name == "GUI/Text Shader")
+                    {
+                        array.GetArrayElementAtIndex(i).objectReferenceValue = null;
+                        array.DeleteArrayElementAtIndex(i);
+                    }
+                }
+                foreach (string name in new[] { "KeyLearner/Terrain", "KeyLearner/Water", "KeyLearner/Particle", "KeyLearner/Sky", "KeyLearner/SoftCloud", "KeyLearner/SeabedCaustics", "KeyLearner/RoarShockwave", "Universal Render Pipeline/Lit", "Universal Render Pipeline/Unlit" })
+                {
+                    var shader = Shader.Find(name);
+                    if (!shader)
+                        throw new InvalidOperationException("Required runtime shader missing: " + name);
+                    bool exists = false;
+                    for (int i = 0; i < array.arraySize; i++)
+                        if (array.GetArrayElementAtIndex(i).objectReferenceValue == shader)
+                            exists = true;
+                    if (!exists)
+                    {
+                        int n = array.arraySize;
+                        array.InsertArrayElementAtIndex(n);
+                        array.GetArrayElementAtIndex(n).objectReferenceValue = shader;
+                    }
+                }
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+        }
         [MenuItem("KeyLearner/Build Windows player")]
         public static void BuildWindows()
         {
@@ -177,6 +182,9 @@ namespace KeyLearner.Unity.Editor
             if (!System.Text.RegularExpressions.Regex.IsMatch(version ?? "", @"^\d+\.\d+\.\d+$") ||
                 version.Split('.').Any(part => !int.TryParse(part, out int component) || component > 65535))
                 throw new ArgumentException("Windows build version must be MAJOR.MINOR.PATCH with components 0..65535.");
+            PreserveRuntimeShaders();
+            ContentBuilder.Build();
+            AssetDatabase.SaveAssets();
             PlayerSettings.bundleVersion = version;
             PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
             PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);

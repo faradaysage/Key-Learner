@@ -30,6 +30,8 @@ namespace KeyLearner.Unity
         readonly List<GameObject> panes = new List<GameObject>();
         readonly List<Paint> paint = new List<Paint>();
         readonly List<Rocket> rockets = new List<Rocket>();
+        readonly List<(int Number, Vector2 Position, double Until)> countFlashes = new List<(int, Vector2, double)>();
+        double hundredAt = double.PositiveInfinity, celebrationUntil, nextCelebrationBurst;
         ParticleSystem starSystem, glowSystem; ParticleSystem.Particle[] starParticles; readonly ParticleSystem.Particle[] glowParticles = new ParticleSystem.Particle[250];
         Glyph current;
         int activeKey = -1, wordIndex, lastPanes;
@@ -349,6 +351,7 @@ namespace KeyLearner.Unity
         {
             S.Audio.Say(n.ToString(), S.Settings);
             fireworks.Add(n, S.Now);
+            if (n == 100) hundredAt = S.Now + 4.8;
             message = n.ToString();
             messageUntil = S.Now + 4;
         }
@@ -431,10 +434,28 @@ namespace KeyLearner.Unity
                 if (word != null)
                     Announce(word);
             }
-            for (int i = 0, n = fireworks.Due(S.Now); i < n; i++)
+            if (S.Now >= hundredAt)
+            {
+                hundredAt = double.PositiveInfinity;
+                celebrationUntil = S.Now + 6;
+                S.Audio.Say("Congratulations! You counted to one hundred!", S.Settings);
+                S.Audio.Play("celebration", S.Settings, .5f);
+            }
+            S.Audio.SetMusic(mode == PlayMode.Counting && S.Now < celebrationUntil ? "happy-bonus" : "learning-home", mode == PlayMode.Counting && S.Now < celebrationUntil ? .22f : .035f);
+            if (S.Now < celebrationUntil && S.Now >= nextCelebrationBurst)
+            {
+                nextCelebrationBurst = S.Now + (S.Settings.GentleMotion ? .7 : .4);
+                S.Rewards.Firework(new Vector2(random.Next(210, 1230), random.Next(210, 650)), ColorAt(random.Next(6)), (float)S.Now);
+                S.Audio.Play("pop", S.Settings, .18f, .3);
+            }
+            countFlashes.RemoveAll(f => S.Now >= f.Until);
+            var dueCounts = fireworks.DueNumbers(S.Now);
+            for (int i = 0; i < dueCounts.Length; i++)
             {
                 launched++;
-                var p = new Vector2(random.Next(180, 1260), 920);
+                var p = new Vector2(180 + (dueCounts[i] - 1) % 10 * 120, 920);
+                countFlashes.Add((dueCounts[i], new Vector2(p.x, 832), S.Now + .38));
+                if (countFlashes.Count > 30) countFlashes.RemoveAt(0);
                 rockets.Add(new Rocket { Object = Visuals.Sphere(Root.transform, new Vector3(p.x, -p.y, 0), 7, Color.white), P = p, Target = new Vector2(random.Next(170, 1270), random.Next(150, 560)), Color = ColorAt(i + random.Next(6)) });
             }
             for (int i = rockets.Count - 1; i >= 0; i--)
@@ -979,10 +1000,10 @@ namespace KeyLearner.Unity
                 Stroke(32, .4, scenario == "fire" ? 5 : .2);
                 Type("abcdef", 1, .3);
             }
-            if (scenario == "fireworks" || scenario == "counting")
+            if (scenario == "fireworks" || scenario == "counting" || scenario == "counting-hundred")
             {
                 double at = .4;
-                for (int n = 1; n <= 24; n++)
+                for (int n = 1; n <= (scenario == "counting-hundred" ? 100 : 24); n++)
                 {
                     Type(n.ToString(), at, .075);
                     at += n < 10 ? .14 : .25;
@@ -1092,8 +1113,16 @@ namespace KeyLearner.Unity
             else if (mode == PlayMode.Counting)
             {
                 Ui.Label(new Rect(100, 45, 1240, 75), "Counting Stars", 40, Color.white);
-                Ui.Label(new Rect(400, 165, 640, 170), counting.Expected.ToString(), 130, ColorAt(1));
-                Ui.Label(new Rect(300, 357, 840, 55), "Type the next number", 28, Color.white);
+                Ui.Label(new Rect(400, 165, 640, 170), S.Now < celebrationUntil || !double.IsPositiveInfinity(hundredAt) ? "100" : counting.Expected.ToString(), 130, ColorAt(1));
+                foreach (var flash in countFlashes)
+                {
+                    var tint = ColorAt(flash.Number);
+                    tint.a = Mathf.Clamp01((float)((flash.Until - S.Now) / .38));
+                    Ui.Label(new Rect(flash.Position.x - 50, flash.Position.y, 100, 60), flash.Number.ToString(), 38, tint);
+                }
+                if (S.Now < celebrationUntil)
+                    Ui.Label(new Rect(170, 455, 1100, 115), "Congratulations!", 74, Style.Dots);
+                Ui.Label(new Rect(300, 357, 840, 55), S.Now < celebrationUntil ? "You counted all the way to one hundred!" : "Type the next number", 28, Color.white);
             }
             else if (!typed)
             {
@@ -1114,6 +1143,9 @@ namespace KeyLearner.Unity
             gestures.Reset();
             counting.Reset();
             fireworks.Clear();
+            countFlashes.Clear();
+            hundredAt = double.PositiveInfinity;
+            celebrationUntil = 0;
             glass.Reset();
             blobs.Clear();
             current = null;
@@ -1182,6 +1214,6 @@ namespace KeyLearner.Unity
                 UnityEngine.Object.Destroy(mesh);
             base.Exit();
         }
-        public override string DiagnosticState => "mode=" + mode + " glyphs=" + glyphs.Count + " score=" + (guided.Score + reward.Score) + " completed=" + guided.Completed + " count=" + counting.Expected + " pending=" + counting.Pending + " balloons=" + reward.Remaining + " recognized=" + recognized + " rockets=" + launched + " blasts=" + blasts + " shots=" + shots.Count + " paint=" + paint.Count + " cracks=" + glass.Panes.Count + " shattered=" + shattered + " drops=" + blobs.Drops.Count + " liquidRT=" + liquidRenderer?.Diagnostic + " popped=" + poppedGlyphs + " largest=" + (glyphs.Count == 0 ? 0 : glyphs.Max(g => g.Balloon.Size)).ToString("0.00") + " flames=" + flames.Count + " fire=" + fire.ToString("0");
+        public override string DiagnosticState => "mode=" + mode + " glyphs=" + glyphs.Count + " score=" + (guided.Score + reward.Score) + " completed=" + guided.Completed + " count=" + counting.Expected + " pending=" + counting.Pending + " balloons=" + reward.Remaining + " recognized=" + recognized + " celebrating=" + (S.Now < celebrationUntil) + " rockets=" + launched + " blasts=" + blasts + " shots=" + shots.Count + " paint=" + paint.Count + " cracks=" + glass.Panes.Count + " shattered=" + shattered + " drops=" + blobs.Drops.Count + " liquidRT=" + liquidRenderer?.Diagnostic + " popped=" + poppedGlyphs + " largest=" + (glyphs.Count == 0 ? 0 : glyphs.Max(g => g.Balloon.Size)).ToString("0.00") + " flames=" + flames.Count + " fire=" + fire.ToString("0");
     }
 }

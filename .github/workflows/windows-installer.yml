@@ -30,6 +30,11 @@ jobs:
         run: |
           dotnet run --project tests/KeyLearner.Tests.csproj -c Release
           if ($LASTEXITCODE -ne 0) { throw 'Tests failed' }
+      - name: Verify committed prepared speech without Python
+        shell: pwsh
+        run: |
+          dotnet run --project tools/KeyLearner.SpeechVerify -c Release -- .
+          if ($LASTEXITCODE -ne 0) { throw 'Prepared speech catalog verification failed' }
       - name: Shared Unity domain regression tests
         shell: pwsh
         run: |
@@ -48,6 +53,7 @@ jobs:
             UnityPort/Assets/Plugins/KeyLearner/KeyLearner.Domain.dll
             UnityPort/Assets/Plugins/KeyLearner/KeyLearner.Domain.pdb
             UnityPort/Assets/StreamingAssets/Platform/**
+            UnityPort/Assets/StreamingAssets/Content/**
           if-no-files-found: error
           retention-days: 7
       - name: Install pinned installer compiler
@@ -150,7 +156,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import os, pathlib, re
-          version = '3.0.' + os.environ['BUILD_NUMBER']
+          version = '3.1.' + os.environ['BUILD_NUMBER']
           if os.environ['REF_TYPE'] == 'tag':
               match = re.fullmatch(r'unity-v(\d+\.\d+\.\d+)(?:-preview\.\d+)?', os.environ['REF_NAME'])
               if not match:

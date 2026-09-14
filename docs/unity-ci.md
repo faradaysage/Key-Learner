@@ -29,11 +29,11 @@ A successful run contains:
 - `CI-Unity-test-results-<run>`: NUnit XML and the project build report.
 - `CI-Unity-upgrade-test-results-<run>`: installer preflight and acceptance JSON.
 - `CI-only-MonoGame-upgrade-baseline`: compatibility output, also used as the upgrade baseline.
-- `CI-only-Unity-build-inputs`: staged domain DLL and Windows helper consumed by the Unity job.
+- `CI-only-Unity-build-inputs`: staged domain DLL, Windows helper and ordinary committed audio/content consumed by the Unity job.
 
 Only the **INSTALL-KeyLearner-Unity-Windows** artifact is needed to install the game. Extract it, then run the setup executable. The run summary links directly to it. The portable player is optional; the CI artifacts are pipeline inputs and test evidence. The installed application keeps the existing per-user installation identity and parent profile. Artifacts are retained for 30 days. This workflow does not automatically create a GitHub Release; a release upload is a separate publication step.
 
-Ordinary runs use `3.0.<workflow run number>`. Tags `unity-vMAJOR.MINOR.PATCH` and `unity-vMAJOR.MINOR.PATCH-preview.N` use the three-part version for both the Unity player and Inno installer. The preview suffix describes publication status, not the Windows numeric file version. Historical `vMAJOR.MINOR.PATCH` tags retain MonoGame packaging only.
+Ordinary runs use `3.1.<workflow run number>` for this immersion update. Tags `unity-vMAJOR.MINOR.PATCH` and `unity-vMAJOR.MINOR.PATCH-preview.N` use the three-part version for both the Unity player and Inno installer. The preview suffix describes publication status, not the Windows numeric file version. Historical `vMAJOR.MINOR.PATCH` tags retain MonoGame packaging only.
 
 ## What the pipeline verifies
 
@@ -64,3 +64,5 @@ The lifecycle/geometry PlayMode tests already disable their cameras and support 
 Run 27 exited 137 before PlayMode XML on two attempts after passing 40 EditMode cases; that exit alone does not establish the cause. The existing test-results artifact now also contains numeric host resource snapshots: memory, free disk and the kernel OOM-kill counter before/after tests and build. `scripts/unity-ci-resources.py` reads only the allowlisted numeric fields in `/proc/meminfo` and `/proc/vmstat` plus free disk, without logs, environment variables, process arguments or credential files.
 
 The explicit headless run passed in run 28 but exit 137 recurred in run 29 after EditMode, with zero host OOM kills. The pinned [GameCI runner implementation](https://github.com/game-ci/unity-test-runner/blob/fa6ced25861c16ef56187828c43f76d00df43a23/dist/platforms/ubuntu/run_tests.sh) invokes successive Editors in one container for `testMode: all`. Separate sequential EditMode/PlayMode steps now isolate their container, licensing-client and shared-memory lifetimes. Both XML sets remain mandatory; this avoids carrying process state between modes without weakening tests or requiring concurrent license use. The exact previous termination cause remains unproven.
+
+The Windows preparation job runs the .NET prepared-speech verifier before building either distribution. It checks manifest recipes, file hashes, WAV format, all aliases and public dictionary coverage. Speech generation is never a CI/build step.

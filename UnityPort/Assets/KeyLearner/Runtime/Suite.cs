@@ -24,7 +24,8 @@ namespace KeyLearner.Unity
             {PlayMode.WhatsHiding,()=>new VisualMathGame(MathActivity.Hiding)},
             {PlayMode.MakeNumber,()=>new VisualMathGame(MathActivity.MakeNumber)},
             {PlayMode.DotDuel,()=>new VisualMathGame(MathActivity.Duel)},
-            {PlayMode.CannonHop,()=>new VisualMathGame(MathActivity.CannonHop)}
+            {PlayMode.CannonHop,()=>new VisualMathGame(MathActivity.CannonHop)},
+            {PlayMode.Dinosaur,()=>new DinosaurGame()}
         };
     }
     public sealed class Suite : MonoBehaviour
@@ -37,6 +38,7 @@ namespace KeyLearner.Unity
         bool picker = true, studio, ready;
         int filter, selected, page;
         string error = "";
+        double hopNoticeUntil;
         readonly List<float> frames = new List<float>();
         readonly Dictionary<PlayMode, Texture2D> previews = new Dictionary<PlayMode, Texture2D>();
         readonly List<string> runtimeErrors = new List<string>();
@@ -125,6 +127,7 @@ namespace KeyLearner.Unity
             input.Suspend();
             ResetInteraction();
         }
+        public bool PreviewInputActive {get{RequirePreview();return input!=null && input.Active;}}
         public string PreviewState
         {
             get
@@ -206,10 +209,16 @@ namespace KeyLearner.Unity
             }
             catch (Exception e) { error = e.ToString(); Debug.LogException(e); diagnostics?.Write("startup-error", new { errorType = e.GetType().Name }); input?.Dispose(); }
         }
+        double revealUntil;
         public void Select(PlayMode mode)
         {
             if (mode == PlayMode.CannonHop && !services.Store.MathLearning.HopUnlocked && !services.Preview)
+            {
+                hopNoticeUntil = Time.unscaledTimeAsDouble + 8;
+                services.Audio.Stop();
+                services.Audio.Say("First, play How Many Now. Practice joining and taking away.", services.Settings);
                 return;
+            }
             ClearTransient();
             game?.Exit();
             game = factories[mode]();
@@ -217,6 +226,7 @@ namespace KeyLearner.Unity
             picker = false;
             studio = false;
             game.Enter(services);
+            revealUntil=Time.realtimeSinceStartupAsDouble+.28;
             services.Store.Save();
             Debug.Log("MINIGAME_ENTER id=" + (int)mode + " name=" + GameCatalog.For(mode).Name);
         }
@@ -309,6 +319,9 @@ namespace KeyLearner.Unity
                     OpenStudio();
                 if (frame.OpenPicker)
                     OpenPicker();
+                // Unity animations/particles share the same suspension as the explicit domain tick.
+                // Input, parent controls and verification use unscaled time.
+                Time.timeScale=frame.Active && !studio && !picker ? 1 : 0;
                 if (frame.Active)
                 {
                     services.AdvanceClock(Mathf.Min(Time.unscaledDeltaTime, .1f));
@@ -374,6 +387,9 @@ namespace KeyLearner.Unity
                 mode = (int)services.Settings.Mode,
                 picker,
                 game = game?.DiagnosticState,
+                audio = new { services.Audio.Requested, services.Audio.Started, services.Audio.PreparedStarted, services.Audio.FallbackStarted, services.Audio.CachedSpeechClips, services.Audio.MusicFrames,
+                    PlayingSources = UnityEngine.Object.FindObjectsByType<AudioSource>().Count(a => a.isPlaying && a.volume > .001f),
+                    SoundEnabled = services.Settings.Sound },
                 frameCount = frames.Count,
                 activeSeconds,
                 p95Milliseconds = frames.Count == 0 ? 0 : frames[(int)(frames.Count * .95)],
@@ -440,6 +456,8 @@ namespace KeyLearner.Unity
                 DrawPicker();
             else
                 game?.DrawUI();
+            if(!studio && introduction?.Active!=true && Time.realtimeSinceStartupAsDouble<revealUntil)
+                Ui.Panel(new Rect(0,0,1440,900),new Color(.025f,.045f,.08f,(float)((revealUntil-Time.realtimeSinceStartupAsDouble)/.28)),0);
             if (!picker && !studio && services.Now < reminderUntil)
             {
                 Ui.Panel(new Rect(80, 808, 1280, 74), Style.Panel);
@@ -515,8 +533,15 @@ namespace KeyLearner.Unity
                 Ui.Label(new Rect(r.x + 181, r.y + 84, 218, 30), "AGES " + g.MinimumAge + "+  /  " + g.Type.ToUpperInvariant(), 14, accent, TextAnchor.MiddleLeft);
                 Ui.Label(new Rect(r.x + 24, r.y + 127, r.width - 48, 55), locked ? "Complete joining and taking away to unlock" : g.Description, 21, new Color(.72f, .80f, .9f), TextAnchor.MiddleLeft);
                 Ui.Label(new Rect(r.x + 24, r.y + 185, r.width - 48, 30), locked ? "Keep exploring numbers" : "LET'S PLAY  →", 16, accent, TextAnchor.MiddleLeft);
-                if (!locked && GUI.Button(r, GUIContent.none, GUIStyle.none))
+                if (GUI.Button(r, GUIContent.none, GUIStyle.none))
                     Select(g.Mode);
+            }
+            if (Time.unscaledTimeAsDouble < hopNoticeUntil)
+            {
+                Ui.Panel(new Rect(160, 625, 1120, 140), Style.Navy);
+                var progress = services.Store.MathLearning;
+                Ui.Label(new Rect(180, 638, 760, 100), "Cannon Hop opens after How Many Now practice.\nJoining: " + Mathf.Min(3, progress.JoiningCompleted) + "/3    Taking away: " + Mathf.Min(3, progress.SeparatingCompleted) + "/3", 25, Color.white);
+                Ui.Button(new Rect(968, 666, 280, 65), "Start practice", () => Select(PlayMode.HowManyNow));
             }
             Ui.Label(new Rect(80, 797, 1010, 48), "Arrow keys + Enter to choose   ·   Tab to explore categories   ·   G, G to return", 19, new Color(.50f, .62f, .77f), TextAnchor.MiddleLeft);
             Ui.Label(new Rect(80, 854, 790, 36), BuildLabel, 17, new Color(.56f, .68f, .82f), TextAnchor.MiddleLeft);
@@ -549,6 +574,7 @@ namespace KeyLearner.Unity
         }
         void OnDestroy()
         {
+            Time.timeScale=1;
             Application.logMessageReceived -= RecordRuntimeError;
             ClearTransient();
             services?.Audio?.Dispose();

@@ -1,0 +1,18 @@
+[
+  {
+    "file": "Ground_Diffuse.png",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/forrest_ground_01/forrest_ground_01_diff_2k.png",
+    "sha256": "06a7c3c4a3916fd96821c4f4d21b4a38c333e931bfc66856e19dab720a22ffa5",
+    "source": "https://polyhaven.com/a/forrest_ground_01",
+    "author": "Rob Tuytel",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "Ground_Normal.png",
+    "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/forrest_ground_01/forrest_ground_01_nor_gl_2k.png",
+    "sha256": "bfc3e06ea31c3de513c9421a8fbbb4a540ebe32fada1bbb545286c1abc96e313",
+    "source": "https://polyhaven.com/a/forrest_ground_01",
+    "author": "Rob Tuytel",
+    "license": "CC0-1.0"
+  }
+]

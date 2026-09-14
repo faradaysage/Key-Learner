@@ -10,7 +10,21 @@ namespace KeyLearner.Unity
     {
         readonly ExplorerKind kind;
         FlightModel model;
-        GameObject hero, gate;
+        ExplorerSoundscape soundscape;
+        AmbientLifeAudio lifeAudio;
+        OceanAtmosphere atmosphere;
+        OceanVisitor visitor;
+        ExplorerEncounters encounters;
+        int lastTreasure;
+        ExplorerWorldLife worldLife;
+        CoastalLife coastalLife;
+        VehicleAnimation vehicleAnimation;
+        TireWake tireWake;
+        CompanionBird companion;
+        int vehicleIndex, predatorScatters, fleeingFish;
+        Vector2 previousWaterPointer;
+        float waterImpulse;
+        GameObject hero, gate, oceanSurface;
         TextMesh letter;
         LineRenderer ring;
         readonly Dictionary<Vector2Int, GameObject> segments = new Dictionary<Vector2Int, GameObject>();
@@ -21,10 +35,10 @@ namespace KeyLearner.Unity
         Material terrainMat, waterMat, skyMaterial, gateMaterial;
         int segmentAnchor = int.MinValue, horizontalAnchor = int.MinValue, terrainDetail;
         float signalTime, particleClock, diagnosticClock;
-        bool firstFrame = true, validateWord;
+        bool firstFrame = true, validateWord, eventCaptured;
         class Swimmer
         {
-            public Transform T; public Vector3 Origin; public float Phase, Speed, Radius;
+            public Transform T; public Vector3 Origin,Velocity,Target; public float Phase, Speed, Radius,Decision,Wake; public bool Shy, PredatorAlarm;
         }
         public ExplorerGame(ExplorerKind kind)
         {
@@ -56,6 +70,7 @@ namespace KeyLearner.Unity
                 throw new InvalidOperationException("The local content catalog is missing. Run ProjectSetup.Configure in the Editor.");
             terrainMat = new Material(Shader.Find(kind == ExplorerKind.Dolphin ? "KeyLearner/SeabedCaustics" : "KeyLearner/Terrain"));
             terrainMat.enableInstancing = true;
+            if (kind != ExplorerKind.Dolphin) S.Content.ConfigureGround(terrainMat);
             if (kind == ExplorerKind.Dolphin)
             {
                 terrainMat.SetFloat("_Intensity", .19f);
@@ -77,11 +92,31 @@ namespace KeyLearner.Unity
             S.Camera.backgroundColor = RenderSettings.fogColor;
             S.ConfigureLighting(kind == ExplorerKind.Dolphin);
             string category = kind == ExplorerKind.Bird ? "bird" : kind == ExplorerKind.Racer ? "car" : "dolphin";
-            hero = S.Content.Spawn(category, 0, Root.transform, V(model.Position), kind == ExplorerKind.Bird ? 4.2f : kind == ExplorerKind.Racer ? 3.3f : 5.6f);
+            vehicleIndex = kind == ExplorerKind.Racer ? (model.Treasures + 1) / 2 % S.Content.Category("car").Length : 0;
+            hero = S.Content.Spawn(category, vehicleIndex, Root.transform, V(model.Position), kind == ExplorerKind.Bird ? 4.2f : kind == ExplorerKind.Racer ? 3.3f : 5.6f);
             if (!hero)
                 throw new InvalidOperationException("Required licensed animated/player asset missing: " + category);
+            soundscape = new ExplorerSoundscape(S, Root.transform, kind);
+            if(kind!=ExplorerKind.Dolphin)lifeAudio=new AmbientLifeAudio(S,Root.transform);
+            encounters = new ExplorerEncounters(S, Root.transform, kind);
+            lastTreasure = model.Treasures;
+            worldLife = new ExplorerWorldLife(S, kind, Root.transform);
+            if(kind==ExplorerKind.Bird)companion=new CompanionBird(S,Root.transform);
+            coastalLife=new CoastalLife(S);
+            if(kind==ExplorerKind.Dolphin)visitor=new OceanVisitor(S,Root.transform);
+            if (kind == ExplorerKind.Racer)
+            {
+                vehicleAnimation = new VehicleAnimation(hero);
+                tireWake=new TireWake(S,Root.transform,hero);
+                ApplyVehicleTint();
+            }
             if (kind == ExplorerKind.Dolphin)
-                OceanAtmosphere.Create(S, Root.transform, hero.transform);
+            {
+                atmosphere = OceanAtmosphere.Create(S, Root.transform, hero.transform);
+                oceanSurface = new GameObject("Ocean surface to the horizon");
+                oceanSurface.transform.SetParent(Root.transform, false);
+                Water(oceanSurface.transform, 3000, 0, 6000, 6000, 0);
+            }
             gate = new GameObject("Ordered letter gate");
             gate.transform.SetParent(Root.transform);
             ring = gate.AddComponent<LineRenderer>();
@@ -101,6 +136,7 @@ namespace KeyLearner.Unity
                 Visuals.Text(gate.transform, "A", new Vector3(.04f * i, -.04f * i, .15f * i), 14, new Color(.18f, .1f, .02f));
             if (kind != ExplorerKind.Dolphin)
                 ExplorerCloudLayer.Create(Root.transform, S.Camera.transform, S.Settings.GentleMotion);
+            SunShaftField.Create(S,Root.transform,kind==ExplorerKind.Dolphin);
             UpdateSegments();
             Tick(0);
         }
@@ -120,8 +156,12 @@ namespace KeyLearner.Unity
             if ((e.Key == 162 || e.Key == 163) && model.Signal())
             {
                 signalTime = 2;
-                S.Audio.Play(kind == ExplorerKind.Bird ? "squawk" : "powerup", S.Settings, .45f);
+                S.Audio.Play(kind == ExplorerKind.Bird ? "squawk" : kind == ExplorerKind.Racer ? "horn" : "sonar", S.Settings, .45f);
             }
+        }
+        public override void Pointer(Vector2 logical, bool right)
+        {
+            if (!right && kind == ExplorerKind.Dolphin) encounters.Pointer(logical, model);
         }
         public override void Tick(float dt)
         {
@@ -155,13 +195,64 @@ namespace KeyLearner.Unity
             if (model.Collected >= model.Word.Length && model.RewardRemaining <= 0)
                 PickWord();
             Vector3 position = V(model.Position), forward = V(model.Forward), up = V(model.Up);
+            encounters.Tick(dt, model);
+            worldLife.Tick(dt, position);
+            coastalLife.Tick(dt,position);
+            var habitat=ExplorerWorld.Area(position.z);
+            lifeAudio?.Tick(dt,position,habitat==Region.Forest || habitat==Region.Lakes);
+            visitor?.Tick(dt,position,V(model.Forward),model.Speed);
+            if (kind == ExplorerKind.Racer && lastTreasure != model.Treasures)
+            {
+                lastTreasure = model.Treasures;
+                if (lastTreasure % 2 == 1)
+                {
+                    vehicleIndex = (vehicleIndex + 1) % S.Content.Category("car").Length;
+                    UnityEngine.Object.Destroy(hero);
+                    hero = S.Content.Spawn("car", vehicleIndex, Root.transform, position, 3.3f);
+                    vehicleAnimation = new VehicleAnimation(hero);
+                    tireWake.Bind(hero);
+                }
+                ApplyVehicleTint();
+            }
+            if (kind == ExplorerKind.Racer) soundscape.SetVehicle(S.Content.Category("car")[vehicleIndex].Id);
+            soundscape.Tick(dt, model.Speed, turn, pitch, S.Keys.IsDown(32), position.y, vehicleIndex);
+            vehicleAnimation?.Tick(dt, turn, model.Speed, S.Settings.GentleMotion);
+            if (kind == ExplorerKind.Dolphin)
+            {
+                float surfaceBlend = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(-4, 2, S.Camera.transform.position.y));
+                S.Camera.clearFlags = S.Camera.transform.position.y > 0 ? CameraClearFlags.Skybox : CameraClearFlags.SolidColor;
+                oceanSurface.transform.position = new Vector3(position.x, 0, position.z);
+                RenderSettings.fogColor = Color.Lerp(new Color(.035f,.37f,.51f), new Color(.58f,.79f,.91f), surfaceBlend);
+                RenderSettings.fogDensity = Mathf.Lerp(.0037f,.00095f,surfaceBlend);
+                S.Camera.backgroundColor = RenderSettings.fogColor;
+                waterMat.SetColor("_BaseColor", Color.Lerp(new Color(.08f,.67f,.81f,.35f),new Color(.025f,.32f,.46f,.94f),surfaceBlend));
+                Vector2 pointer = Input.mousePosition;
+                float movement = S.Settings.MousePlay && dt > 0 ? Mathf.Clamp01((pointer - previousWaterPointer).magnitude / 90) : 0;
+                previousWaterPointer = pointer;
+                waterImpulse = Mathf.Max(waterImpulse * Mathf.Exp(-dt * 3), movement * (S.Settings.GentleMotion ? .15f : .4f));
+                var ray = S.Camera.ScreenPointToRay(pointer);
+                Vector3 ripple = ray.GetPoint(45);
+                waterMat.SetVector("_Ripple", new Vector4(ripple.x,ripple.z,waterImpulse,(float)S.Now));
+            }
             hero.transform.localPosition = position + (kind == ExplorerKind.Racer ? Vector3.down * 1.2f : Vector3.zero);
             Quaternion facing = Quaternion.LookRotation(forward, up) * Quaternion.AngleAxis(-model.Roll * Mathf.Rad2Deg, Vector3.forward);
-            float yaw = S.Content.Category(kind == ExplorerKind.Bird ? "bird" : kind == ExplorerKind.Racer ? "car" : "dolphin")[0].Yaw;
-            hero.transform.localRotation = facing * Quaternion.Euler(0, yaw, 0);
+            float yaw = S.Content.Category(kind == ExplorerKind.Bird ? "bird" : kind == ExplorerKind.Racer ? "car" : "dolphin")[kind == ExplorerKind.Racer ? vehicleIndex : 0].Yaw;
+            hero.transform.localRotation = facing * Quaternion.Euler(0, yaw + (kind == ExplorerKind.Racer ? encounters.Spin : 0), 0);
+            tireWake?.Tick(dt,forward,model.Speed,pitch>0);
+            companion?.Tick(dt,position,forward,model.Speed);
             float follow = kind == ExplorerKind.Racer ? 24 : kind == ExplorerKind.Bird ? 24 : 23;
-            Vector3 cameraPosition = position - forward * follow + up * (kind == ExplorerKind.Racer ? 10 : 9);
-            Vector3 look = position + forward * (kind == ExplorerKind.Racer ? 35 : 28) + up * 1;
+            Vector3 cameraForward = kind == ExplorerKind.Racer ? new Vector3(ExplorerWorld.Road(position.z - 30) - ExplorerWorld.Road(position.z), 0, -30).normalized : forward;
+            Vector3 cameraPosition = position - cameraForward * follow + up * (kind == ExplorerKind.Racer ? 10 : 9);
+            Vector3 look = position + cameraForward * (kind == ExplorerKind.Racer ? 35 : 28) + up * 1;
+            if (kind == ExplorerKind.Dolphin && position.y > -5)
+            {
+                // Let the follow camera see the horizon during the short airborne arc.
+                // Its underwater pitch offset otherwise leaves it submerged throughout.
+                var horizontal = new Vector3(forward.x, 0, forward.z).normalized;
+                cameraPosition = position - horizontal * follow + Vector3.up * 8;
+                look = position + horizontal * 28;
+                up = Vector3.up;
+            }
             if (firstFrame)
             {
                 S.Camera.transform.position = cameraPosition;
@@ -180,7 +271,24 @@ namespace KeyLearner.Unity
             gate.transform.localScale = Vector3.one * (1 + signalTime * .12f);
             UpdateSegments();
             WriteInteraction(dt);
+            if (S.Preview && !eventCaptured && S.Options.Value("--event-screenshot").Length > 0 &&
+                (kind == ExplorerKind.Dolphin && position.y > 0 && S.Camera.transform.position.y > 0 && atmosphere.LastSplash && atmosphere.LastSplash.Age>.15f && atmosphere.LastSplash.Droplets>0 ||
+                 kind == ExplorerKind.Racer && Mathf.Abs(vehicleAnimation.Steering) > 20 ||
+                 kind == ExplorerKind.Dolphin && visitor!=null && visitor.Visible && fleeingFish>0 ||
+                 kind == ExplorerKind.Bird && companion!=null && companion.Active && companion.Age>5))
+            {
+                string path = System.IO.Path.GetFullPath(S.Options.Value("--event-screenshot"));
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+                ScreenCapture.CaptureScreenshot(path);
+                eventCaptured = true;
+            }
+            if(S.Preview && kind==ExplorerKind.Dolphin && atmosphere.LastSplash && atmosphere.LastSplash.Entering && atmosphere.LastSplash.Age>.15f && atmosphere.LastSplash.Droplets>0 && S.Options.Value("--entry-screenshot").Length>0)
+            {
+                string entryPath=System.IO.Path.GetFullPath(S.Options.Value("--entry-screenshot"));
+                if(!System.IO.File.Exists(entryPath))ScreenCapture.CaptureScreenshot(entryPath);
+            }
             float t = (float)S.Now * (S.Settings.GentleMotion ? .38f : 1);
+            fleeingFish=0;
             for (int i = swimmers.Count - 1; i >= 0; i--)
             {
                 var fish = swimmers[i];
@@ -194,10 +302,33 @@ namespace KeyLearner.Unity
                     fish.T.gameObject.SetActive(visible);
                 if (!visible)
                     continue;
-                float phase = t * fish.Speed + fish.Phase;
-                Vector3 delta = new Vector3(Mathf.Sin(phase) * fish.Radius, Mathf.Sin(phase * .73f) * 2, Mathf.Cos(phase) * fish.Radius * .35f);
-                fish.T.localPosition = fish.Origin + delta;
-                fish.T.localRotation = Quaternion.LookRotation(new Vector3(Mathf.Cos(phase), .1f * Mathf.Cos(phase * .73f), -.35f * Mathf.Sin(phase)));
+                fish.Decision-=dt;
+                if(fish.Decision<=0)
+                {
+                    fish.Decision=3.5f+(float)random.NextDouble()*5;
+                    float phase=(float)random.NextDouble()*Mathf.PI*2;
+                    fish.Target=fish.Origin+new Vector3(Mathf.Sin(phase)*fish.Radius,Mathf.Sin(phase*.7f)*2,Mathf.Cos(phase)*fish.Radius);
+                }
+                Vector3 destination=fish.Target;
+                float speed=fish.Shy?3.5f:5;
+                Vector3 away=fish.T.position-position;
+                bool alarm=false;
+                if(fish.Shy && away.sqrMagnitude<28*28){destination=fish.T.position+away.normalized*25;speed=13;alarm=true;}
+                bool predator=fish.Shy && visitor!=null && visitor.Active && (fish.T.position-visitor.Threat).sqrMagnitude<105*105;
+                if(predator)
+                { destination=fish.T.position+(fish.T.position-visitor.Threat).normalized*40;speed=17;alarm=true;fleeingFish++;if(!fish.PredatorAlarm)predatorScatters++; }
+                fish.PredatorAlarm=predator;
+                var desired=destination-fish.T.position;
+                if(desired.sqrMagnitude>.01f)desired=desired.normalized*speed;
+                fish.Velocity=Vector3.MoveTowards(fish.Velocity,desired,dt*(alarm?15:4));
+                Vector3 nextFish=fish.T.position+fish.Velocity*dt;
+                nextFish.y=Mathf.Clamp(nextFish.y,ExplorerWorld.Bed(nextFish.x,nextFish.z)+4,-7);
+                fish.T.position=nextFish;
+                if(fish.Velocity.sqrMagnitude>.01f)fish.T.rotation=Quaternion.RotateTowards(fish.T.rotation,Quaternion.LookRotation(fish.Velocity),dt*120);
+                fish.Wake-=dt;
+                if(fish.Shy && fish.Wake<=0 && away.sqrMagnitude<90*90)
+                { atmosphere?.FishWake(fish.T.position-fish.T.forward);fish.Wake=alarm?.4f:2+(float)random.NextDouble()*3; }
+
             }
             for (int i = plants.Count - 1; i >= 0; i--)
             {
@@ -216,9 +347,19 @@ namespace KeyLearner.Unity
                 particleClock = 0;
                 if (kind == ExplorerKind.Dolphin)
                     S.Rewards.Burst(position + forward * 20 + new Vector3(random.Next(-20, 21), -10, 0), new Color(.55f, .88f, 1, .6f), 3, 2);
-                if (kind == ExplorerKind.Racer && model.OffRoad > 0)
-                    S.Rewards.Burst(position - forward * 2, new Color(.65f, .48f, .27f), 7, 7);
+
             }
+        }
+        void ApplyVehicleTint()
+        {
+            if (model.Treasures == 0 || model.Treasures % 2 != 0) return;
+            foreach (var renderer in hero.GetComponentsInChildren<Renderer>())
+                if (renderer.name.Contains("body"))
+                {
+                    var tint = new MaterialPropertyBlock();
+                    tint.SetColor("_BaseColor", Style.Colors[(model.Treasures / 2) % Style.Colors.Length]);
+                    renderer.SetPropertyBlock(tint);
+                }
         }
         void WriteInteraction(float dt)
         {
@@ -240,6 +381,34 @@ namespace KeyLearner.Unity
                 time = S.Now,
                 mode = (int)S.Settings.Mode,
                 x = model.Position.X,
+                y = model.Position.Y,
+                cameraY = S.Camera.transform.position.y,
+                surfaceVisible = S.Camera.clearFlags == CameraClearFlags.Skybox,
+                surfaceExits = atmosphere ? atmosphere.Exits : 0,
+                surfaceEntries = atmosphere ? atmosphere.Entries : 0,
+                sharkVisits = visitor?.Visits ?? 0,
+                predatorScatters, fleeingFish,
+                sharkWarning = visitor?.Warning ?? false,
+                sharkActive = visitor?.Active ?? false,
+                speed = model.Speed,
+                bonusScore = model.BonusScore,
+                treasures = model.Treasures,
+                obstacles = encounters.ObstaclesHit,
+                obstacleRemaining = model.ObstacleRemaining,
+                bubbles = encounters.BubblesPopped,
+                pickupTargets = encounters.PreviewTargets(),
+                vehicleIndex,
+                frontWheels = vehicleAnimation?.FrontWheels ?? 0,
+                wheelSteering = vehicleAnimation?.Steering ?? 0,
+                waterImpulse,
+                tireParticles=tireWake?.Emitted ?? 0,
+                companionPosition=companion?.Position.ToString(),
+                companionSeparation=companion==null?0:Vector3.Distance(companion.Position,V(model.Position)),
+                sharkPosition=visitor?.Position.ToString(),
+                splashAge=atmosphere && atmosphere.LastSplash?atmosphere.LastSplash.Age:-1,
+                splashDrops=atmosphere && atmosphere.LastSplash?atmosphere.LastSplash.Droplets:0,
+                companionVisits=companion?.Visits ?? 0,
+                companionActive=companion?.Active ?? false,
                 z = model.Position.Z,
                 heading = model.Yaw,
                 heroX = heroScreen.x,
@@ -300,6 +469,7 @@ namespace KeyLearner.Unity
             float start = -index * 160;
             bool ocean = kind == ExplorerKind.Dolphin, race = kind == ExplorerKind.Racer;
             Terrain(go.transform, start, ocean, race, centerX);
+            coastalLife.Populate(go.transform,start,index,centerX,kind);
             if (ocean)
             {
                 Reef(go.transform, start, rng, index, centerX);
@@ -311,14 +481,22 @@ namespace KeyLearner.Unity
             else if (ExplorerWorld.Area(start - 80) == Region.City || ExplorerWorld.Area(start - 80) == Region.Town)
                 TownStreet(go.transform, start, centerX);
             LandEnvironmentComposer.Populate(S, go.transform, start, index, race, centerX);
+            worldLife.Populate(go.transform, start, index, centerX);
             return go;
         }
         void Reef(Transform parent, float start, System.Random rng, int index, float centerX)
         {
             // Asymmetric shelves frame a clear swimming corridor. Source boulders determine coral contact.
-            for (int garden = 0; garden < 6; garden++)
+            // Long, weathered shelves interrupt the smaller coral clusters and frame the route.
+            if ((index % 3 + 3) % 3 == 1)
             {
-                float z = start - 16 - garden * 25 + rng.Next(-5, 6), side = (garden + index) % 2 == 0 ? -1 : 1;
+                float shelfX=centerX+(index%2==0?-112:112),shelfZ=start-76;
+                S.Content.SpawnWidth("cliff",0,parent,new Vector3(shelfX,ExplorerWorld.Bed(shelfX,shelfZ)-3,shelfZ),170,index%2==0?90:270);
+            }
+            int gardens=4+(index%4+4)%4;
+            for (int garden = 0; garden < gardens; garden++)
+            {
+                float z = start - 12 - garden * (138f/gardens) + rng.Next(-7, 8), side = (garden + index) % 2 == 0 ? -1 : 1;
                 float x = centerX + side * (34 + (garden % 3) * 31) + rng.Next(-9, 10);
                 float bed = ExplorerWorld.Bed(x, z), height = 18 + (garden % 3) * 7;
                 var rock = S.Content.Spawn("rock", garden + index, parent, new Vector3(x, bed - 2, z), height, rng.Next(360));
@@ -369,15 +547,14 @@ namespace KeyLearner.Unity
                     Vector3 origin = new Vector3(x * .75f + centerX * .25f + (j % 3 - 1) * 3, bed + 35 + (garden % 3) * 8 + j / 3 * 2, z + j % 3 * 4);
                     var fish = S.Content.Spawn("fish", index * 3 + garden, parent, origin, 1.8f + (garden % 3) * .7f, 90);
                     if (fish)
-                        swimmers.Add(new Swimmer { T = fish.transform, Origin = origin, Phase = j * .12f + garden * 1.3f, Radius = 9 + garden * 2, Speed = .13f + garden * .025f });
+                        swimmers.Add(new Swimmer { T = fish.transform, Origin = origin, Phase = j * .12f + garden * 1.3f, Radius = 9 + garden * 2, Speed = .13f + garden * .025f, Shy = true });
                 }
             }
-            string category = (index % 3 + 3) % 3 == 0 ? "whale" : (index % 3 + 3) % 3 == 1 ? "ray" : "shark";
+            string category = (index % 3 + 3) % 3 == 0 ? "whale" : "ray";
             Vector3 big = new Vector3(centerX + (index % 2 == 0 ? 72 : -72), category == "whale" ? -21 : -42, start - 98);
             var animal = S.Content.Spawn(category, 0, parent, big, category == "whale" ? 10 : category == "ray" ? 3.8f : 4.6f, 90);
             if (animal)
                 swimmers.Add(new Swimmer { T = animal.transform, Origin = big, Phase = index, Radius = 29, Speed = .09f });
-            Water(parent, start, 0, 1500, 160, centerX);
         }
         void Terrain(Transform parent, float start, bool ocean, bool race, float centerX)
         {
@@ -473,8 +650,15 @@ namespace KeyLearner.Unity
             }
             for (int j = 0; j < 16; j++)
             {
-                float z = start - j * 10 - 3, x = ExplorerWorld.Road(z);
-                Visuals.Box(parent, new Vector3(x, 5.89f, z), new Vector3(.35f, .03f, 4), new Color(.91f, .88f, .64f));
+                // Follow the same curve as the road instead of world-aligned boxes.
+                var dash = new List<Vector3>();
+                for (int k = 0; k <= 2; k++)
+                {
+                    float z = start - j * 10 - 1 - k * 2, x = ExplorerWorld.Road(z);
+                    dash.Add(new Vector3(x - .18f, 5.92f, z));
+                    dash.Add(new Vector3(x + .18f, 5.92f, z));
+                }
+                MeshObject("Curve-following center dash", parent, dash, new List<int> {0,1,2,1,3,2,2,3,4,3,5,4}, Visuals.Material(new Color(.91f, .88f, .64f)));
             }
         }
         void Water(Transform parent, float start, float y, float width, float length, float centerX)
@@ -498,6 +682,7 @@ namespace KeyLearner.Unity
         }
         public override void DrawUI()
         {
+            encounters.DrawUI();
             Ui.Panel(new Rect(40, 30, 510, 128), new Color(.025f, .065f, .12f, .92f));
             Ui.Label(new Rect(64, 41, 460, 30), GameCatalog.All.First(g => g.Explorer == kind).Name.ToUpperInvariant(), 18, Style.Mint, TextAnchor.MiddleLeft);
             for (int i = 0; i < model.Word.Length; i++)
@@ -519,12 +704,15 @@ namespace KeyLearner.Unity
         }
         public override void Suspend()
         {
+            soundscape?.Stop();
+            lifeAudio?.Stop();
             model?.ResetInputGestures();
             signalTime = 0;
             validateWord = true;
         }
         public override void Exit()
         {
+            encounters?.Dispose();
             base.Exit();
             if (terrainMat)
                 UnityEngine.Object.Destroy(terrainMat);
@@ -535,6 +723,6 @@ namespace KeyLearner.Unity
             if (gateMaterial)
                 UnityEngine.Object.Destroy(gateMaterial);
         }
-        public override string DiagnosticState => "explorer=" + kind + " letters=" + model.Collected + " score=" + model.Score + " words=" + model.Completed + " position=" + model.Position + " segments=" + segments.Count + " swimmers=" + swimmers.Count;
+        public override string DiagnosticState => "explorer=" + kind + " letters=" + model.Collected + " score=" + model.Score + " words=" + model.Completed + " position=" + model.Position + " segments=" + segments.Count + " swimmers=" + swimmers.Count + " bonus=" + model.BonusScore + " treasures=" + model.Treasures + " obstacles=" + encounters.ObstaclesHit + " bubbles=" + encounters.BubblesPopped;
     }
 }

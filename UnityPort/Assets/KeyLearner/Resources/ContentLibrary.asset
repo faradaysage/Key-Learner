@@ -829,6 +829,18 @@ MonoBehaviour:
     Height: 0.7325443
     Size: {x: 1.3, y: 0.7325443, z: 2.5597725}
     Yaw: 0
+  - Category: road-obstacle
+    Id: KenneyCars_box
+    Prefab: {fileID: 2316807843597896274, guid: 90b69a4934195314792a41ee6869a298, type: 3}
+    Height: 0.715
+    Size: {x: 0.715, y: 0.715, z: 0.715}
+    Yaw: 0
+  - Category: road-obstacle
+    Id: KenneyCars_cone
+    Prefab: {fileID: 5284502212190616864, guid: e65a8e162ac759641b86a431568fb2e6, type: 3}
+    Height: 0.5952431
+    Size: {x: 0.47619444, y: 0.5952431, z: 0.47619444}
+    Yaw: 0
   - Category: car
     Id: KenneyCars_delivery
     Prefab: {fileID: 7624200328739103237, guid: 91f0b79cfccacfd4b80c90c8a44111be, type: 3}
@@ -1135,6 +1147,192 @@ MonoBehaviour:
     Height: 0.74469995
     Size: {x: 1.1838729, y: 0.74469995, z: 0.61773443}
     Yaw: 0
+  - Category: animal
+    Id: QuaterniusAnimals_Cow
+    Prefab: {fileID: 8576999640957801230, guid: f5bbad065b74b7049b37b62beb884a9e, type: 3}
+    Height: 4.6589775
+    Size: {x: 2.416875, y: 4.6589775, z: 8.360947}
+    Yaw: 0
+  - Category: animal
+    Id: QuaterniusAnimals_Deer
+    Prefab: {fileID: 7733414128958688390, guid: 01edf1897824b9442835d0f016287f18, type: 3}
+    Height: 4.265562
+    Size: {x: 1.4892936, y: 4.265562, z: 5.090062}
+    Yaw: 0
+  - Category: animal
+    Id: QuaterniusAnimals_Fox
+    Prefab: {fileID: 227344849927213600, guid: f6e54b99cc72bd74999815daf3f32742, type: 3}
+    Height: 2.5221796
+    Size: {x: 1.0987997, y: 2.5221796, z: 5.618744}
+    Yaw: 0
+  - Category: animal
+    Id: QuaterniusAnimals_Horse
+    Prefab: {fileID: 5145902669460811865, guid: 4b9c58cf8f5bcf14693d283a4624cae4, type: 3}
+    Height: 4.77816
+    Size: {x: 1.5648959, y: 4.77816, z: 6.0086064}
+    Yaw: 0
+  - Category: dinosaur
+    Id: QuaterniusDinosaurs_Apatosaurus
+    Prefab: {fileID: 3281781550510425456, guid: 3fbb3b4d7b2fec3468a88ec608a9a4bc, type: 3}
+    Height: 13.087868
+    Size: {x: 6.517121, y: 13.087868, z: 49.462692}
+    Yaw: 0
+  - Category: dinosaur
+    Id: QuaterniusDinosaurs_Parasaurolophus
+    Prefab: {fileID: 9119542225051326747, guid: 01c3f323fb75ee7429092923ef4c1338, type: 3}
+    Height: 6.013179
+    Size: {x: 2.0431628, y: 6.013179, z: 13.02083}
+    Yaw: 0
+  - Category: dinosaur
+    Id: QuaterniusDinosaurs_Stegosaurus
+    Prefab: {fileID: 1808397715813854115, guid: a0ca8dd561221c14b94ba134bec4995d, type: 3}
+    Height: 11.576553
+    Size: {x: 5.3957973, y: 11.576553, z: 22.442375}
+    Yaw: 0
+  - Category: dinosaur
+    Id: QuaterniusDinosaurs_Trex
+    Prefab: {fileID: 3219338296544748335, guid: 8188b1797f3e6174284b65cc01cae088, type: 3}
+    Height: 14.495298
+    Size: {x: 8.423626, y: 14.495298, z: 31.472963}
+    Yaw: 0
+  - Category: dinosaur
+    Id: QuaterniusDinosaurs_Triceratops
+    Prefab: {fileID: 2374110518692039623, guid: f228d6501468cc3488cd38f7c1996d17, type: 3}
+    Height: 9.223988
+    Size: {x: 6.5279913, y: 9.223988, z: 20.333397}
+    Yaw: 0
+  - Category: dinosaur
+    Id: QuaterniusDinosaurs_Velociraptor
+    Prefab: {fileID: 3737901416601194231, guid: 290b6ee75baee8c49bcc98ed79b17d79, type: 3}
+    Height: 5.2315593
+    Size: {x: 2.6742744, y: 5.2315593, z: 13.686151}
+    Yaw: 0
+  - Category: pterosaur
+    Id: ChistodrakoPteranodon_Pteranodon
+    Prefab: {fileID: 2326742318756510148, guid: a1c59bf1daeb8fa48979e90467ddfaa1, type: 3}
+    Height: 0.6018918
+    Size: {x: 1.0684144, y: 0.6018918, z: 0.45099902}
+    Yaw: 0
+  - Category: tropical-tree
+    Id: YughuesPalms_palm_bend
+    Prefab: {fileID: 2446215117194064573, guid: 7c4d9e6526dd59242a16065a4903c318, type: 3}
+    Height: 179.9131
+    Size: {x: 149.758, y: 179.9131, z: 104.442215}
+    Yaw: 0
+  - Category: tropical-tree
+    Id: YughuesPalms_palm_dual
+    Prefab: {fileID: 1592934678519264627, guid: 2e0eca31302a1eb4cb62b4d8f566d513, type: 3}
+    Height: 212.79642
+    Size: {x: 121.18089, y: 212.79642, z: 115.72331}
+    Yaw: 0
+  - Category: tropical-tree
+    Id: YughuesPalms_palm_dual_bend
+    Prefab: {fileID: 3733576285785157006, guid: 316ebcf82019c09499373595101509dd, type: 3}
+    Height: 157.196
+    Size: {x: 195.98119, y: 157.196, z: 167.78311}
+    Yaw: 0
+  - Category: tropical-tree
+    Id: YughuesPalms_palm_straight
+    Prefab: {fileID: 3319647045393500791, guid: 06fd9a9632c062c418b47c6f73bf022f, type: 3}
+    Height: 213.77531
+    Size: {x: 105.91429, y: 213.77531, z: 104.44221}
+    Yaw: 0
+  - Category: tropical-tree
+    Id: YughuesPalms_palm_trio
+    Prefab: {fileID: 4305732672862566593, guid: 60988a34237d46943ab57ce41437826b, type: 3}
+    Height: 206.4218
+    Size: {x: 185.45929, y: 206.4218, z: 191.33601}
+    Yaw: 0
+  - Category: boat
+    Id: LasquetiBoat_FishingBoat
+    Prefab: {fileID: 8159917478394699594, guid: b35833b135303464198dd06c1936a6ca, type: 3}
+    Height: 1.789299
+    Size: {x: 0.970894, y: 1.789299, z: 2.4885893}
+    Yaw: 0
+  - Category: spectator
+    Id: LasquetiBoat_SpectatorA
+    Prefab: {fileID: 5559398163713413450, guid: 7ea1e7c82df4d554c99bc4898c18df55, type: 3}
+    Height: 0.4149106
+    Size: {x: 0.08673641, y: 0.4149106, z: 0.16302109}
+    Yaw: 0
+  - Category: spectator
+    Id: LasquetiBoat_SpectatorB
+    Prefab: {fileID: 2027589896784799564, guid: 21b03688ae37dac4ea6778cc06e7f911, type: 3}
+    Height: 0.3284179
+    Size: {x: 0.097339645, y: 0.3284179, z: 0.13108802}
+    Yaw: 0
+  - Category: reef-shark
+    Id: LasquetiBoat_SwimmingShark
+    Prefab: {fileID: 8316761852775666903, guid: 8e1f7d60e1866174aac150870529a90c, type: 3}
+    Height: 0.66630834
+    Size: {x: 0.76219845, y: 0.66630834, z: 1.8728232}
+    Yaw: 0
+  - Category: cliff
+    Id: PolyHavenScenery_coastal_cliff_01
+    Prefab: {fileID: 8357053507140761282, guid: 339a0e7d90042a54095c1260683c2850, type: 3}
+    Height: 10.32967
+    Size: {x: 91.979744, y: 10.32967, z: 10.966708}
+    Yaw: 0
+  - Category: fern
+    Id: PolyHavenScenery_fern_02_a
+    Prefab: {fileID: 5150602502445962849, guid: f863d2824f8c33749bf6c6131e0c201c, type: 3}
+    Height: 0.28680357
+    Size: {x: 0.5519406, y: 0.28680357, z: 0.6134211}
+    Yaw: 0
+  - Category: fern
+    Id: PolyHavenScenery_fern_02_b
+    Prefab: {fileID: 7279132678308191186, guid: 5a3609a043d4abd48965856591dbd52f, type: 3}
+    Height: 0.4276948
+    Size: {x: 0.9897474, y: 0.4276948, z: 0.8936897}
+    Yaw: 0
+  - Category: fern
+    Id: PolyHavenScenery_fern_02_c
+    Prefab: {fileID: 5547839185232208264, guid: dffaaa6b9ef90a14488d7e78648027dc, type: 3}
+    Height: 0.34902045
+    Size: {x: 0.8743258, y: 0.34902045, z: 0.76522565}
+    Yaw: 0
+  - Category: fern
+    Id: PolyHavenScenery_fern_02_d
+    Prefab: {fileID: 5287313087841037689, guid: 91602cf41bc44e04c81d13e3403adf56, type: 3}
+    Height: 0.21308759
+    Size: {x: 0.5727822, y: 0.21308759, z: 0.5932782}
+    Yaw: 0
+  - Category: mountainside
+    Id: PolyHavenScenery_mountainside
+    Prefab: {fileID: 3568518117757725859, guid: 680f3e9e65bbc5d489234a1cc290b956, type: 3}
+    Height: 10.526674
+    Size: {x: 10.214376, y: 10.526674, z: 5.254636}
+    Yaw: 0
+  - Category: polar-bear
+    Id: KenchooPolarBear_PolarBear
+    Prefab: {fileID: 8074425023232463436, guid: 4b133d96e6ed8e04fa285c1102dd1c47, type: 3}
+    Height: 3.9097886
+    Size: {x: 2.6265187, y: 3.9097886, z: 7.4189677}
+    Yaw: 0
+  - Category: wolf
+    Id: WildMeshAnimals_Wolf
+    Prefab: {fileID: 6405975906581340528, guid: 651a69bc67874224583e109fe99257d1, type: 3}
+    Height: 1.3254995
+    Size: {x: 0.4868179, y: 1.3254995, z: 2.2218416}
+    Yaw: 0
+  - Category: prop
+    Id: KenneyPirate_barrel
+    Prefab: {fileID: 1703976184380115085, guid: 238d925961c024e4aa4e44fc1533ee67, type: 3}
+    Height: 1.2291427
+    Size: {x: 1.3360982, y: 1.2291427, z: 1.3360982}
+    Yaw: 0
+  - Category: cannon
+    Id: KenneyPirate_cannon-mobile
+    Prefab: {fileID: 5327266274390346127, guid: 2c7d8929ec45f194e8d770b4be5add9b, type: 3}
+    Height: 1.3796623
+    Size: {x: 1.6787499, y: 1.3796623, z: 1.925}
+    Yaw: 0
+  - Category: treasure
+    Id: KenneyPirate_chest
+    Prefab: {fileID: 3467400391858062853, guid: 7ae7eba7b9f98354b9c8a5a4daeefa25, type: 3}
+    Height: 1.1475
+    Size: {x: 1.275, y: 1.1475, z: 1.275}
+    Yaw: 0
   - Category: seaweed
     Id: MohabinsSeaweed_Seaweed_Mohabins
     Prefab: {fileID: 8367771452245781908, guid: 471037d8fd8ba5b4187384b9eb2c99ce, type: 3}
@@ -1351,4 +1549,6 @@ MonoBehaviour:
     Height: 2.1436884
     Size: {x: 1.8061955, y: 2.1436884, z: 1.101248}
     Yaw: 0
+  GroundDiffuse: {fileID: 2800000, guid: 791c58090b1bcbc4fa2c262d07fefeb4, type: 3}
+  GroundNormal: {fileID: 2800000, guid: 480c72a7d27b2464e9971f4803556dd1, type: 3}
   AuthoredItems: []

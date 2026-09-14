@@ -47,6 +47,8 @@ namespace KeyLearner.Unity
                 lostFocus,
                 gainedFocus,
                 focused = Application.isFocused,
+                inputActive=suite.PreviewInputActive,
+                worldTimeScale=Time.timeScale,
                 suite = suite.PreviewState,
                 parent = suite.PreviewParent.PreviewState
             };
@@ -170,16 +172,16 @@ namespace KeyLearner.Unity
                 int beforeLost = lostFocus, beforeGained = gainedFocus;
                 Write("await-native-focus-loss");
                 until = Time.unscaledTimeAsDouble + 20;
-                while (lostFocus == beforeLost && Time.unscaledTimeAsDouble < until)
+                while (suite.PreviewInputActive && Time.unscaledTimeAsDouble < until)
                     yield return null;
-                Check(lostFocus > beforeLost, "actual minimized window delivered focus loss");
+                Check(!suite.PreviewInputActive, "actual minimized window suspended native input");
                 if (failed)
                     yield break;
                 Write("await-native-focus-return");
                 until = Time.unscaledTimeAsDouble + 20;
-                while ((!Application.isFocused || gainedFocus == beforeGained) && Time.unscaledTimeAsDouble < until)
+                while (!suite.PreviewInputActive && Time.unscaledTimeAsDouble < until)
                     yield return null;
-                Check(Application.isFocused && gainedFocus > beforeGained, "actual restored window delivered focus return");
+                Check(suite.PreviewInputActive, "actual restored window resumed native input");
                 if (failed)
                     yield break;
                 Check(parent.PreviewState.Contains("editing=False"), "native focus loss canceled unfinished parent edit");
@@ -187,7 +189,12 @@ namespace KeyLearner.Unity
                     yield break;
                 yield return Shot("studio-focus-recovered");
             }
+            Check(Time.timeScale==0,"source animation and particles pause in Parent Studio");
+            if(failed)yield break;
             suite.PreviewStudio(false);
+            yield return null;
+            Check(Time.timeScale==1,"world time resumes with gameplay");
+            if(failed)yield break;
             Check(suite.PreviewState.Contains("studio=False"), "Parent Studio closes to play");
             if (failed)
                 yield break;

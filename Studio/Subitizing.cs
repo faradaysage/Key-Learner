@@ -53,6 +53,7 @@ public sealed class SubitizingGame
     double elapsed,shownFor,retryLock;
     public int Stage {get;private set;}=1;
     public int Mastery {get;private set;}
+    public LearningBonus Bonus {get;}=new();
     public int Mask {get;private set;}
     public int Quantity=>DotPatterns.Count(Mask);
     public int WrongAttempts {get;private set;}
@@ -67,13 +68,13 @@ public sealed class SubitizingGame
     public static double ImpactAt(int index)=>LaunchAt(index)+.24;
     public int Popped=>Phase==DotPhase.Reward?Math.Min(Quantity,Enumerable.Range(0,Quantity).Count(i=>elapsed>=ImpactAt(i))):0;
     public SubitizingGame(int seed=1,int mastery=0){patterns=new(seed);Mastery=Math.Max(0,mastery);NextPattern();}
-    void NextPattern(){Difficulty=DotDifficulty.At(Mastery);Mask=patterns.Next(Difficulty,previous);previous=Mask;retried=false;WrongAttempts=0;RestartRound();}
+    void NextPattern(){Bonus.BeginRound();Difficulty=DotDifficulty.At(Mastery);Mask=patterns.Next(Difficulty,previous);previous=Mask;retried=false;WrongAttempts=0;RestartRound();}
     // Focus/visibility changes replay this pattern from READY; no hidden timer or old volley survives.
     public void RestartRound(){if(Phase==DotPhase.Reward){Phase=DotPhase.Ready;Stage++;NextPattern();return;}Phase=DotPhase.Ready;elapsed=shownFor=retryLock=0;}
     public bool Answer(int number){
         if(!CanAnswer || number<0 || number>9)return false;
-        if(number!=Quantity){WrongAttempts++;retried=true;retryLock=.24;return false;}
-        if(!retried)Mastery++;Phase=DotPhase.Reward;elapsed=0;return true;
+        if(number!=Quantity){WrongAttempts++;Bonus.Miss();retried=true;retryLock=.24;return false;}
+        if(!retried)Mastery++;Bonus.Complete(!retried);Phase=DotPhase.Reward;elapsed=0;return true;
     }
     public void Step(double dt){
         if(!double.IsFinite(dt)||dt<=0)return;dt=Math.Min(dt,.25);retryLock=Math.Max(0,retryLock-dt);

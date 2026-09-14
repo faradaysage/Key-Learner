@@ -237,3 +237,7 @@ Capture representative screenshots from actual gameplay cameras for bird flight,
 Deliver the Unity project, runnable Windows build, reproducible build/run instructions, asset attribution, test results, representative screenshots, and a brief list of remaining blockers or unresolved visual gaps. Also leave the project in a state where adding a new minigame means implementing/registering the minigame and its content, not modifying unrelated engine plumbing. Report actual download/import success separately from advertised pack contents. Do not silently substitute crude placeholders and call the visual upgrade complete.
 
 Proceed with implementation and make reasonable reversible decisions. Ask only for genuinely necessary user actions such as authentication, a required manual download, a paid choice, or a destructive change. Continue independent work when a single asset or optional tool is blocked.
+
+
+### Authorized license exception — 2026-09-14
+The user explicitly approved WildMesh 3D’s ULTIMATE ANIMAL PACK under CC BY-NC 4.0 for noncommercial builds. Track every imported file and replacement point in `NONCOMMERCIAL_ASSETS.md`; commercial release requires a suitable separate license or removal/replacement. This exception does not waive attribution or authorize other restricted packs.

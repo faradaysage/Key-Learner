@@ -24,6 +24,7 @@ public sealed class Voice : IDisposable
     private readonly ConcurrentDictionary<string,byte> preparing=new();
     private readonly Thread worker;
     private readonly string cache;
+    private readonly PreparedSpeechCatalog preparedSpeech=new(Path.Combine(AppContext.BaseDirectory,"Content","Voice"));
     private volatile bool stopping;
     private Process? process;
     public int Pending=>keys.Count+words.Count+lanes.Count(l=>l.Request!=null);
@@ -31,6 +32,8 @@ public sealed class Voice : IDisposable
     public string[] Voices {get;private set;}=[];
     public int Requested {get;private set;}
     public int Started {get;private set;}
+    public int PreparedStarted {get;private set;}
+    public int FallbackStarted {get;private set;}
     public int Completed {get;private set;}
     public int Overflow {get;private set;}
     public int PeakOverlap {get;private set;}
@@ -67,6 +70,7 @@ public sealed class Voice : IDisposable
     private string? FindAudio(Request r)
     {
         if(File.Exists(r.Recording))return r.Recording;
+        var generated=preparedSpeech.Find(r.Text);if(generated!=null)return generated;
         var bundled=Path.Combine(AppContext.BaseDirectory,"Content","Voice",r.Text.ToLowerInvariant()+".wav");
         string? fallback=r.Text.All(char.IsAsciiLetterOrDigit) && File.Exists(bundled)?bundled:null;
         if(!File.Exists(r.Model))return fallback;
@@ -101,7 +105,7 @@ public sealed class Voice : IDisposable
                     try
                     {
                         using var stream=File.OpenRead(wav);lane.Clip=SoundEffect.FromStream(stream);lane.Audio=lane.Clip.CreateInstance();
-                        lane.Audio.Volume=r.Volume/100f*(r.Key?.7f:1);lane.Audio.Play();Status="Offline voice · overlapping playback";
+                        lane.Audio.Volume=r.Volume/100f*(r.Key?.7f:1);lane.Audio.Play();if(preparedSpeech.Find(r.Text)==wav)PreparedStarted++;Status="Offline voice · overlapping playback";
                     }
                     catch(Exception e) when(e is not OutOfMemoryException){lane.Audio?.Dispose();lane.Clip?.Dispose();lane.Audio=null;lane.Clip=null;Speak(lane,r);}
                 }
@@ -117,6 +121,7 @@ public sealed class Voice : IDisposable
         var synth=lane.Synth??throw new InvalidOperationException("No installed speech engine.");
         synth.Rate=r.Rate;synth.Volume=(int)(r.Volume*(r.Key?.7:1));
         if(Voices.Length>0)synth.SelectVoice(Voices.Contains(r.Selected)?r.Selected:Voices[0]);
+        FallbackStarted++;
         lane.Prompt=synth.SpeakAsync(r.Text.Length==1 && char.IsAsciiLetter(r.Text[0])?r.Text.ToUpperInvariant():r.Text);
         Status="Windows speech · overlapping playback";
     }

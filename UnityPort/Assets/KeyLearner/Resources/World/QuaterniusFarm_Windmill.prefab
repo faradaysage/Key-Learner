@@ -44,7 +44,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f1fa157a499734ca6885c6a6b0cce8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KeyLearner.Unity.SourcePropMotion
+  m_EditorClassIdentifier: KeyLearner.Unity::KeyLearner.Unity.SourcePropMotion
   Wheels: []
   WindmillBlades:
   - {fileID: 3077704854843919965}

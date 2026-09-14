@@ -14,7 +14,7 @@ public sealed class FlightModel
     public float Pulse {get;private set;}
     public int Rolls {get;private set;}
     public float OffRoad=>Kind==ExplorerKind.Racer?Math.Max(0,Math.Abs(Position.X-ExplorerWorld.Road(Position.Z))-18):0;
-    public Vector3 Forward=>Kind==ExplorerKind.Racer?Vector3.Normalize(new Vector3(MathF.Sin(Yaw)*.5f,0,-1)):new(MathF.Sin(Yaw)*MathF.Cos(Pitch),MathF.Sin(Pitch),-MathF.Cos(Yaw)*MathF.Cos(Pitch));
+    public Vector3 Forward=>Kind==ExplorerKind.Racer?new Vector3(MathF.Sin(Yaw),0,-MathF.Cos(Yaw)):new(MathF.Sin(Yaw)*MathF.Cos(Pitch),MathF.Sin(Pitch),-MathF.Cos(Yaw)*MathF.Cos(Pitch));
     public Vector3 Up=>Kind==ExplorerKind.Racer?Vector3.UnitY:new(-MathF.Sin(Yaw)*MathF.Sin(Pitch),MathF.Cos(Pitch),MathF.Cos(Yaw)*MathF.Sin(Pitch));
     public Vector3 Right=>Vector3.Normalize(Vector3.Cross(Forward,Up));
     // Local +X must always project to the viewer's right, including in a loop.
@@ -22,7 +22,13 @@ public sealed class FlightModel
     public Vector3 Gate {get;private set;}
     public string Word=>course.Word;
     public int Collected=>course.Collected;
-    public int Score=>course.Score;
+    public int BonusScore {get;private set;}
+    public int Treasures {get;private set;}
+    public float ObstacleRemaining {get;private set;}
+    public int Score=>course.Score+BonusScore;
+    public void AwardBubble()=>BonusScore+=5;
+    public void AwardTreasure(){BonusScore+=25;Treasures++;}
+    public bool HitObstacle(){if(ObstacleRemaining>0)return false;ObstacleRemaining=1.5f;return true;}
     public int Completed=>course.Completed;
     public float RewardRemaining=>course.RewardRemaining;
     public char Letter=>Word[Math.Min(Collected,Word.Length-1)];
@@ -48,7 +54,7 @@ public sealed class FlightModel
     {
         dt=Math.Clamp(dt,0,.1f);int steps=Math.Max(1,(int)Math.Ceiling(dt*120));float h=dt/steps;
         for(int i=0;i<steps;i++){
-            Time+=h;course.Step(h);Pulse=Math.Max(0,Pulse-h*.7f);pulseCooldown=Math.Max(0,pulseCooldown-h);
+            Time+=h;course.Step(h);ObstacleRemaining=Math.Max(0,ObstacleRemaining-h);Pulse=Math.Max(0,Pulse-h*.7f);pulseCooldown=Math.Max(0,pulseCooldown-h);
             movement.Step(this,h,turn,pitch,accelerate,assist);
             if(rollTime>0){rollTime=Math.Max(0,rollTime-h);float t=1-rollTime/.8f;Roll+=rollDirection*(2*MathF.PI)*(t*t*(3-2*t));}
             if(Collected>=Word.Length)continue;

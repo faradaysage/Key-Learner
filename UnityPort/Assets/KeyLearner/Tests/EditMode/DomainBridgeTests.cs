@@ -24,6 +24,7 @@ namespace KeyLearner.Unity.Tests.EditMode
         [TestCase(9, PlayMode.MakeNumber, typeof(VisualMathGame))]
         [TestCase(10, PlayMode.DotDuel, typeof(VisualMathGame))]
         [TestCase(11, PlayMode.CannonHop, typeof(VisualMathGame))]
+        [TestCase(12, PlayMode.Dinosaur, typeof(DinosaurGame))]
         public void SavedModeIdsResolveToCatalogAndUnityPresentation(int id, PlayMode mode, Type presentation)
         {
             Assert.That((int)mode, Is.EqualTo(id), "Never renumber a persisted mode.");

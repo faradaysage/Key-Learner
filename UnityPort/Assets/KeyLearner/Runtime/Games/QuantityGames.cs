@@ -27,6 +27,26 @@ namespace KeyLearner.Unity
         readonly List<GameObject> spherePool = new List<GameObject>();
         protected readonly List<Token> Tokens = new List<Token>();
         protected double LastTap = -10;
+        readonly HashSet<int> painted = new HashSet<int>();
+        readonly Dictionary<int,double> touches = new Dictionary<int,double>();
+        Material pearl;
+        protected virtual bool BonusRound => false;
+        protected void ResetPaint() { painted.Clear(); touches.Clear(); }
+        protected int PaintedCount => painted.Count;
+        protected void TouchToken(int index)=>touches[index]=S.Now;
+        protected object[] TokenTargets => Tokens.Select(t => PointerTarget(t.Index, new DotRect(t.Position.x-t.Radius,t.Position.y-t.Radius,t.Radius*2,t.Radius*2))).ToArray();
+        protected bool PaintToken(Vector2 point)
+        {
+            foreach (var token in Tokens)
+                if ((token.Position - point).sqrMagnitude <= token.Radius * token.Radius)
+                {
+                    if (!painted.Add(token.Index)) painted.Remove(token.Index);
+                    touches[token.Index]=S.Now;
+                    S.Audio.Play("ball-touch", S.Settings, .22f, .12);
+                    return true;
+                }
+            return false;
+        }
         string lastPointerReport = "";
         protected virtual Color Ink => S.Settings.Theme == Mood.BlackAndWhite ? Color.white : Style.Dots;
         protected static Vector2 V(NVector2 p) => new Vector2(p.X, p.Y);
@@ -42,8 +62,24 @@ namespace KeyLearner.Unity
                 var token = Tokens[i];
                 go.SetActive(true);
                 go.transform.localPosition = new Vector3(token.Position.x + shake.x, -token.Position.y - shake.y, 0);
-                go.transform.localScale = Vector3.one * (token.Radius * 2);
-                go.GetComponent<Renderer>().sharedMaterial = Visuals.Material(Ink);
+                float pulse=touches.TryGetValue(token.Index,out double touched)?Mathf.Clamp01(1-(float)(S.Now-touched)/.35f):0;
+                pulse=Mathf.Sin(pulse*Mathf.PI)*pulse*(S.Settings.GentleMotion?.035f:.10f);
+                go.transform.localScale = new Vector3(1+pulse,1-pulse,1)*(token.Radius*2);
+                Color tint = painted.Contains(token.Index) ? ThemeColors.At(S.Settings.Theme, 3) : Ink;
+                var renderer = go.GetComponent<Renderer>();
+                if (BonusRound)
+                {
+                    if (!pearl) pearl = new Material(Resources.Load<Shader>("Shaders/Pearl"));
+                    renderer.sharedMaterial = pearl;
+                    var properties = new MaterialPropertyBlock();
+                    properties.SetColor("_BaseColor", painted.Contains(token.Index) ? tint : new Color(.91f, .95f, 1));
+                    renderer.SetPropertyBlock(properties);
+                }
+                else
+                {
+                    if (renderer.HasPropertyBlock()) renderer.SetPropertyBlock(null);
+                    renderer.sharedMaterial = Visuals.Material(tint);
+                }
             }
             for (int i = Tokens.Count; i < spherePool.Count; i++)
                 spherePool[i].SetActive(false);
@@ -59,7 +95,7 @@ namespace KeyLearner.Unity
         {
             if (string.IsNullOrEmpty(text))
                 return;
-            S.Audio.Stop();
+            S.Audio.StopSpeech();
             S.Audio.Say(text, S.Settings, brisk: brisk);
         }
         protected void ToggleMute()
@@ -74,6 +110,7 @@ namespace KeyLearner.Unity
             Rect r = R(rect);
             bool hover = enabled && r.Contains(Ui.Pointer);
             Ui.Panel(new Rect(r.x, r.y + 5, r.width, r.height), new Color(0, 0, 0, .28f));
+            if(hover && Input.GetMouseButton(0))r.y+=3;
             Ui.Panel(r, selected ? Ink : hover ? new Color(.13f, .22f, .34f) : enabled ? new Color(.095f, .15f, .25f) : new Color(.06f, .085f, .14f));
             if (selected)
                 Ui.Panel(new Rect(r.x + 4, r.y + 4, r.width - 8, r.height - 8), Style.Panel);
@@ -124,7 +161,7 @@ namespace KeyLearner.Unity
             if (!S.Preview || signature == lastPointerReport)
                 return;
             string scenario = Argument("--scenario");
-            if (scenario != "math-pointer" && scenario != "dots-pointer")
+            if (scenario != "math-pointer" && scenario != "dots-pointer" && scenario != "dots-bonus")
                 return;
             string requested = Argument("--interaction-report");
             if (string.IsNullOrEmpty(requested))
@@ -164,6 +201,7 @@ namespace KeyLearner.Unity
         public override void Exit()
         {
             S.Audio.Stop();
+            if (pearl) UnityEngine.Object.Destroy(pearl);
             base.Exit();
         }
     }
@@ -171,6 +209,7 @@ namespace KeyLearner.Unity
     public sealed class DotPopGame : QuantityMinigame
     {
         SubitizingGame model;
+        protected override bool BonusRound => model != null && model.Bonus.Active;
         int previewActions;
         string scenario;
         public override void Enter(GameServices services)
@@ -185,6 +224,15 @@ namespace KeyLearner.Unity
                 S.Session["dots"] = model;
             }
             scenario = S.Preview ? Argument("--scenario") : "";
+            if (scenario == "dots-bonus")
+            {
+                for (int round = 0; round < 5; round++)
+                {
+                    for (int frame = 0; frame < 100 && !model.CanAnswer; frame++) model.Step(.05);
+                    model.Answer(model.Quantity);
+                    model.RestartRound();
+                }
+            }
             Refresh();
         }
         public override void Tick(float dt)
@@ -192,6 +240,11 @@ namespace KeyLearner.Unity
             var before = model.Phase;
             int popped = model.Popped;
             model.Step(dt);
+            S.Audio.SetMusic(BonusRound && model.Phase != DotPhase.Reward ? "happy-bonus" : "learning-home", BonusRound ? .16f : .04f);
+            if (before != model.Phase && model.Phase == DotPhase.Ready)
+                ResetPaint();
+            if (before != model.Phase && model.Phase == DotPhase.Go && BonusRound)
+                S.Audio.Play("bonus-round", S.Settings, .4f);
             if (before != model.Phase && model.Phase == DotPhase.Answer)
                 Speak("How many?");
             if (model.Phase == DotPhase.Reward && model.Popped > popped)
@@ -221,12 +274,16 @@ namespace KeyLearner.Unity
                     previewActions++;
                 }
             }
-            PointerReport(model.Phase + "/" + model.Stage + "/" + model.CanAnswer + "/" + model.WrongAttempts + "/" + Screen.width + "/" + Screen.height,
+            PointerReport(model.Phase + "/" + model.Stage + "/" + model.CanAnswer + "/" + model.WrongAttempts + "/" + PaintedCount + "/" + Screen.width + "/" + Screen.height,
                 new
                 {
                     Phase = model.Phase.ToString(),
                     model.Stage,
                     model.CanAnswer,
+                    PaintedCount,
+                    Balls = TokenTargets,
+                    Bonus = model.Bonus.Active,
+                    Points = model.Bonus.Score,
                     Answer = model.Quantity,
                     Choices = Enumerable.Range(0, 10).ToArray(),
                     Targets = Enumerable.Range(0, 10).Select(n => PointerTarget(n, DotLayout.Number(n))).ToArray(),
@@ -256,7 +313,7 @@ namespace KeyLearner.Unity
             if (!model.Answer(number))
                 return;
             S.Audio.Stop();
-            S.Audio.Play("cannon", S.Settings, .7f);
+            S.Audio.Play(BonusRound ? "bonus-win" : "cannon", S.Settings, BonusRound ? .5f : .7f);
             if (model.Quantity == 0)
             {
                 S.Audio.Play("powerup", S.Settings, .5f);
@@ -274,6 +331,11 @@ namespace KeyLearner.Unity
                 ToggleMute();
                 return;
             }
+            if (model.DotsVisible && PaintToken(logical))
+            {
+                Refresh();
+                return;
+            }
             int n = DotLayout.HitNumber(point);
             if (n >= 0)
                 Submit(n);
@@ -286,7 +348,7 @@ namespace KeyLearner.Unity
             LastTap = S.Now;
             Refresh();
         }
-        public override string DiagnosticState => "DotPop phase=" + model.Phase + " stage=" + model.Stage + " mastery=" + model.Mastery + " quantity=" + model.Quantity + " mask=" + model.Mask + " errors=" + model.WrongAttempts;
+        public override string DiagnosticState => "DotPop phase=" + model.Phase + " stage=" + model.Stage + " mastery=" + model.Mastery + " quantity=" + model.Quantity + " mask=" + model.Mask + " errors=" + model.WrongAttempts + " bonus=" + BonusRound + " points=" + model.Bonus.Score + " painted=" + PaintedCount;
         public override void DrawUI()
         {
             Ui.End();
@@ -295,6 +357,7 @@ namespace KeyLearner.Unity
             Ui.Label(new Rect(570, 26, 110, 64), model.Stage.ToString(), 38, Color.white);
             string cue = model.Phase == DotPhase.Ready ? "READY" : model.Phase == DotPhase.Set ? "SET" : model.Phase == DotPhase.Go ? "GO" : model.Phase == DotPhase.Answer ? "HOW MANY?" : model.Phase == DotPhase.Reward ? model.Quantity.ToString() : "";
             Ui.Label(new Rect(30, 126, 660, 105), cue, model.Phase == DotPhase.Reward ? 74 : 55, model.Phase == DotPhase.Go || model.Phase == DotPhase.Reward ? Ink : Color.white);
+            Ui.Label(new Rect(175, 42, 360, 48), (BonusRound ? "BONUS ×3   " : "") + model.Bonus.Score + " points", 25, Ink);
             for (int n = 0; n < 10; n++)
                 Button(DotLayout.Number(n), n.ToString(), model.CanAnswer, false, 58);
             if (model.Phase == DotPhase.Reward)
@@ -327,6 +390,12 @@ namespace KeyLearner.Unity
         readonly MathActivity activity;
         protected override Color Ink => ThemeColors.At(S.Settings.Theme, 1);
         MathGame model;
+        int hopSelection,lastHopLanding;
+        bool wasHopping;
+        float hopPulse,recoil;
+        Vector2 hopLanding;
+        GameObject cannon;
+        protected override bool BonusRound => model != null && model.Bonus.Active;
         MathPhase? spokenPhase;
         int countSpoken = -1, savedRevision = -1, previewActions, previewInitialStage;
         string debugState, scenario;
@@ -356,6 +425,7 @@ namespace KeyLearner.Unity
             debugState = S.Preview ? Argument("--math-state") : "";
             scenario = S.Preview ? Argument("--scenario") : "";
             previewInitialStage = model.Stage;
+            if(activity==MathActivity.CannonHop)cannon=S.Content.Spawn("cannon",0,Root.transform,Vector3.zero,70,90);
             SpeakPhase();
             Refresh();
         }
@@ -383,6 +453,28 @@ namespace KeyLearner.Unity
         {
             int popped = model.Popped;
             model.Step(dt, S.Audio.Pending > 0);
+            if(activity==MathActivity.CannonHop)
+            {
+                hopPulse=Mathf.Max(0,hopPulse-dt);recoil*=Mathf.Exp(-dt*12);
+                var round=model.Round;bool hopping=model.Counting && round.B>0;
+                if(hopping && !wasHopping){lastHopLanding=0;recoil=1;S.Audio.Play("cannon",S.Settings,.3f);}
+                int landed=hopping?Mathf.Clamp(Mathf.FloorToInt((float)model.Motion*round.B+.0001f),0,round.B):wasHopping?round.B:lastHopLanding;
+                if(landed>lastHopLanding)
+                {
+                    lastHopLanding=landed;hopPulse=.35f;
+                    hopLanding=V(MathLayout.HopPoint(round.A+(round.Subtract?-landed:landed)));
+                    TouchToken(0);S.Audio.Play("ball-touch",S.Settings,.22f,.06);
+                }
+                wasHopping=hopping;
+                if(cannon)
+                {
+                    var point=V(MathLayout.HopPoint(round.A));float direction=round.Subtract?-1:1;
+                    cannon.SetActive(model.Phase!=MathPhase.Reward);
+                    cannon.transform.localPosition=new Vector3(point.x-direction*(38+recoil*8),-453,42);
+                    cannon.transform.localRotation=Quaternion.Euler(0,direction*90,-direction*recoil*3);
+                }
+            }
+            S.Audio.SetMusic(BonusRound && model.Phase != MathPhase.Reward ? "happy-bonus" : "learning-home", BonusRound ? .16f : .04f);
             SpeakPhase();
             if (model.Counting && (model.CountQuantity == 0 ? countSpoken != -2 : model.CountIndex != countSpoken))
             {
@@ -449,12 +541,17 @@ namespace KeyLearner.Unity
                 object[] targets = activity == MathActivity.MakeNumber ? Enumerable.Range(0, model.Difficulty.Capacity).Select(i => PointerTarget(i, MathLayout.CellButton(i, model.Difficulty.Capacity))).ToArray() :
                     activity == MathActivity.Duel ? new[] { PointerTarget(0, MathLayout.Group(0)), PointerTarget(1, MathLayout.Group(1)), PointerTarget(2, MathLayout.Same) } :
                     activity == MathActivity.CannonHop ? Enumerable.Range(0, 11).Select(n => PointerTarget(n, MathLayout.Track(n))).ToArray() : model.Round.Choices.Select((n, i) => PointerTarget(n, MathLayout.Choice(i, model.Round.Choices.Length))).ToArray();
-                PointerReport(model.Phase + "/" + model.Stage + "/" + model.CanAnswer + "/" + model.Errors + "/" + model.BuiltMask + "/" + Screen.width + "/" + Screen.height,
+                PointerReport(model.Phase + "/" + model.Stage + "/" + model.CanAnswer + "/" + model.Errors + "/" + hopSelection + "/" + model.BuiltMask + "/" + PaintedCount + "/" + Screen.width + "/" + Screen.height,
                     new
                     {
                         Phase = model.Phase.ToString(),
                         model.Stage,
                         model.CanAnswer,
+                        HopSelection = hopSelection,
+                        PaintedCount,
+                        Balls = TokenTargets,
+                        Bonus = model.Bonus.Active,
+                        Points = model.Bonus.Score,
                         model.Round.Answer,
                         model.Round.Choices,
                         model.BuiltCount,
@@ -478,6 +575,9 @@ namespace KeyLearner.Unity
                 return;
             spokenPhase = model.Phase;
             countSpoken = -1;
+            if (model.Phase == MathPhase.Ready) { ResetPaint(); hopSelection = model.Round.A; }
+            if (model.Phase == MathPhase.Go && BonusRound) S.Audio.Play("bonus-round", S.Settings, .4f);
+            if (model.Phase == MathPhase.Reward && BonusRound) S.Audio.Play("bonus-win", S.Settings, .45f);
             string text = "";
             switch (model.Phase)
             {
@@ -522,6 +622,16 @@ namespace KeyLearner.Unity
             }
             if (!model.CanAnswer || activity == MathActivity.MakeNumber || activity == MathActivity.Duel)
                 return;
+            if (activity == MathActivity.CannonHop)
+            {
+                if (e.Key == 37 || e.Key == 39)
+                {
+                    hopSelection = Mathf.Clamp(hopSelection + (e.Key == 37 ? -1 : 1), 0, 10);
+                    S.Audio.Play("ball-touch", S.Settings, .2f);
+                    return;
+                }
+                if (e.Key == 13 || e.Key == 32) { model.Answer(hopSelection); return; }
+            }
             int n = e.Key >= 48 && e.Key <= 57 ? e.Key - 48 : e.Key >= 96 && e.Key <= 105 ? e.Key - 96 : -1;
             if (n >= 0 && (activity == MathActivity.CannonHop || model.Round.Choices.Contains(n)))
                 model.Answer(n);
@@ -543,6 +653,8 @@ namespace KeyLearner.Unity
             }
             if (!model.CanAnswer)
                 return;
+            if (activity != MathActivity.MakeNumber && activity != MathActivity.Duel && PaintToken(logical))
+            { Refresh(); return; }
             if (activity == MathActivity.MakeNumber)
             {
                 for (int i = 0; i < model.Difficulty.Capacity; i++)
@@ -724,6 +836,8 @@ namespace KeyLearner.Unity
         public override void DrawUI()
         {
             var r = model.Round;
+            if(activity==MathActivity.CannonHop && hopPulse>0)
+                Ring(hopLanding+new Vector2(0,32),38+(1-hopPulse/.35f)*22,2,new Color(Ink.r,Ink.g,Ink.b,hopPulse/.35f*.45f));
             // These translucent outlines leave the real, lit target spheres visible.
             if (activity != MathActivity.Duel && activity != MathActivity.CannonHop && activity != MathActivity.Hiding)
             {
@@ -752,9 +866,9 @@ namespace KeyLearner.Unity
             if (activity == MathActivity.CannonHop)
             {
                 for (int n = 0; n <= 10; n++)
-                    Button(MathLayout.Track(n), n.ToString(), model.CanAnswer, model.Phase == MathPhase.Reward && n == r.Final, 49);
+                    Button(MathLayout.Track(n), n.ToString(), model.CanAnswer, model.Phase == MathPhase.Reward && n == r.Final || model.CanAnswer && n == hopSelection, 49);
                 Line(new Vector2(116, 634), new Vector2(1316, 634), 3, new Color(1, 1, 1, .17f));
-                Ui.Label(new Rect(600, 642, 240, 63), r.Subtract ? "<" : ">", 43, Ink);
+                Ui.Label(new Rect(280, 652, 880, 64), model.CanAnswer ? "Click a number · ← → and Enter · 0–9 keys" : "Watch the ball hop " + (r.Subtract ? "back" : "forward"), 27, Ink);
             }
             if (activity == MathActivity.Hiding && (model.Phase == MathPhase.Transform || AnswerPhase))
             {
@@ -850,6 +964,7 @@ namespace KeyLearner.Unity
                             Ui.Ball(new Vector2(choice.Center.X - (n - 1) * 29 + k * 58, choice.Center.Y), 20, model.CanAnswer ? Ink : Ink * .3f);
                 }
             }
+            Ui.Label(new Rect(500, 30, 700, 55), (BonusRound ? "PEARL BONUS ×3   " : "") + model.Bonus.Score + " points", 24, Ink);
             Button(MathLayout.Back, "<  GAMES", true, false, 24);
             Button(MathLayout.Mute, S.Settings.Sound ? "MUTE" : "UNMUTE", true, false, 23);
             Ui.Label(new Rect(1294, 26, 114, 66), (model.Phase == MathPhase.Reward ? model.Stage - 1 : model.Stage).ToString(), 38, Color.white);

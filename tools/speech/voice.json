@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "model": "ResembleAI/chatterbox",
+  "revision": "5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18",
+  "package": "chatterbox-tts==0.1.7",
+  "voice": "built-in conds.pt (no external voice reference)",
+  "seed": 314159,
+  "settings": {
+    "exaggeration": 0.45,
+    "cfg_weight": 0.4,
+    "temperature": 0.7,
+    "repetition_penalty": 1.2,
+    "min_p": 0.05,
+    "top_p": 1.0
+  },
+  "runtime": {
+    "format": "WAV",
+    "subtype": "PCM_16",
+    "channels": 1
+  },
+  "master": {
+    "format": "WAV",
+    "subtype": "FLOAT"
+  },
+  "watermark": "PerTh preserved"
+}

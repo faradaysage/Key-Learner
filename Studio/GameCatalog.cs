@@ -1,5 +1,5 @@
 namespace KeyLearner.Studio;
-public sealed record GameDefinition(PlayMode Mode,string Name,string Description,int MinimumAge,string Type,string[] Topics,ExplorerKind? Explorer=null);
+public sealed record GameDefinition(PlayMode Mode,string Name,string Description,int MinimumAge,string Type,string[] Topics,ExplorerKind? Explorer=null,bool UnityOnly=false);
 public static class GameCatalog
 {
     public static readonly GameDefinition[] All=[
@@ -14,8 +14,10 @@ public static class GameCatalog
         new(PlayMode.WhatsHiding,"What's Hiding?","Discover the missing part",3,"Learn",["Numbers","Parts and wholes"]),
         new(PlayMode.MakeNumber,"Make the Number","Fill a frame, one ball at a time",2,"Learn",["Numbers","Building"]),
         new(PlayMode.DotDuel,"Dot Duel","Find more, fewer, or the same",2,"Learn",["Numbers","Comparing"]),
-        new(PlayMode.CannonHop,"Cannon Hop","Hop along the number track",4,"Learn",["Numbers","Addition","Subtraction"])
+        new(PlayMode.CannonHop,"Cannon Hop","Hop along the number track",4,"Learn",["Numbers","Addition","Subtraction"]),
+        new(PlayMode.Dinosaur,"Dinosaur Speller","Stomp, roar and discover prehistoric words",3,"Explore",["Letters","Spelling"],UnityOnly:true)
     ];
+    public static readonly GameDefinition[] Legacy=All.Where(g=>!g.UnityOnly).ToArray();
     public static GameDefinition For(PlayMode mode)=>All.FirstOrDefault(g=>g.Mode==mode)??All[0];
 }
 /// <summary>Two distinct G taps within 1.2 seconds. Repeats and modified keys never open the picker.</summary>

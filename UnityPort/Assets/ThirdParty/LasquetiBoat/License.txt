@@ -1,0 +1,4 @@
+"Animated Sharks Circling Fishing Boat Loop" (https://skfb.ly/o9nSO) by LasquetiSpice is licensed under Creative Commons Attribution 4.0 International.
+http://creativecommons.org/licenses/by/4.0/
+https://sketchfab.com/3d-models/animated-sharks-circling-fishing-boat-loop-2a9677a044fd4190bb703c318dcdb668
+Adaptations: selected boat/crew/shark parts exported to FBX; original meshes, UV textures and skeletal animation retained; helper geometry and cigar prop omitted; Unity materials/pivots/scales and contextual movement; shark root travel frozen to remove its original boat-circling path.

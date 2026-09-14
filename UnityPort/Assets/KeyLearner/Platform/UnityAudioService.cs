@@ -26,15 +26,21 @@ namespace KeyLearner.Unity.Platform
         }
         readonly Lane[] lanes = new Lane[8];
         readonly AudioSource[] effects = new AudioSource[8];
-        readonly AudioSource fire;
+        readonly System.Random effectVariation = new System.Random();
+        readonly AudioSource fire, music;
+        float musicGain;
+        string musicName = "";
         readonly Queue<Request> keys = new Queue<Request>(), words = new Queue<Request>();
         readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
+        readonly Dictionary<string, long> speechUse = new Dictionary<string, long>();
+        long speechClock;
         readonly Dictionary<string, double> lastEffects = new Dictionary<string, double>();
         readonly BlockingCollection<Request> prepare = new BlockingCollection<Request>(64);
         readonly ConcurrentDictionary<string, byte> preparing = new ConcurrentDictionary<string, byte>();
         readonly ConcurrentQueue<string> replies = new ConcurrentQueue<string>();
         readonly object pipeGate = new object();
         readonly string cache, streaming;
+        readonly PreparedSpeechCatalog preparedSpeech;
         NamedPipeClientStream pipe; StreamWriter writer; Process helper, piper; Thread speechThread, prepareThread;
         volatile bool disposed;
         bool ready;
@@ -59,6 +65,10 @@ namespace KeyLearner.Unity.Platform
         {
             get; private set;
         }
+        public int PreparedStarted { get; private set; }
+        public int FallbackStarted { get; private set; }
+        public int CachedSpeechClips => speechUse.Count;
+        public int MusicFrames { get; private set; }
         public int Pending => keys.Count + words.Count + lanes.Count(l => l.Request != null);
         public string Status { get; private set; } = "Warming offline Windows speech";
         public string[] Voices { get; private set; } = Array.Empty<string>();
@@ -68,12 +78,16 @@ namespace KeyLearner.Unity.Platform
             cache = Path.Combine(profileRoot, "voice-cache");
             Directory.CreateDirectory(cache);
             streaming = Application.streamingAssetsPath;
+            preparedSpeech = new PreparedSpeechCatalog(Path.Combine(streaming,"Content","Voice"));
             for (int i = 0; i < lanes.Length; i++)
                 lanes[i] = new Lane { Source = Source(owner, "Voice " + i) };
             for (int i = 0; i < effects.Length; i++)
                 effects[i] = Source(owner, "Effect " + i);
             fire = Source(owner, "Fire ambience");
             fire.loop = true;
+            music = Source(owner, "Learning bonus music");
+            music.loop = true;
+            music.priority = 190;
             foreach (var name in new[] { "pop", "paint", "crack", "shatter", "cannon", "fire", "squawk" })
                 LoadClip(Path.Combine(streaming, "Content", "Sounds", name + ".wav"));
             clips["retry"] = Tone("retry", .25, t => Math.Sin(t * Math.PI * 2 * (t < .12 ? 170 : 125)) * Math.Min(1, t * 40) * Math.Max(0, 1 - t * 4));
@@ -175,6 +189,11 @@ namespace KeyLearner.Unity.Platform
                 Stop();
                 return;
             }
+            float targetMusic = settings.EffectsSound ? musicGain * settings.Volume / 100f * settings.EffectsVolume / 100f * (Pending > 0 ? .25f : 1) : 0;
+            music.volume = Mathf.MoveTowards(music.volume, targetMusic, Time.unscaledDeltaTime * .3f);
+            if (music.volume > .001f && music.clip && !music.isPlaying) music.Play();
+            if (music.volume <= .001f && targetMusic == 0) music.Stop();
+            if (music.isPlaying && music.volume > .001f) MusicFrames++;
             foreach (var lane in lanes)
                 if (lane.Request != null && ((!lane.Speech && !lane.Source.isPlaying) || Now - lane.Started > 30))
                     Finish(lane);
@@ -191,7 +210,7 @@ namespace KeyLearner.Unity.Platform
                     continue;
                 var request = queue.Peek();
                 string wav = FindAudio(request);
-                AudioClip clip = wav == null ? null : LoadClip(wav);
+                AudioClip clip = wav == null ? null : LoadClip(wav, true);
                 if (clip == null && !ready)
                 {
                     if (Now - request.Time > 2)
@@ -214,6 +233,8 @@ namespace KeyLearner.Unity.Platform
                 }
                 else
                     Send("SPEAK\t" + i + "\t" + lane.Ticket + "\t" + (int)(request.Volume * (key ? .7 : 1)) + "\t" + request.Rate + "\t" + Encode(request.Voice) + "\t" + Encode(request.Text.Length == 1 ? request.Text.ToUpperInvariant() : request.Text));
+                if (clip != null && preparedSpeech.Find(request.Text) == wav) PreparedStarted++;
+                if (clip == null) FallbackStarted++;
                 Started++;
             }
             PeakOverlap = Math.Max(PeakOverlap, lanes.Count(l => l.Request != null));
@@ -246,6 +267,8 @@ namespace KeyLearner.Unity.Platform
         {
             if (File.Exists(request.Recording))
                 return request.Recording;
+            var generated = preparedSpeech.Find(request.Text);
+            if (generated != null) return generated;
             var bundle = Path.Combine(streaming, "Content", "Voice", request.Text.ToLowerInvariant() + ".wav");
             var fallback = Simple(request.Text) && File.Exists(bundle) ? bundle : null;
             if (!File.Exists(request.Model))
@@ -299,7 +322,7 @@ namespace KeyLearner.Unity.Platform
                 finally { piper = null; preparing.TryRemove(destination, out _); try { if (File.Exists(temporary)) File.Delete(temporary); } catch (IOException) { } }
             }
         }
-        public void Play(string name, Settings settings, float gain = 1, double minimumInterval = .09)
+        public void Play(string name, Settings settings, float gain = 1, double minimumInterval = .09, Vector3? position = null, float pitch = 1)
         {
             if (disposed || !settings.Sound || !settings.EffectsSound)
                 return;
@@ -315,8 +338,26 @@ namespace KeyLearner.Unity.Platform
                 return;
             lastEffects[name] = now;
             source.clip = clip;
+            source.spatialBlend = position.HasValue ? 1 : 0;
+            source.dopplerLevel = 0;
+            source.rolloffMode = AudioRolloffMode.Logarithmic;
+            source.minDistance = 12; source.maxDistance = 180;
+            if(position.HasValue)source.transform.position=position.Value;
+            bool vary=name=="pop" || name=="paint" || name=="ball-touch" || name=="bubble-pop" || name=="surface-splash" || name.StartsWith("dinosaur-step-");
+            source.pitch=Mathf.Clamp(pitch*(vary?.96f+(float)effectVariation.NextDouble()*.08f:1),.5f,1.6f);
             source.volume = Mathf.Clamp01(settings.EffectsVolume / 100f * settings.Volume / 100f * gain);
             source.Play();
+        }
+        public void SetMusic(string name, float gain = .16f)
+        {
+            if (disposed) return;
+            musicGain = string.IsNullOrEmpty(name) ? 0 : gain;
+            if (musicGain > 0 && musicName != name)
+            {
+                music.Stop();
+                music.clip = SoundClip(name);
+                musicName = name;
+            }
         }
         public void SetFire(float heat, Settings settings)
         {
@@ -333,10 +374,14 @@ namespace KeyLearner.Unity.Platform
             else
                 fire.Stop();
         }
-        AudioClip LoadClip(string path)
+        public AudioClip SoundClip(string name) => LoadClip(Path.Combine(streaming, "Content", "Sounds", name + ".wav"));
+        AudioClip LoadClip(string path, bool speech = false)
         {
             if (clips.TryGetValue(path, out var existing))
+            {
+                if (speech) speechUse[path] = ++speechClock;
                 return existing;
+            }
             if (!File.Exists(path))
                 return null;
             try
@@ -392,10 +437,32 @@ namespace KeyLearner.Unity.Platform
                     var clip = AudioClip.Create(Path.GetFileNameWithoutExtension(path), samples.Length / channels, channels, rate, false);
                     clip.SetData(samples, 0);
                     clips[path] = clip;
+                    if (speech)
+                    {
+                        speechUse[path] = ++speechClock;
+                        TrimSpeechCache(path);
+                    }
                     return clip;
                 }
             }
             catch (Exception e) when (e is IOException || e is ArgumentException) { return null; }
+        }
+        // Keep a large vocabulary from retaining thousands of decoded clips. Active lanes
+        // are protected; soundscape loops belong to the separate permanent effects cache.
+        void TrimSpeechCache(string newest)
+        {
+            long bytes = speechUse.Keys.Sum(k => (long)clips[k].samples * clips[k].channels * 4);
+            foreach (var entry in speechUse.OrderBy(p => p.Value).ToArray())
+            {
+                if (speechUse.Count <= 64 && bytes <= 32 * 1024 * 1024) break;
+                var clip = clips[entry.Key];
+                if (entry.Key == newest || lanes.Any(l => l.Request != null && l.Source.clip == clip)) continue;
+                foreach (var lane in lanes) if (lane.Source.clip == clip) lane.Source.clip = null;
+                bytes -= (long)clip.samples * clip.channels * 4;
+                speechUse.Remove(entry.Key);
+                clips.Remove(entry.Key);
+                UnityEngine.Object.Destroy(clip);
+            }
         }
         static AudioClip Tone(string name, double seconds, Func<double, double> wave)
         {
@@ -406,7 +473,7 @@ namespace KeyLearner.Unity.Platform
             clip.SetData(samples, 0);
             return clip;
         }
-        public void Stop()
+        public void StopSpeech()
         {
             keys.Clear();
             words.Clear();
@@ -420,6 +487,13 @@ namespace KeyLearner.Unity.Platform
                 lane.Source.Stop();
                 lane.Speech = false;
             }
+        }
+        public void Stop()
+        {
+            StopSpeech();
+            musicGain = 0;
+            music.Stop();
+            music.volume = 0;
             foreach (var source in effects)
                 source.Stop();
             fire.Stop();
@@ -458,6 +532,7 @@ namespace KeyLearner.Unity.Platform
             foreach (var source in effects)
                 UnityEngine.Object.Destroy(source.gameObject);
             UnityEngine.Object.Destroy(fire.gameObject);
+            UnityEngine.Object.Destroy(music.gameObject);
         }
     }
 }

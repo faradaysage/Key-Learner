@@ -1,0 +1,9 @@
+Poly Haven scenery, CC0 1.0
+https://polyhaven.com/license
+Fern 02: Rico Cilliers (modeling), Rob Tuytel (scanning)
+https://polyhaven.com/a/fern_02
+Coastal Cliff 01: Rico Cilliers, Rob Tuytel
+https://polyhaven.com/a/coastal_cliff_01
+Mountainside: Dario Barresi (photography), Rico Cilliers (processing)
+https://polyhaven.com/a/mountainside
+Adaptations: separate fern clumps, select authored LOD1-3 for cliffs/mountains, preserve UVs and 2K textures; Unity materials/pivots/scales and LOD distances.
