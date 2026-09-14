@@ -5389,6 +5389,19 @@
       "trimAligner": "small.en"
     },
     {
+      "id": "word-athena",
+      "text": "Athena",
+      "aliases": [
+        "athena"
+      ],
+      "sources": [
+        "Explicit additional speech vocabulary"
+      ],
+      "generationText": "The name. Athena.",
+      "trimPrefix": "The name",
+      "trimAligner": "small.en"
+    },
+    {
       "id": "word-athlete",
       "text": "athlete",
       "aliases": [

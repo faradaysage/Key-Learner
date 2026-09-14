@@ -72,13 +72,13 @@
     },
     "trimPolicy": "Existing production context/Whisper alignment, version 1"
   },
-  "requiredSpeechCount": 4898,
-  "corpusSha256": "28d3118182e64a92d44936466016a20138e5a50177274835dad58558a1c522ef",
+  "requiredSpeechCount": 4899,
+  "corpusSha256": "501aeeb7b9271d9f76395f8a96bba27ea4dce8a890a74313a2f6b4a2ed1ce4fa",
   "catalog": "Voice/catalog.json",
   "runtimeDirectory": "Voice",
   "status": "complete",
   "readyForIntegration": true,
-  "validCount": 4898,
+  "validCount": 4899,
   "runtime": {
     "python": "3.11.16 (main, Sep  1 2026, 14:15:24) [MSC v.1944 64 bit (AMD64)]",
     "torch": "2.6.0+cu124",

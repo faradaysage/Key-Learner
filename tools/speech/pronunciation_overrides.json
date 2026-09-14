@@ -12556,5 +12556,10 @@
     "trimPrefix": "The word",
     "seedOffset": 103,
     "trimAligner": "small.en"
+  },
+  "word-athena": {
+    "generationText": "The name. Athena.",
+    "trimPrefix": "The name",
+    "trimAligner": "small.en"
   }
 }

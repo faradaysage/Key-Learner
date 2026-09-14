@@ -2,7 +2,7 @@
 
 ## Current phase
 
-Blake is a finalized production pack: **4,898 / 4,898 clips**, including the explicitly requested Apollo addition. Its stable ID `kyutai-Blake` is the default for new/unset/invalid selections. Original narrator (`builtin`) remains intact, selectable, and the same-key fallback. Existing explicit selections are preserved. Butter and Lake are intentionally on hold; do not generate or wait for them. Their future import path remains data-driven.
+Blake is a finalized production pack: **4,899 / 4,899 clips**, including the explicitly requested Apollo and Athena additions. Its stable ID `kyutai-Blake` is the default for new/unset/invalid selections. Original narrator (`builtin`) remains intact, selectable, and the same-key fallback. Existing explicit selections are preserved. Butter and Lake are intentionally on hold; do not generate or wait for them. Their future import path remains data-driven.
 
 ## Architecture
 
@@ -52,7 +52,7 @@ Ignored development/staging locations include `.local/` (venv/model/reference ca
 
 ## Validation boundary
 
-Strict verification checks both production corpora (9,796 WAVs total), including exact semantic contracts, hashes/PCM, repaired generation recipes and requested-pack resolution without masked fallback. Isolated regression fixtures cover additive import, held peers, corrupt selection refusal, default/fallback separation, preserved Original selection, persistence/reordering and decoder fallback. Actual-player verification uses isolated profiles and the normal Options/preview/audio paths; it does not alter parent saves or synthesize OS keys. Audio decode/completion evidence is not a subjective listening-quality claim.
+Strict verification checks both production corpora (9,798 WAVs total), including exact semantic contracts, hashes/PCM, repaired generation recipes and requested-pack resolution without masked fallback. Isolated regression fixtures cover additive import, held peers, corrupt selection refusal, default/fallback separation, preserved Original selection, persistence/reordering and decoder fallback. Actual-player verification uses isolated profiles and the normal Options/preview/audio paths; it does not alter parent saves or synthesize OS keys. Audio decode/completion evidence is not a subjective listening-quality claim.
 
 ```powershell
 scripts/verify-unity-ux.ps1 -Output artifacts/blake-ux -SkipNativeFocus -VerifyVoices

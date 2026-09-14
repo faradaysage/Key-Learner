@@ -93163,6 +93163,25 @@
         "tokenizer.json": "d71e3a44eabb1784df9a68e9f95b251ecbf1a7af6a9f50835856b2ca9d8c14a5",
         "conds.pt": "6552d70568833628ba019c6b03459e77fe71ca197d5c560cef9411bee9d87f4e"
       }
+    },
+    "word-athena": {
+      "file": "speech-word-athena.wav",
+      "text": "Athena",
+      "aliases": [
+        "athena"
+      ],
+      "recipe": "2fe1209019545df3f48297f74ed8d119e4df52a4759f9266741b25e5a77d41ee",
+      "sha256": "0aed62ae14bcad2b6c3d9010346fb397878be0e216c6fe86f5d609ebe00e2179",
+      "seconds": 0.86,
+      "sampleRate": 24000,
+      "seed": 1721609915,
+      "modelFiles": {
+        "ve.safetensors": "f0921cab452fa278bc25cd23ffd59d36f816d7dc5181dd1bef9751a7fb61f63c",
+        "t3_cfg.safetensors": "914cb1696f47527fe8852ca8f1fe1fa63cb34f76f9c715e84e067b744dd0da81",
+        "s3gen.safetensors": "2b78103c654207393955e4900aac14a12de8ef25f4b09424f1ef91941f161d4e",
+        "tokenizer.json": "d71e3a44eabb1784df9a68e9f95b251ecbf1a7af6a9f50835856b2ca9d8c14a5",
+        "conds.pt": "6552d70568833628ba019c6b03459e77fe71ca197d5c560cef9411bee9d87f4e"
+      }
     }
   }
 }

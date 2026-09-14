@@ -70,7 +70,7 @@ namespace KeyLearner.Unity.Tests.PlayMode
             Assert.AreEqual(VoicePackRegistry.LegacyId,registry.FallbackVoiceId);
             CollectionAssert.IsSubsetOf(new[]{"Blake","Original narrator"},registry.Packs.Select(p=>p.DisplayName).ToArray());
             audio=new UnityAudioService(owner,Path.Combine(root,"production-profile"),registry);
-            var keys=new[]{VoicePackRegistry.PreviewKey,"letter-d","letter-n","word-milk","word-apollo","word-dave","number-003","number-100","cue-bird","cue-ocean","cue-racer","cue-how-many","cue-hop-help","cue-try-again","cue-well-done","cue-hundred"};
+            var keys=new[]{VoicePackRegistry.PreviewKey,"letter-d","letter-n","word-milk","word-apollo","word-athena","word-dave","number-003","number-100","cue-bird","cue-ocean","cue-racer","cue-how-many","cue-hop-help","cue-try-again","cue-well-done","cue-hundred"};
             foreach(var pack in registry.Packs)
             {
                 audio.SelectVoice(settings,pack.Id);
