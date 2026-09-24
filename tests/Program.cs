@@ -454,3 +454,5 @@ Check(startled.State==WildlifeState.Flee,"roar startles a creature outside norma
 var followingCub=new WildlifeMotion(new(0,0,-20),36,speed:2.5f);
 for(int i=0;i<1800;i++){followingCub.Follow(new(0,0,i*.01f));followingCub.Step(.02f,distantObserver);}
 Check(System.Numerics.Vector3.Distance(followingCub.Position,new(0,0,18))<15,"cub follows its mother's moving habitat rather than wandering independently");
+
+VoicePackChecks.Run(Check);

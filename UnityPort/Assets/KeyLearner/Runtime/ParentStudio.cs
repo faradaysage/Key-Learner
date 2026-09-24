@@ -186,6 +186,10 @@ namespace KeyLearner.Unity
                 row = 0;
                 return;
             }
+            if(tab==1 && e.Key==32){services.Audio.PreviewVoice(S.VoicePackId,S);return;}
+            // Tab and arrow events can arrive before the next OnGUI repaint.
+            // Resolve rows from the current tab, never a stale rendered section.
+            currentRows = Rows();
             if (e.Key == 38)
                 row = Math.Max(0, row - 1);
             if (e.Key == 40)
@@ -349,8 +353,8 @@ namespace KeyLearner.Unity
             }
             if (tab == 1)
             {
-                Side(255, "Try this voice", () => services.Audio.Say("Hello little explorer. Milk. Mommy. Let's play.", S));
-                Ui.Label(new Rect(1125, 329, 250, 155), "Recordings, prepared clips and Windows speech all play offline.", 23, Color.white);
+                Side(255, "Try this voice", () => services.Audio.PreviewVoice(S.VoicePackId, S));
+                Ui.Label(new Rect(1125, 329, 250, 155), "Changes apply now. Save & return keeps them. Space: preview narrator.", 23, Color.white);
                 Ui.Label(new Rect(55, 740, 1050, 45), services.Audio.Status, 19, Style.Mint, TextAnchor.MiddleLeft);
             }
             if (tab == 2)
@@ -404,8 +408,12 @@ namespace KeyLearner.Unity
                     Cycle("Backdrop", () => S.Backdrop, v => S.Backdrop = v);
                     break;
                 case 1:
-                    rows.Add(new SettingRow { Label = "Windows voice", Value = () => S.WindowsVoice.Length > 0 ? S.WindowsVoice : "Automatic", Change = d => { var values = new[] { "" }.Concat(services.Audio.Voices).ToArray(); S.WindowsVoice = values[(Math.Max(0, Array.IndexOf(values, S.WindowsVoice)) + d + values.Length) % values.Length]; } });
-                    Number("Speech rate", () => S.SpeechRate, v => S.SpeechRate = (int)v, 1);
+                    rows.Add(new SettingRow { Label = "Narrator", Value = () => services.Store.SpeechPacks.DisplayName(S.VoicePackId), Change = d => {
+                        var values=services.Store.SpeechPacks.Packs.Select(v=>v.Id).ToArray();var index=Array.IndexOf(values,services.Store.SpeechPacks.NormalizeChoice(S.VoicePackId));
+                        services.Audio.SelectVoice(S,values[(index+d+values.Length)%values.Length]);
+                    } });
+                    rows.Add(new SettingRow { Label = "Custom Windows voice", Value = () => S.WindowsVoice.Length > 0 ? S.WindowsVoice : "Automatic", Change = d => { var values = new[] { "" }.Concat(services.Audio.Voices).ToArray(); S.WindowsVoice = values[(Math.Max(0, Array.IndexOf(values, S.WindowsVoice)) + d + values.Length) % values.Length]; } });
+                    Number("Custom speech rate", () => S.SpeechRate, v => S.SpeechRate = (int)v, 1);
                     Number("Volume", () => S.Volume, v => S.Volume = (int)v, 5);
                     Toggle("Speak letters", () => S.SpeakLetters, v => S.SpeakLetters = v);
                     Text("Optional Piper executable", () => S.PiperExecutable, v => S.PiperExecutable = v);

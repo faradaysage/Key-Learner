@@ -60,6 +60,12 @@ def build():
         for row in csv.DictReader((ROOT/"data"/name).open(encoding="utf-8-sig")):
             word=row["word"].strip().lower()
             if word: add("word-"+re.sub(r"[^a-z0-9]+","-",word),word,"data/"+name)
+    # Explicitly requested shared recordings; never enumerate a private dictionary/profile.
+    additions=ROOT/"tools/speech/additional_words.json"
+    if additions.exists():
+        for id,text in json.loads(additions.read_text(encoding="utf-8")).items():
+            if not re.fullmatch(r"word-[a-z0-9-]+",id):raise ValueError("Invalid additional word ID: "+id)
+            add(id,text,"Explicit additional speech vocabulary")
     samples=["number-000","number-001","number-007","number-012","number-042","number-100","letter-a","letter-w",
              "cue-how-many","make-05","hop-subtract-02","cue-well-done","cue-great-counting","cue-try-again",
              "cue-take-your-time","cue-hundred","cue-voice-preview","cue-locked-hop","cue-ocean","cue-hop-help"]

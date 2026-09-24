@@ -176,11 +176,11 @@ namespace KeyLearner.Unity
                 var contentRoot = Directory.GetParent(Application.dataPath);
                 if (Application.isEditor)
                     contentRoot = contentRoot.Parent;
-                var store = new Store(options.DataRoot, contentRoot.FullName);
+                var store = new Store(options.DataRoot, contentRoot.FullName, Path.Combine(Application.streamingAssetsPath,"Content","Voice"));
                 if (options.Has("--mute"))
                     store.Settings.Sound = false;
                 services = new GameServices { Store = store, Options = options, Camera = camera, PickerAction = OpenPicker, Content = Resources.Load<ContentLibrary>("ContentLibrary") };
-                services.Audio = new UnityAudioService(gameObject, store.Root);
+                services.Audio = new UnityAudioService(gameObject, store.Root, store.SpeechPacks);
                 services.Rewards = gameObject.AddComponent<RewardEffects>();
                 services.CanvasCamera();
                 input = new WindowsInputSession(options.Unprotected, store.Root);

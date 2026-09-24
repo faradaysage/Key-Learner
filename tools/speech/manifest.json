@@ -4739,6 +4739,16 @@
       "trimAligner": "small.en"
     },
     {
+      "id": "word-apollo",
+      "text": "Apollo",
+      "aliases": [
+        "apollo"
+      ],
+      "sources": [
+        "Explicit additional speech vocabulary"
+      ]
+    },
+    {
       "id": "word-apologize",
       "text": "apologize",
       "aliases": [
@@ -5376,6 +5386,19 @@
       "generationText": "The word. astra.",
       "trimPrefix": "The word",
       "seedOffset": 103,
+      "trimAligner": "small.en"
+    },
+    {
+      "id": "word-athena",
+      "text": "Athena",
+      "aliases": [
+        "athena"
+      ],
+      "sources": [
+        "Explicit additional speech vocabulary"
+      ],
+      "generationText": "The name. Athena.",
+      "trimPrefix": "The name",
       "trimAligner": "small.en"
     },
     {

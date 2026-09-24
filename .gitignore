@@ -65,3 +65,8 @@ UnityPort/Assets/StreamingAssets/Content/Voice/catalog.json*
 # Development-only Python caches (speech and asset conversion tools).
 __pycache__/
 *.pyc
+
+# Generated Unity copies of finalized voice packs; canonical data lives in Content/Voice.
+UnityPort/Assets/StreamingAssets/Content/Voice/Packs/
+UnityPort/Assets/StreamingAssets/Content/Voice/Packs.meta
+UnityPort/Assets/StreamingAssets/Content/Voice/voice-packs.json*

@@ -16,6 +16,7 @@
     <Compile Include="../Studio/Subitizing.cs" />
     <Compile Include="../Studio/LearningBonus.cs" />
     <Compile Include="../Studio/PreparedSpeechCatalog.cs" />
+    <Compile Include="../Studio/VoicePackRegistry.cs" />
     <Compile Include="../Studio/InputFocus.cs" />
     <Compile Include="../Studio/GameCatalog.cs" />
     <Compile Include="../Studio/ExplorerWorld.cs" />

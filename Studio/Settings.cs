@@ -58,6 +58,7 @@ public sealed class Settings
     public double Bounce { get; set; } = .65;
     public double EffectStrength { get; set; } = 1;
     public double FontScale { get; set; } = 1;
+    public string VoicePackId { get; set; } = "";
     public string WindowsVoice { get; set; } = "";
     public string PiperExecutable { get; set; } = "";
     public string PiperModel { get; set; } = "";
@@ -74,6 +75,7 @@ public sealed class Settings
         LetterLifetime = Finite(LetterLifetime, 1, 12, 5); Gravity = Finite(Gravity, 0, 500, 110);
         Bounce = Finite(Bounce, 0, .95, .65); EffectStrength = Finite(EffectStrength, .1, 2, 1);
         FontScale = Finite(FontScale, .5, 1.8, 1);
+        VoicePackId = (VoicePackId ?? "").Trim();
         WindowsVoice ??= ""; PiperExecutable ??= ""; PiperModel ??= "";
         if (!Enum.IsDefined(typeof(Backdrop),Backdrop)) Backdrop=Backdrop.Starfield;
         if (!Enum.IsDefined(typeof(Mood),Theme)) Theme = Mood.PrimaryColors;
@@ -109,17 +111,31 @@ public sealed class Store
     public string Root { get; }
     public string Status { get; private set; } = "Saved locally. No accounts or uploads.";
     public Settings Settings { get; }
+    public VoicePackRegistry SpeechPacks {get;}
     public GestureTraining Gestures {get;private set;}=new();
     public Profile Profile { get; private set; }
     public MathProgress MathLearning {get;private set;}=new();
     public List<WordEntry> Words { get; }
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
-    public Store(string? root = null,string? contentRoot = null)
+    void ReportSpeechDiagnostic(string message)
+    {
+        // Bounded per registry and capped on disk; contains stable pack/key IDs, never spoken text.
+        try
+        {
+            var path=Path.Combine(Root,"voice-pack-diagnostics.log");
+            if(File.Exists(path) && new FileInfo(path).Length>65536)File.WriteAllText(path,"");
+            File.AppendAllText(path,DateTime.UtcNow.ToString("O")+" "+message+Environment.NewLine);
+        }
+        catch(Exception e) when(e is IOException or UnauthorizedAccessException) { }
+    }
+    public Store(string? root = null,string? contentRoot = null,string? speechRoot = null)
     {
         Root = root ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KeyLearner");
         Directory.CreateDirectory(Root);
         var savedSettings=Read<Settings>("settings.json");
         Settings = savedSettings ?? new(); Settings.Normalize();
+        SpeechPacks=new VoicePackRegistry(speechRoot??Path.Combine(contentRoot??AppContext.BaseDirectory,"Content","Voice"),ReportSpeechDiagnostic);
+        Settings.VoicePackId=SpeechPacks.NormalizeChoice(Settings.VoicePackId);
         if(Settings.DefaultsVersion<1)
         {
             if(Settings.Theme==Mood.Aurora)Settings.Theme=Mood.PrimaryColors;
