@@ -478,6 +478,12 @@ jobs:
           versioning: Custom
           version: ${{ needs.unity-preflight.outputs.version }}
           allowDirtyBuild: true
+      - name: Make custom Android output writable
+        shell: bash
+        run: |
+          test -d artifacts/leappad
+          # GameCI creates this custom build directory as root inside its container.
+          sudo chown --recursive --no-dereference "$(id -u):$(id -g)" artifacts/leappad
       - name: Inspect the actual candidate APK
         env:
           BUILD_VERSION: ${{ needs.unity-preflight.outputs.version }}
