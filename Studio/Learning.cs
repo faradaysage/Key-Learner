@@ -128,9 +128,10 @@ public sealed class CountingRecognizer
         if(now-last>4) Pending="";
         last=now; Pending+=digit;
         var expected=Expected.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        if(Pending==expected) { var result=Expected; Expected=Expected>=100?1:Expected+1; Pending=""; return result; }
+        if(Pending==expected) return CountNext();
         if(!expected.StartsWith(Pending,StringComparison.Ordinal)) Pending=expected.StartsWith(digit) ? digit.ToString() : "";
         return null;
     }
+    public int CountNext() { var result=Expected; Expected=Expected>=100?1:Expected+1; Pending=""; return result; }
     public void Update(double now) { if(now-last>4) Pending=""; }
 }

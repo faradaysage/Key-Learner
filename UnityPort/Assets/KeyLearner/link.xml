@@ -1,0 +1,17 @@
+<linker>
+  <!-- Local settings/progress and narration metadata are serialized through System.Text.Json. -->
+  <assembly fullname="KeyLearner.Domain" preserve="all" />
+  <assembly fullname="KeyLearner.Unity" preserve="all" />
+  <assembly fullname="System.Text.Json" preserve="all" />
+  <!-- CreatePrimitive requests these components internally, before visual-only
+       callers remove colliders. Preserve their native registration in IL2CPP. -->
+  <assembly fullname="UnityEngine.CoreModule">
+    <type fullname="UnityEngine.MeshFilter" preserve="all" />
+    <type fullname="UnityEngine.MeshRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.PhysicsModule">
+    <type fullname="UnityEngine.SphereCollider" preserve="all" />
+    <type fullname="UnityEngine.BoxCollider" preserve="all" />
+    <type fullname="UnityEngine.MeshCollider" preserve="all" />
+  </assembly>
+</linker>

@@ -28,7 +28,7 @@ namespace KeyLearner.Unity
             {PlayMode.Dinosaur,()=>new DinosaurGame()}
         };
     }
-    public sealed class Suite : MonoBehaviour
+    public sealed partial class Suite : MonoBehaviour
     {
         GameServices services;
         WindowsInputSession input;
@@ -117,8 +117,11 @@ namespace KeyLearner.Unity
         }
         void DispatchGameKey(KeyEvent e)
         {
-            if (e.Down && e.Key == 27)
-                reminderUntil = services.Now + 7;
+            if (e.Key == 27)
+            {
+                if (e.Down) OpenGameMenu();
+                return;
+            }
             game?.Key(e);
         }
         public void PreviewFocusLoss()
@@ -165,7 +168,7 @@ namespace KeyLearner.Unity
                     privacy = "Aggregate counts and state only; no key identities, text, profile contents, device identifiers or window titles."
                 });
                 introduction = options.Preview && !options.Has("--show-intro") ? null : new StartupIntroduction();
-                Application.runInBackground = true;
+                Application.runInBackground = !AndroidContent.Enabled;
                 Application.targetFrameRate = 60;
                 var camera = Camera.main;
                 if (!camera)
@@ -176,7 +179,7 @@ namespace KeyLearner.Unity
                 var contentRoot = Directory.GetParent(Application.dataPath);
                 if (Application.isEditor)
                     contentRoot = contentRoot.Parent;
-                var store = new Store(options.DataRoot, contentRoot.FullName, Path.Combine(Application.streamingAssetsPath,"Content","Voice"));
+                var store = new Store(options.DataRoot, contentRoot.FullName, Path.Combine(Application.streamingAssetsPath,"Content","Voice"), AndroidContent.Enabled ? AndroidContent.CreateVoiceRegistry() : null);
                 if (options.Has("--mute"))
                     store.Settings.Sound = false;
                 services = new GameServices { Store = store, Options = options, Camera = camera, PickerAction = OpenPicker, Content = Resources.Load<ContentLibrary>("ContentLibrary") };
@@ -212,6 +215,7 @@ namespace KeyLearner.Unity
         double revealUntil;
         public void Select(PlayMode mode)
         {
+            CloseGameMenu();
             if (mode == PlayMode.CannonHop && !services.Store.MathLearning.HopUnlocked && !services.Preview)
             {
                 hopNoticeUntil = Time.unscaledTimeAsDouble + 8;
@@ -232,6 +236,7 @@ namespace KeyLearner.Unity
         }
         public void OpenPicker()
         {
+            CloseGameMenu();
             ClearTransient();
             game?.Suspend();
             game?.Exit();
@@ -242,6 +247,16 @@ namespace KeyLearner.Unity
         }
         void OpenStudio()
         {
+            if (TouchMode)
+            {
+                CloseGameMenu();
+                services.Audio.Stop();
+                parent.Suspend();
+                studio = !studio;
+                pointerInput.Reset();
+                services.Keys = default;
+                return;
+            }
             ClearTransient();
             game?.Suspend();
             parent.Suspend();
@@ -287,12 +302,13 @@ namespace KeyLearner.Unity
                     DiagnosticState("heartbeat");
                     nextDiagnostic = Time.realtimeSinceStartupAsDouble + (Time.realtimeSinceStartupAsDouble < 60 ? 1 : 5);
                 }
-                if (frame.Reset)
+                if (frame.Reset && !gameMenu && !TouchMode)
                     ResetInteraction();
-                services.Keys = frame.Snapshot;
+                services.Keys = gameMenu ? default : frame.Snapshot;
                 services.Rewards.Gentle = services.Settings.GentleMotion;
+                UpdateParentGate();
                 services.Audio.Update(services.Settings);
-                if (frame.ParentAction == ParentAction.Exit)
+                if (!TouchMode && frame.ParentAction == ParentAction.Exit)
                 {
                     Quit();
                     return;
@@ -311,26 +327,32 @@ namespace KeyLearner.Unity
                     {
                         input.Suspend(); // Intro keystrokes must never leak into picker/gameplay.
                         ResetInteraction();
+                        AndroidSystemUi.Apply();
                         DiagnosticState("splash-finished");
                     }
                     return;
                 }
-                if (frame.ParentAction == ParentAction.Options)
+                if (!TouchMode && frame.ParentAction == ParentAction.Options)
                     OpenStudio();
                 if (frame.OpenPicker)
                     OpenPicker();
                 // Unity animations/particles share the same suspension as the explicit domain tick.
                 // Input, parent controls and verification use unscaled time.
-                Time.timeScale=frame.Active && !studio && !picker ? 1 : 0;
+                Time.timeScale=frame.Active && !studio && !picker && !gameMenu ? 1 : 0;
                 if (frame.Active)
                 {
-                    services.AdvanceClock(Mathf.Min(Time.unscaledDeltaTime, .1f));
+                    if (!gameMenu && !(TouchMode && (studio || picker))) services.AdvanceClock(Mathf.Min(Time.unscaledDeltaTime, .1f));
                     foreach (var e in frame.Events)
                     {
+                        if (TouchMode && e.Key == 27)
+                        {
+                            if (e.Down) { if (studio) CloseStudio(); OpenGameMenu(); }
+                            continue;
+                        }
+                        if (gameMenu) continue;
                         if (e.Key < 0)
                         {
-                            ClearTransient();
-                            game?.Suspend();
+                            if (!TouchMode) { ClearTransient(); game?.Suspend(); }
                             continue;
                         }
                         if (studio)
@@ -349,14 +371,15 @@ namespace KeyLearner.Unity
                         gameKeyEvents++;
                         DispatchGameKey(new KeyEvent(e.Key, e.Down, services.Now));
                     }
-                    if (!picker && !studio)
+                    if (!picker && !studio && !gameMenu)
                     {
                         game?.Tick(Mathf.Min(Time.unscaledDeltaTime, .1f));
                         services.Feedback.Apply(services.Camera, Mathf.Min(Time.unscaledDeltaTime, .1f), services.Settings.GentleMotion);
                         if (pointerInput.TryGet(out var pointer, out bool right))
                         {
                             var p = services.PointerFromScreen(pointer);
-                            game?.Pointer(p, right);
+                            if (TouchMode && MenuRect.Contains(NavigationPoint(pointer))) OpenGameMenu();
+                            else game?.Pointer(p, right);
                         }
                     }
                 }
@@ -452,10 +475,11 @@ namespace KeyLearner.Unity
                 DrawIntroduction();
             else if (studio)
                 parent.Draw();
-            else if (picker)
+            else if (picker && !gameMenu)
                 DrawPicker();
-            else
+            else if (!gameMenu)
                 game?.DrawUI();
+            if (introduction?.Active != true && !studio) DrawGameNavigation();
             if(!studio && introduction?.Active!=true && Time.realtimeSinceStartupAsDouble<revealUntil)
                 Ui.Panel(new Rect(0,0,1440,900),new Color(.025f,.045f,.08f,(float)((revealUntil-Time.realtimeSinceStartupAsDouble)/.28)),0);
             if (!picker && !studio && services.Now < reminderUntil)
@@ -499,9 +523,9 @@ namespace KeyLearner.Unity
             for (int i = 0; i < 4; i++)
             {
                 int n = i;
-                Ui.Button(new Rect(80 + i * 195, 151, 180, 52), filters[i], () => { filter = n; selected = page = 0; });
+                Ui.Button(new Rect(80 + i * 195, 151, 180, TouchMode ? 78 : 52), filters[i], () => { filter = n; selected = page = 0; });
                 if (filter == i)
-                    Ui.Panel(new Rect(88 + i * 195, 209, 164, 4), Style.Dots, 2);
+                    Ui.Panel(new Rect(88 + i * 195, TouchMode ? 230 : 209, 164, 4), Style.Dots, 2);
             }
             var all = VisibleGames();
             int pages = Mathf.CeilToInt(all.Length / 6f);
@@ -531,8 +555,8 @@ namespace KeyLearner.Unity
                     Ui.Label(picture, (int)g.Mode >= 6 ? "• •" : "ABC", 33, Style.Navy);
                 Ui.Label(new Rect(r.x + 180, r.y + 15, 217, 68), g.Name, 27, Color.white, TextAnchor.MiddleLeft);
                 Ui.Label(new Rect(r.x + 181, r.y + 84, 218, 30), "AGES " + g.MinimumAge + "+  /  " + g.Type.ToUpperInvariant(), 14, accent, TextAnchor.MiddleLeft);
-                Ui.Label(new Rect(r.x + 24, r.y + 127, r.width - 48, 55), locked ? "Complete joining and taking away to unlock" : g.Description, 21, new Color(.72f, .80f, .9f), TextAnchor.MiddleLeft);
-                Ui.Label(new Rect(r.x + 24, r.y + 185, r.width - 48, 30), locked ? "Keep exploring numbers" : "LET'S PLAY  →", 16, accent, TextAnchor.MiddleLeft);
+                Ui.Label(new Rect(r.x + 24, r.y + 127, r.width - 48, 55), locked ? "Complete joining and taking away to unlock" : TouchMode && g.Mode == PlayMode.SmashGarden ? "Tap to grow a word, one letter at a time" : TouchMode && g.Mode == PlayMode.WordAdventure ? "Match letters, then tap the balloons" : g.Description, 21, new Color(.72f, .80f, .9f), TextAnchor.MiddleLeft);
+                Ui.Label(new Rect(r.x + 24, r.y + 185, r.width - 48, 30), locked ? "Keep exploring numbers" : TouchMode ? "TAP TO PLAY" : "LET'S PLAY  →", 16, accent, TextAnchor.MiddleLeft);
                 if (GUI.Button(r, GUIContent.none, GUIStyle.none))
                     Select(g.Mode);
             }
@@ -543,28 +567,44 @@ namespace KeyLearner.Unity
                 Ui.Label(new Rect(180, 638, 760, 100), "Cannon Hop opens after How Many Now practice.\nJoining: " + Mathf.Min(3, progress.JoiningCompleted) + "/3    Taking away: " + Mathf.Min(3, progress.SeparatingCompleted) + "/3", 25, Color.white);
                 Ui.Button(new Rect(968, 666, 280, 65), "Start practice", () => Select(PlayMode.HowManyNow));
             }
-            Ui.Label(new Rect(80, 797, 1010, 48), "Arrow keys + Enter to choose   ·   Tab to explore categories   ·   G, G to return", 19, new Color(.50f, .62f, .77f), TextAnchor.MiddleLeft);
+            Ui.Label(new Rect(80, 797, 1010, 48), TouchMode ? "Tap a game to start exploring" : "Arrow keys + Enter to choose   ·   Tab to explore categories   ·   G, G to return", 19, new Color(.50f, .62f, .77f), TextAnchor.MiddleLeft);
             Ui.Label(new Rect(80, 854, 790, 36), BuildLabel, 17, new Color(.56f, .68f, .82f), TextAnchor.MiddleLeft);
-            Ui.Button(new Rect(1000, 858, 360, 34), "Open diagnostics & close", OpenDiagnosticsAndQuit);
+            if (!TouchMode) Ui.Button(new Rect(1000, 858, 360, 34), "Open diagnostics & close", OpenDiagnosticsAndQuit);
             if (pages > 1)
-                Ui.Button(new Rect(1130, 798, 230, 54), page == 0 ? "More games →" : "← First games", () => { page = (page + 1) % pages; selected = page * 6; });
+                Ui.Button(new Rect(1130, 785, 230, TouchMode ? 84 : 54), page == 0 ? (TouchMode ? "More games" : "More games →") : (TouchMode ? "Previous games" : "← First games"), () => { page = (page + 1) % pages; selected = page * 6; });
         }
         void OnApplicationFocus(bool focus)
         {
             diagnostics?.Write("unity-focus", new { focus });
+            if (focus && TouchMode) AndroidSystemUi.Apply();
             if (!focus)
             {
                 input?.Suspend();
-                ResetInteraction();
+                if (TouchMode)
+                {
+                    OpenGameMenu();
+                    parentHoldStarted = -1;
+                    parentFinger = -1;
+                    services?.Store?.Save();
+                }
+                else ResetInteraction();
             }
         }
         void OnApplicationPause(bool pause)
         {
             diagnostics?.Write("unity-pause", new { pause });
+            if (!pause && TouchMode) AndroidSystemUi.Apply();
             if (pause)
             {
                 input?.Suspend();
-                ResetInteraction();
+                if (TouchMode)
+                {
+                    OpenGameMenu();
+                    parentHoldStarted = -1;
+                    parentFinger = -1;
+                    services?.Store?.Save();
+                }
+                else ResetInteraction();
             }
         }
         void RecordRuntimeError(string message, string stack, LogType type)
@@ -572,11 +612,18 @@ namespace KeyLearner.Unity
             if ((type == LogType.Error || type == LogType.Exception || type == LogType.Assert) && runtimeErrors.Count < 20)
                 runtimeErrors.Add(message);
         }
-        void OnDestroy()
+        bool shutdown;
+        void OnApplicationQuit() => Shutdown();
+        void OnDestroy() => Shutdown();
+        void Shutdown()
         {
+            if (shutdown) return;
+            shutdown = true;
+            CloseGameMenu();
             Time.timeScale=1;
             Application.logMessageReceived -= RecordRuntimeError;
             ClearTransient();
+            game?.Exit();
             services?.Audio?.Dispose();
             input?.Dispose();
             diagnostics?.Write("disposed", new { normalCleanup = true });

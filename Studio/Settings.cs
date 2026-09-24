@@ -128,13 +128,13 @@ public sealed class Store
         }
         catch(Exception e) when(e is IOException or UnauthorizedAccessException) { }
     }
-    public Store(string? root = null,string? contentRoot = null,string? speechRoot = null)
+    public Store(string? root = null,string? contentRoot = null,string? speechRoot = null,VoicePackRegistry? speechPacks = null)
     {
         Root = root ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KeyLearner");
         Directory.CreateDirectory(Root);
         var savedSettings=Read<Settings>("settings.json");
         Settings = savedSettings ?? new(); Settings.Normalize();
-        SpeechPacks=new VoicePackRegistry(speechRoot??Path.Combine(contentRoot??AppContext.BaseDirectory,"Content","Voice"),ReportSpeechDiagnostic);
+        SpeechPacks=speechPacks??new VoicePackRegistry(speechRoot??Path.Combine(contentRoot??AppContext.BaseDirectory,"Content","Voice"),ReportSpeechDiagnostic);
         Settings.VoicePackId=SpeechPacks.NormalizeChoice(Settings.VoicePackId);
         if(Settings.DefaultsVersion<1)
         {

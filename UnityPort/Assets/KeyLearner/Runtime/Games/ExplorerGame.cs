@@ -153,14 +153,17 @@ namespace KeyLearner.Unity
                 model.TapTurn(1);
             if (e.Key == 39)
                 model.TapTurn(-1);
-            if ((e.Key == 162 || e.Key == 163) && model.Signal())
-            {
-                signalTime = 2;
-                S.Audio.Play(kind == ExplorerKind.Bird ? "squawk" : kind == ExplorerKind.Racer ? "horn" : "sonar", S.Settings, .45f);
-            }
+            if (e.Key == 162 || e.Key == 163) Signal();
+        }
+        void Signal()
+        {
+            if (!model.Signal()) return;
+            signalTime = 2;
+            S.Audio.Play(kind == ExplorerKind.Bird ? "squawk" : kind == ExplorerKind.Racer ? "horn" : "sonar", S.Settings, .45f);
         }
         public override void Pointer(Vector2 logical, bool right)
         {
+            if (S.TouchPlay && TouchControls.Owns(logical)) return;
             if (!right && kind == ExplorerKind.Dolphin) encounters.Pointer(logical, model);
         }
         public override void Tick(float dt)
@@ -176,7 +179,9 @@ namespace KeyLearner.Unity
             int before = model.Collected, completed = model.Completed;
             // The domain is right-handed; the Unity -Z follow view has the opposite screen-right axis.
             float turn = (S.Keys.IsDown(37) ? 1 : 0) - (S.Keys.IsDown(39) ? 1 : 0), pitch = (S.Keys.IsDown(40) ? 1 : 0) - (S.Keys.IsDown(38) ? 1 : 0);
-            model.Step(dt, turn, pitch, S.Keys.IsDown(32), S.Settings.FlightAssist);
+            if (S.TouchPlay) { var steering=TouchControls.Steering; turn=-steering.x; pitch=-steering.y; }
+            bool boosting = S.TouchPlay ? TouchControls.Boost : S.Keys.IsDown(32);
+            model.Step(dt, turn, pitch, boosting, S.Settings.FlightAssist);
             if (before != model.Collected)
             {
                 if (model.Collected < model.Word.Length)
@@ -215,7 +220,7 @@ namespace KeyLearner.Unity
                 ApplyVehicleTint();
             }
             if (kind == ExplorerKind.Racer) soundscape.SetVehicle(S.Content.Category("car")[vehicleIndex].Id);
-            soundscape.Tick(dt, model.Speed, turn, pitch, S.Keys.IsDown(32), position.y, vehicleIndex);
+            soundscape.Tick(dt, model.Speed, turn, pitch, boosting, position.y, vehicleIndex);
             vehicleAnimation?.Tick(dt, turn, model.Speed, S.Settings.GentleMotion);
             if (kind == ExplorerKind.Dolphin)
             {
@@ -692,13 +697,14 @@ namespace KeyLearner.Unity
                 Ui.Panel(rect, i < model.Collected ? Style.Mint : i == model.Collected ? Style.Dots : Style.Panel);
                 Ui.Label(rect, model.Word[i].ToString().ToUpperInvariant(), 33, i <= model.Collected ? Style.Navy : Color.white);
             }
-            Ui.Panel(new Rect(1160, 30, 240, 96), new Color(.025f, .065f, .12f, .9f));
-            Ui.Label(new Rect(1180, 43, 200, 35), model.Score + " points", 27, Color.white);
-            Ui.Label(new Rect(1180, 82, 200, 25), model.Completed + " words discovered", 15, Style.Mint);
+            Ui.Panel(new Rect(S.TouchPlay ? 900 : 1160, 30, 240, 96), new Color(.025f, .065f, .12f, .9f));
+            Ui.Label(new Rect(S.TouchPlay ? 920 : 1180, 43, 200, 35), model.Score + " points", 27, Color.white);
+            Ui.Label(new Rect(S.TouchPlay ? 920 : 1180, 82, 200, 25), model.Completed + " words discovered", 15, Style.Mint);
             string region = kind == ExplorerKind.Dolphin ? "THE CORAL GARDENS" : ExplorerWorld.Area(model.Position.Z).ToString().ToUpperInvariant();
             Ui.Panel(new Rect(30, 781, 1370, 91), new Color(.025f, .065f, .12f, .7f), 12);
             Ui.Label(new Rect(42, 785, 830, 40), region, 21, Color.white, TextAnchor.MiddleLeft);
-            Ui.Label(new Rect(42, 828, 1300, 38), kind == ExplorerKind.Racer ? "← → Steer    ↑ Accelerate    ↓ Brake    SPACE Boost    CTRL Find a letter    G G Games" : "← → Turn    ↑ Dive    ↓ Climb    SPACE Boost    Double-tap ← or → to roll    CTRL Call    G G Games", 19, new Color(.85f, .96f, 1), TextAnchor.MiddleLeft);
+            if (!S.TouchPlay) Ui.Label(new Rect(42, 828, 1300, 38), kind == ExplorerKind.Racer ? "← → Steer    ↑ Accelerate    ↓ Brake    SPACE Boost    CTRL Find a letter    G G Games" : "← → Turn    ↑ Dive    ↓ Climb    SPACE Boost    Double-tap ← or → to roll    CTRL Call    G G Games", 19, new Color(.85f, .96f, 1), TextAnchor.MiddleLeft);
+            if (S.TouchPlay) TouchControls.Draw(kind == ExplorerKind.Bird ? "Call" : kind == ExplorerKind.Racer ? "Horn" : "Sonar", Signal);
             if (model.RewardRemaining > 0)
                 Ui.Label(new Rect(280, 280, 880, 150), model.Word.ToUpperInvariant() + "!", 84, Style.Dots);
         }
@@ -710,6 +716,7 @@ namespace KeyLearner.Unity
             signalTime = 0;
             validateWord = true;
         }
+        public override void ResetActivity() => S.Session.Remove("explorer." + kind);
         public override void Exit()
         {
             encounters?.Dispose();

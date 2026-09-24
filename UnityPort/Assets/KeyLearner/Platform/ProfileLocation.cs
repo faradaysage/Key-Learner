@@ -9,6 +9,8 @@ namespace KeyLearner.Unity.Platform
         {
             if (!string.IsNullOrWhiteSpace(explicitDataRoot))
                 return Path.GetFullPath(explicitDataRoot);
+            if (!isolatedPreview && UnityEngine.Application.platform == UnityEngine.RuntimePlatform.Android)
+                return UnityEngine.Application.persistentDataPath;
             return isolatedPreview ? Path.Combine(Path.GetTempPath(), "KeyLearner-Unity-preview-" + Guid.NewGuid().ToString("N")) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KeyLearner");
         }
     }

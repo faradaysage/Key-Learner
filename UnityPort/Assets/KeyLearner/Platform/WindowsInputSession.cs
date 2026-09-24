@@ -267,7 +267,7 @@ namespace KeyLearner.Unity.Platform
             if (next) activePolls++;
             frame.Active = next;
             if (changed)
-                UnityEngine.Debug.Log("KEYLEARNER_INPUT_TRANSITION active=" + next + " bound=" + window + " foreground=" + GetForegroundWindow() + " visibleState=" + state + " unityFocus=" + Application.isFocused + " nativeFocus=" + (guard?.OwnsForeground ?? false));
+                UnityEngine.Debug.Log("KEYLEARNER_INPUT_TRANSITION active=" + next + " bound=" + window + " foreground=" + (window == IntPtr.Zero ? IntPtr.Zero : GetForegroundWindow()) + " visibleState=" + state + " unityFocus=" + Application.isFocused + " nativeFocus=" + (guard?.OwnsForeground ?? false));
             if (!next)
             {
                 frame.Snapshot = default;

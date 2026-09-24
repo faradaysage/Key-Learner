@@ -31,22 +31,26 @@ public sealed class VoicePackRegistry
     readonly HashSet<string> rejected=new(StringComparer.Ordinal),reported=new(StringComparer.Ordinal);
     readonly Action<string>? diagnostic;
     readonly PreparedSpeechCatalog contract;
+    readonly Func<PreparedSpeechCatalog.Clip,bool>? importedClipAvailable;
     public IReadOnlyList<VoicePack> Packs => packs.AsReadOnly();
     public string DefaultVoiceId {get;private set;}=LegacyId;
     public string FallbackVoiceId {get;private set;}=LegacyId;
     public int RequiredCount => contract.Clips.Count;
-    public VoicePackRegistry(string root,Action<string>? diagnostic=null)
+    public VoicePackRegistry(string root,Action<string>? diagnostic=null,Func<string,string?>? readMetadata=null,Func<PreparedSpeechCatalog.Clip,bool>? importedClipAvailable=null,bool includeLegacy=true)
     {
         this.diagnostic=diagnostic;
+        this.importedClipAvailable=importedClipAvailable;
         root=System.IO.Path.GetFullPath(root);
-        contract=new PreparedSpeechCatalog(root);
+        contract=new PreparedSpeechCatalog(root,readMetadata);
         var legacy=new VoicePack(LegacyId,"Original narrator",root,contract,default);
         var manifest=System.IO.Path.Combine(root,"voice-packs.json");
-        if(File.Exists(manifest))
+        if(readMetadata!=null || File.Exists(manifest))
         {
             try
             {
-                using var document=JsonDocument.Parse(File.ReadAllText(manifest));
+                var manifestText=readMetadata!=null?readMetadata(manifest):File.ReadAllText(manifest);
+                if(manifestText==null)throw new InvalidDataException("Missing voice manifest");
+                using var document=JsonDocument.Parse(manifestText);
                 var json=document.RootElement;
                 if(json.GetProperty("schema").GetInt32()!=1 || json.GetProperty("status").GetString()!="complete")throw new InvalidDataException("Packs are not finalized");
                 // A bundled corpus catalog is the stable key/alias contract, independent of pack ordering.
@@ -54,7 +58,7 @@ public sealed class VoicePackRegistry
                 {
                     var corpusFile=Contained(root,corpus.GetString()??"");
                     if(System.IO.Path.GetFileName(corpusFile)!="catalog.json")throw new InvalidDataException("Invalid corpus catalog");
-                    contract=new PreparedSpeechCatalog(System.IO.Path.GetDirectoryName(corpusFile)!);
+                    contract=new PreparedSpeechCatalog(System.IO.Path.GetDirectoryName(corpusFile)!,readMetadata);
                 }
                 if(!contract.IsValid)throw new InvalidDataException("Missing speech contract");
                 foreach(var item in json.GetProperty("voices").EnumerateArray())
@@ -67,7 +71,7 @@ public sealed class VoicePackRegistry
                         var catalogPath=Contained(packRoot,item.GetProperty("catalog").GetString()??"");
                         if(System.IO.Path.GetFileName(catalogPath)!="catalog.json")throw new InvalidDataException("Unsupported catalog path");
                         var folder=System.IO.Path.GetDirectoryName(catalogPath)!;
-                        var catalog=new PreparedSpeechCatalog(folder);
+                        var catalog=new PreparedSpeechCatalog(folder,readMetadata);
                         if(!MatchesContract(catalog))throw new InvalidDataException("Speech contract mismatch");
                         Add(new VoicePack(id,name,folder,catalog,item.Clone()));
                     }
@@ -84,7 +88,7 @@ public sealed class VoicePackRegistry
             {packs.Clear();byId.Clear();contract=legacy.Catalog;DefaultVoiceId=LegacyId;FallbackVoiceId=LegacyId;Report("manifest-invalid","Voice-pack metadata is unavailable; using the original narrator.");}
         }
         // Compatibility data also makes malformed/missing registry metadata nonfatal.
-        Add(legacy);
+        if(includeLegacy)Add(legacy);
     }
     static bool IsContentError(Exception e)=>e is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or InvalidOperationException or KeyNotFoundException or ArgumentException or NotSupportedException or FormatException;
     static bool ValidId(string id)=>id.Length>0 && id.Length<=96 && id.All(c=>c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9' or '-' or '_');
@@ -125,6 +129,8 @@ public sealed class VoicePackRegistry
     {rejected.Add(asset.Path);Report("decode:"+asset.VoiceId+":"+asset.Key,"Speech decoder could not play: "+asset.VoiceId+" / "+asset.Key);}
     bool ValidFile(PreparedSpeechCatalog.Clip clip)
     {
+        // Imported assets were hash-checked before build; their runtime encoding is no longer PCM.
+        if(importedClipAvailable!=null)return importedClipAvailable(clip);
         try
         {
             var file=new FileInfo(clip.Path);if(!file.Exists)return false;
