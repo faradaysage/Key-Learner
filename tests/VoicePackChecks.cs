@@ -18,6 +18,17 @@ static class VoicePackChecks
             check(registry.DefaultVoiceId=="alpha" && registry.Packs[0].Id=="beta","voice default is an explicit ID, not pack order");
             check(registry.Packs.Count==3 && registry.Packs.All(p=>p.AvailableSpeechKeys.Count==2),"voice packs expose identical semantic IDs");
             check(registry.KeyForText("  CAT!  ")=="word-cat","legacy text requests map centrally to semantic IDs");
+            var virtualRoot=Path.Combine(root,"imported-only");
+            var metadata=Directory.GetFiles(root,"*.json",SearchOption.AllDirectories).ToDictionary(path=>Path.GetRelativePath(root,path),File.ReadAllText);
+            int importedLookups=0;
+            var imported=new VoicePackRegistry(virtualRoot,
+                readMetadata:path=>metadata.GetValueOrDefault(Path.GetRelativePath(virtualRoot,path)),
+                importedClipAvailable:clip=>{importedLookups++;return true;},includeLegacy:false);
+            check(importedLookups==0 && imported.Packs.Count==2,"imported voice startup reads metadata without resolving audio or exposing excluded legacy pack");
+            var importedClip=imported.Resolve("word-cat","beta")!;
+            check(importedLookups==1 && importedClip.VoiceId=="beta" && !File.Exists(importedClip.Path),"imported voice resolution does not require raw WAVs on the filesystem");
+            imported.Reject(importedClip);
+            check(imported.Resolve("word-cat","beta")?.VoiceId=="alpha","imported decoder failure retains same-key fallback semantics");
             var beta=registry.Resolve("word-cat","beta")!;var alpha=registry.Resolve("word-cat","alpha")!;
             check(beta.VoiceId=="beta" && alpha.VoiceId=="alpha" && beta.Path!=alpha.Path,"same key selects a different voice data root immediately");
             check(registry.Resolve(VoicePackRegistry.PreviewKey,"beta")?.VoiceId=="beta","preview is a regular speech key in the candidate pack");

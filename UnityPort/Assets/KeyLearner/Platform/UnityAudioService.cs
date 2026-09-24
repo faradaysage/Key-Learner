@@ -14,7 +14,7 @@ using UnityEngine;
 namespace KeyLearner.Unity.Platform
 {
     /// <summary>Unity WAV/effect playback, with warmed offline Windows synthesis isolated in its own helper.</summary>
-    public sealed class UnityAudioService : IDisposable
+    public sealed partial class UnityAudioService : IDisposable
     {
         sealed class Request
         {
@@ -74,7 +74,21 @@ namespace KeyLearner.Unity.Platform
         public int Pending => keys.Count + words.Count + lanes.Count(l => l.Request != null);
         public string Status { get; private set; } = "Warming offline Windows speech";
         public string[] Voices { get; private set; } = Array.Empty<string>();
-        static double Now => KeyboardGuard.Now;
+        bool menuPaused;
+        double pauseStarted, pausedSeconds;
+        double Now => (menuPaused ? pauseStarted : KeyboardGuard.Now) - pausedSeconds;
+        public void SetMenuPaused(bool value)
+        {
+            if (menuPaused == value) return;
+            if (value)
+            {
+                // External Windows synthesis has no pause protocol; cancel only that fallback.
+                if (lanes.Any(l => l.Speech)) StopSpeech();
+                pauseStarted = KeyboardGuard.Now;
+            }
+            else pausedSeconds += KeyboardGuard.Now - pauseStarted;
+            menuPaused = value;
+        }
         public UnityAudioService(GameObject owner, string profileRoot, VoicePackRegistry speechPacks = null)
         {
             cache = Path.Combine(profileRoot, "voice-cache");
@@ -96,6 +110,11 @@ namespace KeyLearner.Unity.Platform
             clips["powerup"] = Tone("powerup", .8, t => { int note = Math.Min(3, (int)(t / .14)); double phase = t - note * .14, duration = note == 3 ? .38 : .14, hz = new[] { 523.25, 659.25, 783.99, 1046.5 }[note]; return (Math.Sin(Math.PI * 2 * hz * phase) + .25 * Math.Sin(Math.PI * 4 * hz * phase)) * Math.Sin(Math.PI * phase / duration) * .55; });
             clips["sonar"] = Tone("sonar", .45, t => Math.Sin(Math.PI * 2 * (880 * t - 300 * t * t)) * Math.Exp(-8 * t));
             clips["horn"] = Tone("horn", .28, t => (Math.Sin(Math.PI * 2 * 220 * t) + .25 * Math.Sin(Math.PI * 2 * 440 * t)) * Math.Sin(Math.PI * t / .28));
+            if (AndroidContent.Enabled)
+            {
+                Status = "Offline Blake narration";
+                return;
+            }
             try
             {
                 using (var current = Process.GetCurrentProcess())
@@ -187,13 +206,14 @@ namespace KeyLearner.Unity.Platform
             {
                 var wav=FindAudio(request);if(wav==null)return null;
                 var clip=LoadClip(wav,true);if(clip!=null)return clip;
+                if(importedSpeechPending)return null;
                 if(request.Asset!=null)SpeechPacks.Reject(request.Asset);else request.SkipRecording=true;
             }
             return null;
         }
         public void Update(Settings settings)
         {
-            if (disposed)
+            if (disposed || menuPaused)
                 return;
             while (replies.TryDequeue(out var reply))
             {
@@ -227,17 +247,23 @@ namespace KeyLearner.Unity.Platform
                     Finish(lane);
             for (int i = 0; i < lanes.Length; i++)
             {
+                // Touch learning narrates each letter and then the completed word.
+                // Keep narration intelligible and bound concurrent decoder memory.
+                if (AndroidContent.Enabled && lanes.Any(active => active.Request != null)) break;
                 var lane = lanes[i];
                 if (lane.Request != null)
                     continue;
                 bool key = i < 5;
+                if (AndroidContent.Enabled && !key && keys.Count > 0) continue;
                 if (key ? i >= keyChannels : i - 5 >= wordChannels)
                     continue;
                 var queue = key ? keys : words;
                 if (queue.Count == 0)
                     continue;
                 var request = queue.Peek();
+                importedSpeechPending = false;
                 AudioClip clip = LoadSpeech(request);
+                if (importedSpeechPending) continue;
                 if(clip==null && request.SpeechKey!=null)
                 {queue.Dequeue();Completed++;Status="Prepared speech unavailable.";continue;}
                 if (clip == null && !ready)
@@ -282,6 +308,7 @@ namespace KeyLearner.Unity.Platform
             lane.Request = null;
             lane.Speech = false;
             lane.Source.Stop();
+            if (AndroidContent.Enabled) { lane.Source.clip = null; ReleaseUnusedImportedSpeech(); }
         }
         static bool Simple(string value) => value.All(c => c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9');
         string Destination(Request request)
@@ -406,6 +433,8 @@ namespace KeyLearner.Unity.Platform
         public AudioClip SoundClip(string name) => LoadClip(Path.Combine(streaming, "Content", "Sounds", name + ".wav"));
         AudioClip LoadClip(string path, bool speech = false)
         {
+            if (AndroidContent.Enabled && path != null && AndroidContent.AudioResource(path, speech) != null)
+                return LoadImportedClip(path, speech);
             if (clips.TryGetValue(path, out var existing))
             {
                 if (speech) speechUse[path] = ++speechClock;
@@ -506,6 +535,7 @@ namespace KeyLearner.Unity.Platform
         {
             keys.Clear();
             words.Clear();
+            foreach (var pending in importedRequests.Values) pending.Wanted = false;
             while (prepare.TryTake(out var waiting))
                 preparing.TryRemove(Destination(waiting), out _);
             Send("CANCEL");
@@ -513,19 +543,23 @@ namespace KeyLearner.Unity.Platform
             {
                 lane.Ticket = ++ticket;
                 lane.Request = null;
-                lane.Source.Stop();
+                if (lane.Source)
+                {
+                    lane.Source.Stop();
+                    if (AndroidContent.Enabled) lane.Source.clip = null;
+                }
                 lane.Speech = false;
             }
+            if (AndroidContent.Enabled) ReleaseUnusedImportedSpeech();
         }
         public void Stop()
         {
             StopSpeech();
             musicGain = 0;
-            music.Stop();
-            music.volume = 0;
+            if (music) { music.Stop(); music.volume = 0; }
             foreach (var source in effects)
-                source.Stop();
-            fire.Stop();
+                if (source) source.Stop();
+            if (fire) fire.Stop();
             lastEffects.Clear();
         }
         public void Dispose()
@@ -555,13 +589,14 @@ namespace KeyLearner.Unity.Platform
                 helper.Dispose();
             }
             foreach (var clip in clips.Values.Distinct())
-                UnityEngine.Object.Destroy(clip);
+                if (importedClips.Contains(clip)) Resources.UnloadAsset(clip);
+                else UnityEngine.Object.Destroy(clip);
             foreach (var lane in lanes)
-                UnityEngine.Object.Destroy(lane.Source.gameObject);
+                if (lane.Source) UnityEngine.Object.Destroy(lane.Source.gameObject);
             foreach (var source in effects)
-                UnityEngine.Object.Destroy(source.gameObject);
-            UnityEngine.Object.Destroy(fire.gameObject);
-            UnityEngine.Object.Destroy(music.gameObject);
+                if (source) UnityEngine.Object.Destroy(source.gameObject);
+            if (fire) UnityEngine.Object.Destroy(fire.gameObject);
+            if (music) UnityEngine.Object.Destroy(music.gameObject);
         }
     }
 }

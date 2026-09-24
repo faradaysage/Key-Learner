@@ -1,0 +1,6 @@
+{
+  "name": "KeyLearner.AndroidImport",
+  "includePlatforms": [
+    "Editor"
+  ]
+}

@@ -208,10 +208,12 @@ namespace KeyLearner.Unity
 
     public sealed class DotPopGame : QuantityMinigame
     {
+        DotRect TouchMute => S.TouchPlay ? new DotRect(36,24,112,94) : DotLayout.Mute;
         SubitizingGame model;
         protected override bool BonusRound => model != null && model.Bonus.Active;
         int previewActions;
         string scenario;
+        public override void ResetActivity() => S.Session.Remove("dots");
         public override void Enter(GameServices services)
         {
             base.Enter(services);
@@ -287,7 +289,7 @@ namespace KeyLearner.Unity
                     Answer = model.Quantity,
                     Choices = Enumerable.Range(0, 10).ToArray(),
                     Targets = Enumerable.Range(0, 10).Select(n => PointerTarget(n, DotLayout.Number(n))).ToArray(),
-                    Mute = PointerTarget(-1, DotLayout.Mute),
+                    Mute = PointerTarget(-1, TouchMute),
                     LayoutWidth = 720,
                     LayoutHeight = 1080,
                     Width = Screen.width,
@@ -326,7 +328,7 @@ namespace KeyLearner.Unity
                 return;
 
             var point = new NVector2(logical.x, logical.y);
-            if (DotLayout.Mute.Contains(point))
+            if (TouchMute.Contains(point))
             {
                 ToggleMute();
                 return;
@@ -353,7 +355,7 @@ namespace KeyLearner.Unity
         {
             Ui.End();
             Ui.Begin(720, 1080);
-            Button(DotLayout.Mute, S.Settings.Sound ? "MUTE" : "UNMUTE", true, false, 23);
+            Button(TouchMute, S.Settings.Sound ? "MUTE" : "UNMUTE", true, false, 23);
             Ui.Label(new Rect(570, 26, 110, 64), model.Stage.ToString(), 38, Color.white);
             string cue = model.Phase == DotPhase.Ready ? "READY" : model.Phase == DotPhase.Set ? "SET" : model.Phase == DotPhase.Go ? "GO" : model.Phase == DotPhase.Answer ? "HOW MANY?" : model.Phase == DotPhase.Reward ? model.Quantity.ToString() : "";
             Ui.Label(new Rect(30, 126, 660, 105), cue, model.Phase == DotPhase.Reward ? 74 : 55, model.Phase == DotPhase.Go || model.Phase == DotPhase.Reward ? Ink : Color.white);
@@ -387,6 +389,8 @@ namespace KeyLearner.Unity
 
     public sealed class VisualMathGame : QuantityMinigame
     {
+        DotRect TouchMathMute => S.TouchPlay ? new DotRect(208,26,150,90) : MathLayout.Mute;
+        DotRect TouchMathBack => S.TouchPlay ? new DotRect(36,26,150,90) : MathLayout.Back;
         readonly MathActivity activity;
         protected override Color Ink => ThemeColors.At(S.Settings.Theme, 1);
         MathGame model;
@@ -404,6 +408,7 @@ namespace KeyLearner.Unity
         {
             this.activity = activity;
         }
+        public override void ResetActivity() => S.Session.Remove("math-" + activity);
         public override void Enter(GameServices services)
         {
             base.Enter(services);
@@ -557,8 +562,8 @@ namespace KeyLearner.Unity
                         model.BuiltCount,
                         model.BuiltMask,
                         Targets = targets,
-                        Back = PointerTarget(-2, MathLayout.Back),
-                        Mute = PointerTarget(-1, MathLayout.Mute),
+                        Back = PointerTarget(-2, TouchMathBack),
+                        Mute = PointerTarget(-1, TouchMathMute),
                         LayoutWidth = 1440,
                         LayoutHeight = 900,
                         Width = Screen.width,
@@ -641,12 +646,12 @@ namespace KeyLearner.Unity
             if (!AcceptTap(right))
                 return;
             var p = new NVector2(logical.x, logical.y);
-            if (MathLayout.Back.Contains(p))
+            if (TouchMathBack.Contains(p))
             {
                 S.Picker();
                 return;
             }
-            if (MathLayout.Mute.Contains(p))
+            if (TouchMathMute.Contains(p))
             {
                 ToggleMute();
                 return;
@@ -868,7 +873,7 @@ namespace KeyLearner.Unity
                 for (int n = 0; n <= 10; n++)
                     Button(MathLayout.Track(n), n.ToString(), model.CanAnswer, model.Phase == MathPhase.Reward && n == r.Final || model.CanAnswer && n == hopSelection, 49);
                 Line(new Vector2(116, 634), new Vector2(1316, 634), 3, new Color(1, 1, 1, .17f));
-                Ui.Label(new Rect(280, 652, 880, 64), model.CanAnswer ? "Click a number · ← → and Enter · 0–9 keys" : "Watch the ball hop " + (r.Subtract ? "back" : "forward"), 27, Ink);
+                Ui.Label(new Rect(280, 652, 880, 64), model.CanAnswer ? (S.TouchPlay ? "Tap the landing number" : "Click a number · ← → and Enter · 0–9 keys") : "Watch the ball hop " + (r.Subtract ? "back" : "forward"), 27, Ink);
             }
             if (activity == MathActivity.Hiding && (model.Phase == MathPhase.Transform || AnswerPhase))
             {
@@ -965,8 +970,8 @@ namespace KeyLearner.Unity
                 }
             }
             Ui.Label(new Rect(500, 30, 700, 55), (BonusRound ? "PEARL BONUS ×3   " : "") + model.Bonus.Score + " points", 24, Ink);
-            Button(MathLayout.Back, "<  GAMES", true, false, 24);
-            Button(MathLayout.Mute, S.Settings.Sound ? "MUTE" : "UNMUTE", true, false, 23);
+            Button(TouchMathBack, "<  GAMES", true, false, 24);
+            Button(TouchMathMute, S.Settings.Sound ? "MUTE" : "UNMUTE", true, false, 23);
             Ui.Label(new Rect(1294, 26, 114, 66), (model.Phase == MathPhase.Reward ? model.Stage - 1 : model.Stage).ToString(), 38, Color.white);
         }
     }

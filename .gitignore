@@ -70,3 +70,10 @@ __pycache__/
 UnityPort/Assets/StreamingAssets/Content/Voice/Packs/
 UnityPort/Assets/StreamingAssets/Content/Voice/Packs.meta
 UnityPort/Assets/StreamingAssets/Content/Voice/voice-packs.json*
+
+# Reversible Android-only import staging (canonical sources remain in Content).
+UnityPort/Assets/KeyLearnerAndroidBuild/
+UnityPort/Assets/KeyLearnerAndroidBuild.meta
+
+# Unity CLI temporary project state
+UnityPort/.utmp/

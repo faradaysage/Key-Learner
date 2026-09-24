@@ -20,13 +20,14 @@ public sealed class PreparedSpeechCatalog
     public IReadOnlyDictionary<string,Clip> Clips => clips;
     public bool IsValid {get;private set;}
     public static string Normalize(string text) => string.Join(" ", (text ?? "").ToLowerInvariant().Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.', '!', '?');
-    public PreparedSpeechCatalog(string directory)
+    public PreparedSpeechCatalog(string directory,Func<string,string?>? readMetadata=null)
     {
         var index=System.IO.Path.Combine(directory,"catalog.json");
-        if(!File.Exists(index))return;
         try
         {
-            using var json=JsonDocument.Parse(File.ReadAllText(index));
+            var textContent=readMetadata!=null?readMetadata(index):File.Exists(index)?File.ReadAllText(index):null;
+            if(textContent==null)return;
+            using var json=JsonDocument.Parse(textContent);
             foreach(var property in json.RootElement.GetProperty("clips").EnumerateObject())
             {
                 var entry=property.Value;

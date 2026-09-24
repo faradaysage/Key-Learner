@@ -10,7 +10,7 @@ using PlayMode = KeyLearner.Studio.PlayMode;
 
 namespace KeyLearner.Unity
 {
-    public sealed class CanvasGame : Minigame
+    public sealed partial class CanvasGame : Minigame
     {
         readonly PlayMode mode;
         GuidedSpelling guided;
@@ -118,11 +118,12 @@ namespace KeyLearner.Unity
             reward = session.Reward;
             reward.Clear();
             wordIndex = session.WordIndex;
-            guided.Timed = S.Settings.TimedSpelling;
+            guided.Timed = S.Settings.TimedSpelling && !S.TouchPlay;
             recipes.AddRange(EffectRecipe.Load(S.Store.Root));
             entered = S.Now;
             var iconPath = Path.Combine(Application.streamingAssetsPath, "Content", "Icons", "catalog.json");
-            icons = File.Exists(iconPath) ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(iconPath)) : new Dictionary<string, string>();
+            var iconJson = KeyLearner.Unity.Platform.AndroidContent.Enabled ? KeyLearner.Unity.Platform.AndroidContent.ReadText("Icons/catalog") : File.Exists(iconPath) ? File.ReadAllText(iconPath) : null;
+            icons = iconJson == null ? new Dictionary<string,string>() : System.Text.Json.JsonSerializer.Deserialize<Dictionary<string,string>>(iconJson);
             target = S.Store.Words.FirstOrDefault(w => w.Enabled && w.Adventure && w.Word == session.Target);
             if (target == null || session.SelectNext)
             {
@@ -177,7 +178,7 @@ namespace KeyLearner.Unity
             }
             var c = KeyboardMap.Character(e.Key);
             var context = gestures.Add(e.Key, S.Now, S.Keys.Keys.Count(k => !ParentChord.IsModifier(k)), S.Store.Gestures.Network, S.Settings.UseGestureCalibration);
-            if (mode == PlayMode.WordAdventure)
+            if (GuidedActivity)
             {
                 if (reward.Remaining > 0)
                     return;
@@ -188,20 +189,7 @@ namespace KeyLearner.Unity
                 }
                 if (c.HasValue && c.Value >= 'a' && c.Value <= 'z')
                 {
-                    if (guided.Update(S.Now))
-                        S.Audio.Play("retry", S.Settings, .45f);
-                    Emit(e.Key, c, context);
-                    if (guided.Add(c.Value, S.Now))
-                    {
-                        if (S.Settings.AdaptiveLearning)
-                            S.Store.Profile.WordCounts[target.Word] = Math.Min(100000, S.Store.Profile.WordCounts.GetValueOrDefault(target.Word) + 1);
-                        Announce(target);
-                        reward.Start(target.Word.Length + target.Word.Count(letter => "jqxz".Contains(letter)));
-                        for (int i = 0; i < reward.Remaining; i++)
-                            MakeBalloon(i, reward.Remaining);
-                    }
-                    else if (S.Settings.SpeakLetters)
-                        S.Audio.Say(c.Value.ToString(), S.Settings, key: true);
+                    SubmitGuidedLetter(c.Value, context);
                 }
                 return;
             }
@@ -322,8 +310,8 @@ namespace KeyLearner.Unity
                 if (icon)
                     t.font = Resources.Load<Font>("Fonts/fa-solid-900");
                 else if (S.Settings.Font == LetterFont.Baloo)
-                    t.font = Resources.Load<Font>("Fonts/BalooBhai2-Play");
-                else if (S.Settings.Font == LetterFont.Classic)
+                    t.font = RuntimeFonts.Load("BalooBhai2-Play");
+                else if (S.Settings.Font == LetterFont.Classic && !KeyLearner.Unity.Platform.AndroidContent.Enabled)
                 {
                     if (!classicFont)
                         classicFont = Font.CreateDynamicFontFromOSFont("Georgia", 96);
@@ -394,7 +382,7 @@ namespace KeyLearner.Unity
                 words.RefreshDictionary();
                 recipes.Clear();
                 recipes.AddRange(EffectRecipe.Load(S.Store.Root));
-                if (mode == PlayMode.WordAdventure)
+                if (GuidedActivity)
                 {
                     var valid = S.Store.Words.FirstOrDefault(w => w.Enabled && w.Adventure && w.Word == target.Word);
                     if (valid == null || session.SelectNext)
@@ -425,7 +413,7 @@ namespace KeyLearner.Unity
             }
             starSystem.SetParticles(starParticles, starCount);
             counting.Update(S.Now);
-            guided.Timed = S.Settings.TimedSpelling;
+            guided.Timed = S.Settings.TimedSpelling && !S.TouchPlay;
             if (guided.Update(S.Now))
                 S.Audio.Play("retry", S.Settings, .45f);
             if (mode == PlayMode.SmashGarden)
@@ -513,9 +501,12 @@ namespace KeyLearner.Unity
                     g.P.y = 900 - radius;
                     g.V.y = -Mathf.Abs(g.V.y) * (float)S.Settings.Bounce;
                 }
-                if (g.P.y < radius + 15)
+                // Touch rewards stay below the shared navigation strip.
+                // Their enlarged hit targets must not overlap the Menu button.
+                float ceiling = radius + (S.TouchPlay && g.Reward ? 180 : 15);
+                if (g.P.y < ceiling)
                 {
-                    g.P.y = radius + 15;
+                    g.P.y = ceiling;
                     g.V.y = Mathf.Abs(g.V.y);
                 }
                 g.Object.transform.localPosition = new Vector3(g.P.x, -g.P.y, 0);
@@ -791,6 +782,7 @@ namespace KeyLearner.Unity
         }
         public override void Pointer(Vector2 p, bool right)
         {
+            if (S.TouchPlay) { if (!right) TouchLearning(p); return; }
             if (!S.Settings.MousePlay)
                 return;
             if (right)
@@ -1084,10 +1076,10 @@ namespace KeyLearner.Unity
                 }
             }
             DrawEffects();
-            if (mode == PlayMode.WordAdventure)
+            if (GuidedActivity)
             {
-                Ui.Label(new Rect(90, 40, 1100, 55), reward.Remaining > 0 ? "Pop the balloons!" : "Find the glowing key", 36, Color.white, TextAnchor.MiddleLeft);
-                Ui.Label(new Rect(1130, 42, 230, 55), (guided.Score + reward.Score) + " points", 25, ColorAt(1));
+                Ui.Label(new Rect(90, 40, 1100, 55), reward.Remaining > 0 ? (S.TouchPlay ? "Tap the balloons!" : "Pop the balloons!") : S.TouchPlay ? (mode == PlayMode.SmashGarden ? "Grow a word in Smash Garden" : "Tap the matching letter") : "Find the glowing key", 36, Color.white, TextAnchor.MiddleLeft);
+                Ui.Label((S.TouchPlay ? new Rect(90,105,350,40) : new Rect(1130, 42, 230, 55)), (guided.Score + reward.Score) + " points", 25, ColorAt(1));
                 for (int i = 0; i < guided.Target.Length; i++)
                 {
                     float w = Mathf.Min(110, 1000f / guided.Target.Length);
@@ -1107,7 +1099,7 @@ namespace KeyLearner.Unity
                     Ui.Label(new Rect(160, 304, 1120, 62), hint, 26, new Color(.76f, .82f, .91f));
                     Ui.Label(new Rect(350, 370, 740, 42), "Words discovered  " + guided.Completed, 23, ColorAt(2));
                 }
-                if (reward.Remaining == 0 && S.Settings.ShowKeyboard)
+                if (reward.Remaining == 0 && S.Settings.ShowKeyboard && !S.TouchPlay)
                     Ui.Keyboard(guided.Progress < guided.Target.Length ? guided.Target[guided.Progress] : ' ', S.Keys, S.Settings.Theme);
             }
             else if (mode == PlayMode.Counting)
@@ -1122,13 +1114,14 @@ namespace KeyLearner.Unity
                 }
                 if (S.Now < celebrationUntil)
                     Ui.Label(new Rect(170, 455, 1100, 115), "Congratulations!", 74, Style.Dots);
-                Ui.Label(new Rect(300, 357, 840, 55), S.Now < celebrationUntil ? "You counted all the way to one hundred!" : "Type the next number", 28, Color.white);
+                Ui.Label(new Rect(300, 357, 840, 55), S.Now < celebrationUntil ? "You counted all the way to one hundred!" : S.TouchPlay ? "Tap the star to count one more" : "Type the next number", 28, Color.white);
             }
             else if (!typed)
             {
                 Ui.Label(new Rect(100, 240, 1240, 110), "Smash Garden", 70, Color.white);
                 Ui.Label(new Rect(180, 365, 1080, 65), "Every little key opens a world of wonder", 30, new Color(.61f, .73f, .88f));
             }
+            if (S.TouchPlay) DrawTouchLearning();
             if (messageUntil > S.Now)
             {
                 Ui.Label(new Rect(300, 460, 840, 115), message, 75, ColorAt(1));
@@ -1183,12 +1176,13 @@ namespace KeyLearner.Unity
             lastPanes = -1;
             liquidRenderer?.Clear();
             flames?.Clear();
-            if (mode == PlayMode.WordAdventure)
+            if (GuidedActivity)
                 guided.Start(target.Word);
             if (wordImage)
                 UnityEngine.Object.Destroy(wordImage);
             wordImage = null;
         }
+        public override void ResetActivity() => S.Session.Remove("canvas-learning");
         public override void Exit()
         {
             Suspend();

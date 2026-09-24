@@ -28,6 +28,7 @@ namespace KeyLearner.Unity
         public virtual void Suspend()
         {
         }
+        public virtual void ResetActivity() { }
         public virtual void Exit()
         {
             if (Root)
@@ -52,6 +53,7 @@ namespace KeyLearner.Unity
         {
             Now += activeDelta;
         }
+        public bool TouchPlay => AndroidContent.Enabled || (Options?.Has("--touch-mode") ?? false);
         public bool Preview => Options.Preview || Application.isEditor;
         public Action PickerAction;
         public RewardEffects Rewards;
@@ -74,6 +76,7 @@ namespace KeyLearner.Unity
             var cameraData = Camera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
             if (cameraData)
                 cameraData.antialiasing = Settings.SmoothEdges ? UnityEngine.Rendering.Universal.AntialiasingMode.SubpixelMorphologicalAntiAliasing : UnityEngine.Rendering.Universal.AntialiasingMode.None;
+            MobileGraphicsProfile.Apply(this);
         }
         public void UpdateViewport()
         {
@@ -147,7 +150,7 @@ namespace KeyLearner.Unity
             GUI.matrix = Matrix4x4.TRS(offset, Quaternion.identity, new Vector3(scale, scale, 1));
             Pointer = (new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y) - offset) / scale;
             if (!font)
-                font = Resources.Load<Font>("Fonts/Fredoka-Play");
+                font = RuntimeFonts.Load("Fredoka-Play");
         }
         public static void End()
         {
@@ -177,9 +180,27 @@ namespace KeyLearner.Unity
         }
         public static void Label(Rect rect, string text, int size, Color color, TextAnchor alignment = TextAnchor.MiddleCenter)
         {
+            // Fredoka does not contain these decorative symbols. Android's system-font
+            // fallback would re-enter runtime font rasterization under ARM translation.
+            // Keep labels within the bundled font instead of requiring firmware fonts.
+            if (AndroidContent.Enabled && text != null)
+                text = text.Replace("→", ">").Replace("←", "<").Replace("↑", "^").Replace("↓", "v")
+                    .Replace("★", "*").Replace("✦", "*").Replace("▏", "|");
+            if (font && !font.dynamic)
+            {
+                BitmapText.Draw(font, rect, text, size, color, alignment);
+                return;
+            }
             var st = new GUIStyle(GUI.skin.label) { font = font, fontSize = size, alignment = alignment, wordWrap = true };
             st.normal.textColor = color;
             GUI.Label(rect, text, st);
+        }
+        public static float WrappedTextHeight(string text, int size, float width)
+        {
+            if (!font) font = RuntimeFonts.Load("Fredoka-Play");
+            if (font && !font.dynamic) return BitmapText.Height(font, text, size, width);
+            var style = new GUIStyle(GUI.skin.label) { font=font, fontSize=size, wordWrap=true, richText=false };
+            return style.CalcHeight(new GUIContent(text), width);
         }
         public static void Button(Rect rect, string text, Action action, bool enabled = true)
         {
@@ -278,9 +299,12 @@ namespace KeyLearner.Unity
             go.transform.SetParent(parent, false);
             go.transform.localPosition = pos;
             var t = go.AddComponent<TextMesh>();
-            t.font = Resources.Load<Font>("Fonts/Fredoka-Play");
+            var textFont = RuntimeFonts.Load("Fredoka-Play");
+            // Static Android fonts already contain 96px glyphs; an override logs
+            // a warning on every TextMesh rebuild and cannot change their size.
+            t.fontSize = textFont.dynamic ? 96 : 0;
+            t.font = textFont;
             t.text = text;
-            t.fontSize = 96;
             t.characterSize = size / 12;
             t.anchor = TextAnchor.MiddleCenter;
             t.alignment = TextAlignment.Center;

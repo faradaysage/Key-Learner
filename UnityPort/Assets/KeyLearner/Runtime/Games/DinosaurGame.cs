@@ -79,10 +79,15 @@ namespace KeyLearner.Unity
         {
             if(e.Key==112)
             {
-                if(e.Down && !cameraKeyHeld){cameraView=(cameraView+1)%CameraNames.Length;S.Session["dinosaur-camera"]=cameraView;ApplyCameraView();}
+                if(e.Down && !cameraKeyHeld)ChangeView();
                 cameraKeyHeld=e.Down;return;
             }
-            if(!e.Down || (e.Key!=162 && e.Key!=163) || !model.Roar())return;
+            if(e.Down && (e.Key==162 || e.Key==163))Roar();
+        }
+        void ChangeView(){cameraView=(cameraView+1)%CameraNames.Length;S.Session["dinosaur-camera"]=cameraView;ApplyCameraView();}
+        void Roar()
+        {
+            if(!model.Roar())return;
             foreach(var creature in walkers)creature.Startle();
             pterosaurs.Startle(V(model.Position));
             roarRemaining=1.15f;S.Audio.Play("dinosaur-roar",S.Settings,.48f,3);
@@ -94,7 +99,8 @@ namespace KeyLearner.Unity
             if(validateWord){validateWord=false;if(!S.Store.Words.Any(w=>w.Enabled&&w.Adventure&&w.Word==model.Course.Word))PickWord();}
             int before=model.Course.Collected,completed=model.Course.Completed;
             float turn=(S.Keys.IsDown(39)?1:0)-(S.Keys.IsDown(37)?1:0),drive=(S.Keys.IsDown(38)?1:0)-(S.Keys.IsDown(40)?1:0);
-            model.Step(dt,turn,drive,S.Keys.IsDown(32),S.Settings.FlightAssist,(float)S.Settings.FlightResponse);
+            if(S.TouchPlay){var steering=TouchControls.Steering;turn=steering.x;drive=steering.y;}
+            model.Step(dt,turn,drive,S.TouchPlay?TouchControls.Boost:S.Keys.IsDown(32),S.Settings.FlightAssist,(float)S.Settings.FlightResponse);
             if(model.Course.Collected!=before){S.Audio.Play("pop",S.Settings,.45f);S.Audio.Say(model.Course.Word[before].ToString(),S.Settings,key:true);}
             if(model.Course.Completed!=completed)
             {
@@ -111,8 +117,8 @@ namespace KeyLearner.Unity
                 if(!S.Settings.GentleMotion)S.Rewards.Burst(p-forward*2, new Color(.5f,.42f,.26f,.2f),6,1.5f);
             }
             footImpulse*=Mathf.Exp(-dt*14);roarRemaining=Mathf.Max(0,roarRemaining-dt);
-            float lookX=S.Settings.MousePlay?(Input.mousePosition.x/Mathf.Max(1,Screen.width)-.5f)*.5f:0;
-            float lookY=S.Settings.MousePlay?(Input.mousePosition.y/Mathf.Max(1,Screen.height)-.5f)*.38f:0;
+            float lookX=!S.TouchPlay && S.Settings.MousePlay?(Input.mousePosition.x/Mathf.Max(1,Screen.width)-.5f)*.5f:0;
+            float lookY=!S.TouchPlay && S.Settings.MousePlay?(Input.mousePosition.y/Mathf.Max(1,Screen.height)-.5f)*.38f:0;
             lookYaw=Mathf.Lerp(lookYaw,lookX,1-Mathf.Exp(-dt*4));lookPitch=Mathf.Lerp(lookPitch,lookY,1-Mathf.Exp(-dt*4));
             float impulseScale=S.Settings.GentleMotion?.08f:.24f;
             var lookRotation=Quaternion.Euler(-lookPitch*Mathf.Rad2Deg,model.Yaw*Mathf.Rad2Deg+lookYaw*Mathf.Rad2Deg,0);
@@ -243,13 +249,24 @@ namespace KeyLearner.Unity
             Ui.Panel(new Rect(40,30,590,125),new Color(.035f,.075f,.06f,.9f));Ui.Label(new Rect(60,40,550,32),"DINOSAUR SPELLER",20,Style.Mint,TextAnchor.MiddleLeft);
             float size=Mathf.Min(52,530f/model.Course.Word.Length);
             for(int i=0;i<model.Course.Word.Length;i++){var r=new Rect(60+i*size,82,size-5,55);Ui.Panel(r,i<model.Course.Collected?Style.Mint:i==model.Course.Collected?Style.Dots:Style.Panel);Ui.Label(r,model.Course.Word[i].ToString().ToUpperInvariant(),29,i<=model.Course.Collected?Style.Navy:Color.white);}
-            Ui.Panel(new Rect(1160,30,240,95),new Color(.035f,.075f,.06f,.9f));Ui.Label(new Rect(1170,40,220,36),model.Course.Score+" points",26,Color.white);Ui.Label(new Rect(1170,82,220,25),model.Course.Completed+" words discovered",15,Style.Mint);
+            Ui.Panel(new Rect(S.TouchPlay?900:1160,30,240,95),new Color(.035f,.075f,.06f,.9f));Ui.Label(new Rect(S.TouchPlay?910:1170,40,220,36),model.Course.Score+" points",26,Color.white);Ui.Label(new Rect(S.TouchPlay?910:1170,82,220,25),model.Course.Completed+" words discovered",15,Style.Mint);
             Ui.Panel(new Rect(30,785,1380,88),new Color(.025f,.07f,.05f,.8f));Ui.Label(new Rect(48,788,1000,35),new[]{"THE FERN FOREST","RED ROCK VALLEY","THE ANCIENT LAGOONS"}[DinosaurWorld.Biome(model.Position.Z)],21,Style.Mint,TextAnchor.MiddleLeft);
-            Ui.Label(new Rect(48,825,1300,35),"← → Turn    ↑ Faster    ↓ Stop    SPACE Run    CTRL Roar    F1 View: "+CameraNames[cameraView]+"    G G Games",18,Color.white,TextAnchor.MiddleLeft);
+            if (!S.TouchPlay) Ui.Label(new Rect(48,825,1300,35),"← → Turn    ↑ Faster    ↓ Stop    SPACE Run    CTRL Roar    F1 View: "+CameraNames[cameraView]+"    G G Games",18,Color.white,TextAnchor.MiddleLeft);
+            else TouchControls.Draw("Roar",Roar,ChangeView);
             if(model.Course.RewardRemaining>0)Ui.Label(new Rect(280,300,880,130),model.Course.Word.ToUpperInvariant()+"!",80,Style.Dots);
         }
         public override void Suspend(){ambience?.Stop();lifeAudio?.Stop();roarRemaining=footImpulse=0;cameraKeyHeld=false;shock?.SetActive(false);model.Course.DismissReward();validateWord=true;}
-        public override void Exit(){S.Camera.GetComponent<UniversalAdditionalCameraData>().requiresColorOption=priorOpaque;base.Exit();foreach(var m in new[]{groundMaterial,waterMaterial,skyMaterial,ringMaterial,shockMaterial})if(m)UnityEngine.Object.Destroy(m);}
+        public override void ResetActivity() => S.Session.Remove("dinosaur");
+        public override void Exit()
+        {
+            // Scene shutdown may destroy the camera before Suite's cleanup runs.
+            // Activity switching still restores the live camera's prior setting.
+            var cameraData = S?.Camera ? S.Camera.GetComponent<UniversalAdditionalCameraData>() : null;
+            if (cameraData) cameraData.requiresColorOption = priorOpaque;
+            base.Exit();
+            foreach (var material in new[] { groundMaterial, waterMaterial, skyMaterial, ringMaterial, shockMaterial })
+                if (material) UnityEngine.Object.Destroy(material);
+        }
         public override string DiagnosticState=>"dinosaur camera="+CameraNames[cameraView]+" letters="+model.Course.Collected+" words="+model.Course.Completed+" score="+model.Course.Score+" footfalls="+model.Footfalls+" roars="+model.Roars+" tiles="+tiles.Count+" actors="+walkers.Count;
     }
 }

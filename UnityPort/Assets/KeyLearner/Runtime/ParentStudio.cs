@@ -14,7 +14,7 @@ using UnityEngine.Rendering.Universal;
 namespace KeyLearner.Unity
 {
     /// <summary>Explicit parent controls; native key events also edit text while protected input is suppressed.</summary>
-    public sealed class ParentStudio
+    public sealed partial class ParentStudio
     {
         readonly GameServices services;
         readonly WindowsInputSession input;
@@ -53,7 +53,8 @@ namespace KeyLearner.Unity
             var path = Path.Combine(Application.streamingAssetsPath, "Content", "Icons", "catalog.json");
             try
             {
-                icons = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
+                var json = AndroidContent.Enabled ? AndroidContent.ReadText("Icons/catalog") : File.ReadAllText(path);
+                icons = json == null ? new Dictionary<string,string>() : JsonSerializer.Deserialize<Dictionary<string, string>>(json);
             }
             catch (IOException) { icons = new Dictionary<string, string>(); }
             iconNames = Friendly.Where(icons.ContainsKey).Concat(icons.Keys.Except(Friendly).OrderBy(n => n)).Distinct().ToArray();
@@ -293,6 +294,7 @@ namespace KeyLearner.Unity
         }
         public void Draw()
         {
+            if (services.TouchPlay) { DrawTouchParent(); return; }
             held.Clear();
             held.UnionWith(services.Keys.Keys);
             TickBenchmark();
@@ -474,6 +476,7 @@ namespace KeyLearner.Unity
                 var asset = Resources.Load<TextAsset>("AssetCredits");
                 creditsText = asset ? asset.text : "See THIRD_PARTY_ASSETS.md and bundled license files beside this game.";
             }
+            if (services.TouchPlay) { DrawTouchCredits(); return; }
             Ui.Panel(new Rect(0, 0, 1440, 900), Style.Navy);
             Ui.Label(new Rect(70, 30, 1200, 65), "The artists who made this world", 40, Color.white, TextAnchor.MiddleLeft);
             Ui.Label(new Rect(70, 105, 1200, 43), "All gameplay art and audio are included locally. Thank you to these generous creators.", 23, Style.Mint, TextAnchor.MiddleLeft);
@@ -483,7 +486,7 @@ namespace KeyLearner.Unity
             creditsScroll = GUI.BeginScrollView(new Rect(65, 175, 1310, 610), creditsScroll, new Rect(0, 0, 1260, Mathf.Max(600, height)));
             GUI.Label(new Rect(20, 10, 1200, height), creditsText, style);
             GUI.EndScrollView();
-            Ui.Button(new Rect(1055, 820, 310, 57), "Back to Parent Studio", () => showCredits = false);
+            Ui.Button(services.TouchPlay ? new Rect(850, 785, 520, 90) : new Rect(1055, 820, 310, 57), services.TouchPlay ? "Parent Options" : "Back to Parent Studio", () => showCredits = false);
         }
         void DrawCalibration()
         {

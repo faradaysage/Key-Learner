@@ -443,3 +443,71 @@ jobs:
             artifacts/unity-ci-installer-test/result.json
           if-no-files-found: warn
           retention-days: 30
+
+  unity-android:
+    name: LeapPad ARMv7 candidate APK
+    needs: [build, unity-preflight, unity]
+    if: needs.unity-preflight.outputs.enabled == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          lfs: true
+      - name: Restore matching shared-domain build inputs
+        uses: actions/download-artifact@v4
+        with:
+          name: CI-only-Unity-build-inputs
+          path: UnityPort/Assets
+      - name: Stage only completed selected Android voice packs
+        run: python3 scripts/stage-unity-android.py prepare --voices kyutai-Blake
+      - name: Build the production ARMv7 APK
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: UnityPort
+          unityVersion: auto
+          customImage: unityci/editor:ubuntu-6000.6.0f1-android-3.2.2@sha256:847eb830373fa73946fb3e41a97e54fbcb25fff70b4ddaf7b8ccff6b5cd61169
+          targetPlatform: Android
+          buildMethod: KeyLearner.Unity.Editor.AndroidBuild.Build
+          customParameters: -disableManagedDebugger -keyLearnerVersion ${{ needs.unity-preflight.outputs.version }} -keyLearnerVersionCode ${{ github.run_number }}
+          versioning: Custom
+          version: ${{ needs.unity-preflight.outputs.version }}
+          allowDirtyBuild: true
+      - name: Make custom Android output writable
+        shell: bash
+        run: |
+          test -d artifacts/leappad
+          # GameCI creates this custom build directory as root inside its container.
+          sudo chown --recursive --no-dereference "$(id -u):$(id -g)" artifacts/leappad
+      - name: Inspect the actual candidate APK
+        env:
+          BUILD_VERSION: ${{ needs.unity-preflight.outputs.version }}
+        run: python3 scripts/inspect-leappad-apk.py "artifacts/leappad/KeyLearner-LeapPad-${BUILD_VERSION}.apk"
+      - name: Restore Windows staging
+        if: always()
+        run: python3 scripts/stage-unity-android.py restore
+      - name: Upload LeapPad candidate and size report
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyLearner-LeapPad-${{ needs.unity-preflight.outputs.version }}
+          path: |
+            artifacts/leappad/*.apk
+            artifacts/leappad/*.json
+            LEAPPAD-INSTALL-INSTRUCTIONS.md
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload Android build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeapPad-build-logs-${{ github.run_number }}
+          path: |
+            artifacts/leappad/build-report.json
+            UnityPort/Logs/**
+          if-no-files-found: warn
+          retention-days: 14

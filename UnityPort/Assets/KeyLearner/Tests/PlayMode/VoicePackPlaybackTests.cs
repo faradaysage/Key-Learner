@@ -33,6 +33,82 @@ namespace KeyLearner.Unity.Tests.PlayMode
             var full=Path.GetFullPath(root);var temp=Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar)+Path.DirectorySeparatorChar;
             if(full.StartsWith(temp,StringComparison.OrdinalIgnoreCase)&&Path.GetFileName(full).StartsWith("KeyLearner-VoicePlayback-",StringComparison.Ordinal))Directory.Delete(full,true);
         }
+        [Test] public void AudioDisposeToleratesDestroyedOwner()
+        {
+            audio.SayKey("number-three", settings);
+            audio.Update(settings);
+            UnityEngine.Object.DestroyImmediate(owner);
+            Assert.DoesNotThrow(() => audio.Dispose());
+            Assert.DoesNotThrow(() => audio.Dispose());
+        }
+        [Test] public void FireCleanupToleratesDestroyedParent()
+        {
+            var parent = new GameObject("Destroyed fire parent");
+            var type = typeof(Suite).Assembly.GetType("KeyLearner.Unity.CanvasFireRenderer");
+            var renderer = Activator.CreateInstance(type, new object[] { parent.transform });
+            try
+            {
+                UnityEngine.Object.DestroyImmediate(parent);
+                Assert.DoesNotThrow(() => type.GetMethod("Clear").Invoke(renderer, null));
+            }
+            finally { ((IDisposable)renderer).Dispose(); if (parent) UnityEngine.Object.DestroyImmediate(parent); }
+        }
+        sealed class MenuActivityProbe : Minigame
+        {
+            public int Progress = 3;
+            public bool Suspended;
+            public override void Tick(float dt) { Progress++; }
+            public override void Suspend() { Suspended = true; Progress = 0; }
+        }
+        [Test] public void SharedMenuPreservesActivityAndQueuedVoice()
+        {
+            var panel = new GameObject("Inactive menu harness");
+            panel.transform.SetParent(owner.transform);
+            panel.SetActive(false); // Never start the player or acquire Windows input hooks.
+            var suite = panel.AddComponent<Suite>();
+            var game = new MenuActivityProbe();
+            var services = new GameServices { Audio = audio };
+            const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+            typeof(Suite).GetField("services", flags).SetValue(suite, services);
+            typeof(Suite).GetField("game", flags).SetValue(suite, game);
+            typeof(Suite).GetField("ready", flags).SetValue(suite, true);
+            float priorTime = Time.timeScale;
+            bool priorPause = AudioListener.pause;
+            AudioListener.pause = false;
+            try
+            {
+                audio.SayKey("number-three", settings);
+                suite.OpenGameMenu();
+                suite.OpenGameMenu(); // Repeated input must not overwrite the saved audio state.
+                Assert.IsTrue(suite.GameMenuOpen);
+                Assert.AreEqual(0, Time.timeScale);
+                Assert.IsTrue(AudioListener.pause);
+                Assert.IsFalse(game.Suspended);
+                Assert.AreEqual(3, game.Progress);
+                audio.Update(settings);
+                Assert.AreEqual(1, audio.Pending);
+                Assert.AreEqual(0, audio.Started);
+                typeof(Suite).GetMethod("CloseGameMenu", flags).Invoke(suite, null);
+                Assert.IsFalse(suite.GameMenuOpen);
+                Assert.IsFalse(AudioListener.pause);
+                Assert.AreEqual(3, game.Progress);
+                audio.Update(settings);
+                Assert.AreEqual(1, audio.PreparedStarted);
+            }
+            finally { Time.timeScale = priorTime; AudioListener.pause = priorPause; }
+        }
+        [Test] public void MenuPausePreservesQueuedNarrationUntilResume()
+        {
+            audio.SayKey("number-three", settings);
+            audio.SetMenuPaused(true);
+            audio.Update(settings);
+            Assert.AreEqual(0, audio.Started, "Opening the menu must not start queued narration");
+            Assert.AreEqual(1, audio.Pending, "Pause must retain the queued phrase");
+            audio.SetMenuPaused(false);
+            audio.Update(settings);
+            Assert.AreEqual(1, audio.PreparedStarted);
+            Assert.AreEqual("number-three", audio.LastSpeechKey);
+        }
         [Test] public void SwitchingAndPreviewUseDistinctClipsImmediatelyWithoutPersistingCandidate()
         {
             audio.SayKey("number-three",settings);audio.Update(settings);

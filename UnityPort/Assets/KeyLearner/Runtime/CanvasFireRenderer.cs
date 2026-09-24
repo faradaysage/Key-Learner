@@ -106,8 +106,8 @@ namespace KeyLearner.Unity
         {
             flames.Clear();
             emission = 0;
-            mesh.Clear();
-            display.SetActive(false);
+            if (mesh) mesh.Clear();
+            if (display) display.SetActive(false);
         }
         public void Dispose()
         {
