@@ -40,6 +40,7 @@ try{
       $x=[int][Math]::Round($target.LogicalX*$scale+($state.Width-$state.LayoutWidth*$scale)/2)
       $y=[int][Math]::Round($target.LogicalY*$scale+($state.Height-$state.LayoutHeight*$scale)/2)
       if([Math]::Abs($x-$target.X) -gt 1 -or [Math]::Abs($y-$target.Y) -gt 1){throw 'Reported answer target disagrees with independently calculated viewport mapping.'}
+      if(![UnityPreviewWindow]::Focus($process.Id)){throw 'Could not regain the owned preview before pointer input.'}
       if(!$rightIgnored){
        [UnityPreviewWindow]::Click($process.Id,$x,$y,$true)
        Start-Sleep -Milliseconds 300

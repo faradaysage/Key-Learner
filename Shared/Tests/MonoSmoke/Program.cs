@@ -6,7 +6,7 @@ void Check(bool ok,string name){if(!ok)throw new Exception("FAIL "+name);Console
 var root=args.Length>0?args[0]:Path.Combine(Path.GetTempPath(),"KeyLearner-MonoSmoke-"+Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(root);
 var store=new Store(root);
-Check(GameCatalog.All.Length==12&&(int)PlayMode.CannonHop==11,"persisted catalog IDs");
+Check(GameCatalog.Legacy.Length==12&&GameCatalog.All.Length==13&&(int)PlayMode.CannonHop==11,"persisted catalog IDs");
 store.Settings.Mode=PlayMode.CannonHop;store.Settings.Volume=37;store.Settings.Theme=Mood.Lagoon;store.Settings.DefaultsVersion=1;
 store.Profile.WordCounts["daddy"]=19;store.Profile.PrefixHabits["dad"]=2.5;
 store.MathLearning.For(MathActivity.Hiding).Stage=41;store.MathLearning.For(MathActivity.Hiding).Level=6;

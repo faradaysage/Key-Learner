@@ -75,12 +75,14 @@ An optional PowerShell orchestration wrapper was attempted during migration. The
 # Static representative explorer screenshots and player logs.
 ./scripts/verify-unity.ps1 -StaticOnly -Modes @(3,4,5)
 
-# All 12 modes plus deterministic canvas, quantity, and math replays.
+# All 13 modes plus deterministic canvas, quantity, and math replays.
 ./scripts/verify-unity.ps1
 
 # A small selection for iteration.
 ./scripts/verify-unity.ps1 -SelectedCases @('word-pop','counting','dots-retry')
 ```
+
+Dinosaur Speller starts behind the visible T-rex. F1 cycles close chase, far chase and first person without resetting progress. The choice is session-local; Ctrl roars and Space runs.
 
 Preview never installs a keyboard hook or changes accessibility settings. `--data <directory>` explicitly selects a writable profile; use a disposable `artifacts` directory for QA. The verification runner hashes the five real parent save files before and after its run, captures actual player screenshots with diagnostic JSON, and checks player logs and progression/scoring assertions. Short screenshots are visual/behavioral checks, not frame-rate measurements.
 
@@ -129,6 +131,6 @@ Explorer handedness regression:
 ./scripts/verify-unity-steering.ps1
 ```
 
-This launches an isolated visible Letter Racer preview, holds only the right-arrow key for a bounded 1.2 seconds, and samples the game's reported input and projection. Acceptance requires the car to move right relative to the projected road center, then acknowledge key release. The helper accepts no parent shortcut or modifier keys and releases the arrow if the preview loses foreground. Run it only when other player captures have released the desktop.
+This launches an isolated visible Letter Racer preview, holds only the right-arrow key for a bounded 1.2 seconds, and samples the game's reported input and projection. Acceptance requires the car to move right relative to the projected road center, then acknowledge key release. The helper allows only the game keys used by the acceptance runners (arrows, Enter, Space, F1 and individual Ctrl roar keys), never a parent shortcut combination, and releases the held key if the preview loses foreground. Run it only when other player captures have released the desktop.
 
 Current acceptance, actual gameplay screenshots and the retained native Unity crash risk are recorded in [verification](../docs/unity-verification.md) and the [gallery](../docs/unity-gallery.md).

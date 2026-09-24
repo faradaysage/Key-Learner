@@ -1,7 +1,7 @@
 param(
  [string]$Executable='',
  [string]$Output='',
- [int[]]$Modes=(0..11),
+ [int[]]$Modes=(0..12),
  [switch]$StaticOnly,
  [string[]]$SelectedCases=@(),
  [switch]$Sound,
@@ -34,6 +34,8 @@ if(!$StaticOnly){
   @('swipe',0,3,'drops=[1-9]'),
   @('fire',0,4,''),
   @('counting',2,12,'count=25'),
+  @('counting-hundred',2,32,'celebrating=True rockets=5050'),
+  @('dots-bonus',6,6,'bonus=True points=50'),
   @('word-balloons',1,3,'balloons=3'),
   @('word-pop',1,6,'score=100'),
   @('guided-mommy',1,3,'completed=1'),
@@ -78,7 +80,7 @@ foreach($case in $cases){
  if(!$Sound){$arguments+='--mute'}
  if($case.Scenario){$arguments+=@('--scenario',$case.Scenario)}
  $arguments+=$case.Extra
- if($Distance -gt 0 -and !$case.Scenario -and $case.Mode -in @(3,4,5)){$arguments+=@("--preview-distance",$Distance.ToString([Globalization.CultureInfo]::InvariantCulture))}
+ if($Distance -gt 0 -and !$case.Scenario -and $case.Mode -in @(3,4,5,12)){$arguments+=@("--preview-distance",$Distance.ToString([Globalization.CultureInfo]::InvariantCulture))}
  $process=Start-Process -FilePath $Executable -ArgumentList $arguments -WindowStyle Normal -PassThru
  try{
   $deadline=[DateTime]::UtcNow.AddSeconds([Math]::Max(45,$case.Seconds+30));$focused=$false

@@ -50,7 +50,7 @@ namespace KeyLearner.Unity.Editor
                 n.StartsWith("detail-parasol") ? "parasol" :
                 n.StartsWith("detail-") ? "building-detail" : null);
             AddPack("QuaterniusFarm", n => n == "Fence" ? "fence" : n == "Well" ? "well" : n == "ChickenCoop" ? "farm-small" : n == "Barn" || n == "BigBarn" ? "farm-building" : "landmark");
-            AddPack("KenneyCars", n => new[] { "race", "race-future", "hatchback-sports", "sedan-sports", "sedan", "taxi", "tractor", "delivery", "truck" }.Contains(n) ? "car" : null);
+            AddPack("KenneyCars", n => new[] { "race", "race-future", "hatchback-sports", "sedan-sports", "sedan", "taxi", "tractor", "delivery", "truck" }.Contains(n) ? "car" : n == "cone" || n == "box" ? "road-obstacle" : null);
             AddPack("KenneyRoads", n =>
                 n.StartsWith("light-") || n.StartsWith("sign-highway") || n == "road-sign-stop" || n == "road-sign-street" || n == "road-sign-warning" ? "roadfurniture" :
                 n.StartsWith("road-sign-") ? "sign-panel" :
@@ -60,6 +60,15 @@ namespace KeyLearner.Unity.Editor
             AddPack("QuaterniusFish", n => n == "Dolphin" ? "dolphin" : n == "Whale" ? "whale" : n == "Shark" ? "shark" : n.StartsWith("Manta") ? "ray" : "fish");
             AddPack("QuaterniusCuteFish", n => "fish");
             AddPack("PantherOneBird", n => "bird");
+            AddPack("QuaterniusAnimals", n => "animal");
+            AddPack("QuaterniusDinosaurs", n => "dinosaur");
+            AddPack("ChistodrakoPteranodon", n => "pterosaur");
+            AddPack("YughuesPalms", n => "tropical-tree");
+            AddPack("LasquetiBoat", n => n == "FishingBoat" ? "boat" : n.StartsWith("Spectator") ? "spectator" : "reef-shark");
+            AddPack("PolyHavenScenery", n => n.StartsWith("fern") ? "fern" : n.StartsWith("coastal") ? "cliff" : "mountainside");
+            AddPack("KenchooPolarBear", n => "polar-bear");
+            AddPack("WildMeshAnimals", n => "wolf");
+            AddPack("KenneyPirate", n => n == "chest" ? "treasure" : n == "cannon-mobile" ? "cannon" : "prop");
             AddPack("MiniPolyCoral", n => "coral");
             AddPack("MohabinsSeaweed", n => "seaweed");
             // Interleave coral families before palette variants so adjacent choices
@@ -82,6 +91,9 @@ namespace KeyLearner.Unity.Editor
                 AssetDatabase.CreateAsset(library, libraryPath);
             }
             library.SetItems(items.ToArray());
+            library.GroundDiffuse = AssetDatabase.LoadAssetAtPath<Texture2D>(Sources + "PolyHavenGround/Textures/Ground_Diffuse.png");
+            library.GroundNormal = AssetDatabase.LoadAssetAtPath<Texture2D>(Sources + "PolyHavenGround/Textures/Ground_Normal.png");
+            if (!library.GroundDiffuse || !library.GroundNormal) throw new InvalidOperationException("Licensed ground textures are missing.");
             EditorUtility.SetDirty(library);
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("../artifacts/unity");
@@ -151,7 +163,7 @@ namespace KeyLearner.Unity.Editor
                 string category = classify(name);
                 if (category == null)
                     continue;
-                bool animated = category == "bird" || category == "dolphin" || category == "fish" || category == "whale" || category == "shark" || category == "ray";
+                bool animated = category == "bird" || category == "dolphin" || category == "fish" || category == "whale" || category == "shark" || category == "ray" || category == "animal" || category == "polar-bear" || category == "wolf" || category == "dinosaur" || category == "pterosaur" || category == "boat" || category == "spectator" || category == "reef-shark";
                 var importer = AssetImporter.GetAtPath(sourcePath) as ModelImporter;
                 if (importer)
                 {
@@ -185,6 +197,8 @@ namespace KeyLearner.Unity.Editor
                         {
                             // Blender's single active-action FBX export names this verified
                             // 1-30 frame flight take Scene. Keep the source take binding.
+                            if ((pack == "KenchooPolarBear" || pack == "WildMeshAnimals") && clip.name == "Scene") { clip.name = "Walk"; changed = true; }
+                            if (pack == "LasquetiBoat" && clip.name == "Scene") { clip.name = category == "reef-shark" ? "Swim" : "Wave"; changed = true; }
                             if (pack == "PantherOneBird" && clip.name == "Scene")
                             {
                                 clip.name = "Flight";
@@ -242,7 +256,20 @@ namespace KeyLearner.Unity.Editor
                             renderer.shadowCastingMode = ShadowCastingMode.On;
                             renderer.receiveShadows = true;
                         }
+                        ConfigureSourceLods(model);
                         var clip = animated ? ConfigureAnimation(model, sourcePath) : null;
+                        if(pack=="LasquetiBoat" && category=="reef-shark")
+                        {
+                            clip.SampleAnimation(model,0);
+                            var bones=model.GetComponentsInChildren<Transform>(true);
+                            var head=bones.FirstOrDefault(t=>t.name.StartsWith("Head.",StringComparison.Ordinal));
+                            var tail=bones.FirstOrDefault(t=>t.name.StartsWith("Spine7.",StringComparison.Ordinal));
+                            if(!head || !tail)throw new InvalidOperationException("Shark orientation landmarks missing.");
+                            var forward=head.position-tail.position;forward.y=0;
+                            if(forward.sqrMagnitude<.00001f)throw new InvalidOperationException("Shark orientation is degenerate.");
+                            pivot.localRotation=Quaternion.FromToRotation(forward.normalized,Vector3.forward);
+                            report.Add("ORIENTATION "+sourcePath+" | head="+head.name+" tail="+tail.name+" heading="+forward);
+                        }
                         var wheels = model.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("wheel-", StringComparison.OrdinalIgnoreCase)).ToArray();
                         var blades = model.GetComponentsInChildren<Transform>(true).Where(t => t.name.EndsWith("_Blades", StringComparison.OrdinalIgnoreCase)).ToArray();
                         if (wheels.Length > 0 || blades.Length > 0)
@@ -267,6 +294,19 @@ namespace KeyLearner.Unity.Editor
                     finally { UnityEngine.Object.DestroyImmediate(root); }
                 }
             }
+        }
+
+        static void ConfigureSourceLods(GameObject model)
+        {
+            var renderers=model.GetComponentsInChildren<Renderer>();
+            var near=renderers.Where(r=>r.name.EndsWith("_LOD1",StringComparison.Ordinal)).ToArray();
+            var middle=renderers.Where(r=>r.name.EndsWith("_LOD2",StringComparison.Ordinal)).ToArray();
+            var far=renderers.Where(r=>r.name.EndsWith("_LOD3",StringComparison.Ordinal)).ToArray();
+            if(near.Length==0 || middle.Length==0 || far.Length==0)return;
+            foreach(var old in model.GetComponentsInChildren<LODGroup>())UnityEngine.Object.DestroyImmediate(old);
+            var group=model.AddComponent<LODGroup>();
+            group.SetLODs(new[]{new LOD(.25f,near),new LOD(.10f,middle),new LOD(.018f,far)});
+            group.RecalculateBounds();
         }
 
         static void KeepCoralPart(GameObject model, string path)
@@ -294,13 +334,16 @@ namespace KeyLearner.Unity.Editor
             var clips = AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>().Where(c => !c.name.StartsWith("__preview__", StringComparison.Ordinal)).ToArray();
             var chosen = clips.FirstOrDefault(c => c.name.IndexOf("Swimming_Normal", StringComparison.OrdinalIgnoreCase) >= 0)
                 ?? clips.FirstOrDefault(c => c.name.IndexOf("Swim", StringComparison.OrdinalIgnoreCase) >= 0)
-                ?? clips.FirstOrDefault(c => c.name.IndexOf("Flight", StringComparison.OrdinalIgnoreCase) >= 0);
+                ?? clips.FirstOrDefault(c => c.name.IndexOf("Flight", StringComparison.OrdinalIgnoreCase) >= 0)
+                ?? clips.FirstOrDefault(c => c.name.IndexOf("Walk", StringComparison.OrdinalIgnoreCase) >= 0)
+                ?? clips.FirstOrDefault(c => c.name.IndexOf("Wave", StringComparison.OrdinalIgnoreCase) >= 0);
             if (!chosen)
-                throw new InvalidOperationException("Animated hero/fauna has no verified swim/flight clip: " + path);
+                throw new InvalidOperationException("Animated hero/fauna has no verified swim/flight/walk clip: " + path);
             var animation = model.GetComponent<Animation>();
             if (!animation)
                 animation = model.AddComponent<Animation>();
-            animation.AddClip(chosen, chosen.name);
+            foreach (var available in clips)
+                animation.AddClip(available, available.name);
             animation.clip = chosen;
             animation.wrapMode = WrapMode.Loop;
             animation.playAutomatically = true;
@@ -430,6 +473,29 @@ namespace KeyLearner.Unity.Editor
             {
                 texture = AssetDatabase.LoadAssetAtPath<Texture2D>(Sources + pack + "/Textures/Bird.png");
                 color = Color.white;
+            }
+            if (pack == "KenchooPolarBear" || pack == "WildMeshAnimals")
+            {
+                string animal = pack == "KenchooPolarBear" ? "PolarBear" : "Wolf";
+                texture = AssetDatabase.LoadAssetAtPath<Texture2D>(Sources + pack + "/Textures/" + animal + "_Diffuse.png");
+                normal = AssetDatabase.LoadAssetAtPath<Texture2D>(Sources + pack + "/Textures/" + animal + "_Normal.png");
+                color = Color.white;
+            }
+            if (pack == "ChistodrakoPteranodon" || pack == "YughuesPalms" || pack == "LasquetiBoat")
+            {
+                string stem=pack=="ChistodrakoPteranodon"?"Pteranodon":pack=="YughuesPalms"?"Palm":System.Text.RegularExpressions.Regex.Replace(originalName,@"[^a-zA-Z0-9_-]","_");
+                var diffuse=AssetDatabase.LoadAssetAtPath<Texture2D>(Sources+pack+"/Textures/"+stem+"_Diffuse.png");
+                if(diffuse){texture=diffuse;color=Color.white;}
+                else if(pack!="LasquetiBoat")throw new InvalidOperationException("Required authored texture missing: "+pack+"/"+stem);
+                normal=AssetDatabase.LoadAssetAtPath<Texture2D>(Sources+pack+"/Textures/"+stem+"_Normal.png");
+                cutout=pack=="YughuesPalms";
+            }
+            if (pack == "PolyHavenScenery")
+            {
+                string stem=model.StartsWith("fern")?"fern_02":model;
+                texture=AssetDatabase.LoadAssetAtPath<Texture2D>(Sources+pack+"/Textures/"+stem+"_Diffuse.png");
+                normal=AssetDatabase.LoadAssetAtPath<Texture2D>(Sources+pack+"/Textures/"+stem+"_Normal.png");
+                cutout=model.StartsWith("fern");color=Color.white;
             }
             if (pack == "QuaterniusNature")
             {

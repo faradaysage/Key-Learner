@@ -472,7 +472,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07f1fa157a499734ca6885c6a6b0cce8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KeyLearner.Unity.SourcePropMotion
+  m_EditorClassIdentifier: KeyLearner.Unity::KeyLearner.Unity.SourcePropMotion
   Wheels:
   - {fileID: 3185039430365769562}
   - {fileID: 1713876468301713853}

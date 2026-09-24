@@ -364,3 +364,93 @@ ReachMath(memoryRound,MathPhase.Observe);Check(!memoryRound.Hidden,"advanced fin
 var resumedMath=new MathGame(MathActivity.Hiding,new(),level:4);ReachMath(resumedMath,MathPhase.AwaitAnswer);int originalHidden=resumedMath.Round.B;resumedMath.Answer(resumedMath.Round.Choices.First(n=>n!=originalHidden));resumedMath.Restart();Check(resumedMath.Round.B==originalHidden&&resumedMath.Errors==1&&resumedMath.Phase==MathPhase.Ready,"focus return replays the same math problem and preserves assistance");
 var heldNarration=new MathGame(MathActivity.HowManyNow,new());for(int i=0;i<7;i++)heldNarration.Step(.1,true);Check(heldNarration.Phase==MathPhase.Ready,"countdown allows the current spoken cue to finish");for(int i=0;i<200;i++)heldNarration.Step(.1,true);Check(heldNarration.Phase!=MathPhase.Ready,"unavailable speech cannot stall the round forever");
 Console.WriteLine($"All {checks} checks passed including math replay and narration.");
+
+// Immersion rewards never change learning mastery or remove earned points.
+var streakBonus=new LearningBonus();
+for(int i=0;i<5;i++){streakBonus.BeginRound();Check(!streakBonus.Active,"five ordinary rounds precede a pearl bonus");streakBonus.Complete(true);}
+streakBonus.BeginRound();Check(streakBonus.Active&&streakBonus.Score==50,"a five-answer streak earns a pearl round");
+streakBonus.Complete(true);Check(streakBonus.LastPoints==30&&streakBonus.Score==80,"pearl correct answer awards triple points exactly once");
+streakBonus.BeginRound();Check(!streakBonus.Active,"bonus does not chain indefinitely");
+streakBonus.Miss();streakBonus.Complete(false);Check(streakBonus.Streak==0,"retry breaks the streak without taking earned points");
+var numberedShow=new FireworkSchedule();numberedShow.Add(5,10);
+Check(numberedShow.DueNumbers(10).SequenceEqual(new[]{1}),"firework label starts with one");
+Check(numberedShow.DueNumbers(14).SequenceEqual(new[]{2,3,4,5}),"dropped frames preserve all scheduled counting labels");
+Check(numberedShow.DueNumbers(15).Length==0,"count labels are consumed once");
+foreach(var kind in new[]{ExplorerKind.Bird,ExplorerKind.Dolphin})
+foreach(float distance in new[]{0f,2100f,5500f})
+foreach(float heading in new[]{0f,2.8f}){
+    var flight=new FlightModel();flight.Configure(kind);flight.Yaw=heading;flight.Response=.6f;
+    float x=kind==ExplorerKind.Bird?160:0,z=-distance;
+    flight.Position=new(x,kind==ExplorerKind.Bird?ExplorerWorld.Height(x,z)+100:-8,z);
+    flight.Pitch=1.1f;flight.Speed=100;flight.SetWord("cat");
+    for(int i=0;i<7200&&flight.Completed==0;i++)flight.Step(1f/60,0,0,false,true);
+    Check(flight.Completed==1,"assisted "+kind+" reaches displaced gates at "+distance+" heading "+heading);
+}
+var breaching=new FlightModel();breaching.Configure(ExplorerKind.Dolphin);breaching.Position=new(0,-2,0);breaching.Pitch=.8f;
+bool reachedAir=false,returnedToWater=false;
+for(int i=0;i<360;i++){breaching.Step(1f/60,0,1,true);reachedAir|=breaching.Position.Y>1;returnedToWater|=reachedAir&&breaching.Position.Y<0;}
+Check(reachedAir&&returnedToWater,"dolphin breaches and falls back into water with climb held");
+var bonusDriver=new FlightModel();bonusDriver.Configure(ExplorerKind.Racer);bonusDriver.AwardBubble();bonusDriver.AwardTreasure();
+Check(bonusDriver.Score==30&&bonusDriver.Treasures==1,"explorer bonuses share the score without collecting a letter");
+Check(bonusDriver.HitObstacle()&&!bonusDriver.HitObstacle(),"harmless obstacles have a cooldown");
+for(int i=0;i<120;i++)bonusDriver.Step(1f/60,0,0,false);
+Check(bonusDriver.ObstacleRemaining==0&&bonusDriver.Score==30,"obstacle slowdown expires without losing points");
+Console.WriteLine("Immersion reward and navigation checks passed.");
+
+var surfaceDolphin = new FlightModel(); surfaceDolphin.Configure(ExplorerKind.Dolphin); surfaceDolphin.SetWord("cat");
+bool emerged=false, returned=false;
+for(int i=0;i<1000;i++){surfaceDolphin.Step(.01f,0,1,false,false);emerged|=surfaceDolphin.Position.Y>0;returned|=emerged && surfaceDolphin.Position.Y < -5;}
+Check(emerged && returned,"Holding climb from normal dolphin spawn breaches and returns without boost");
+
+foreach(var explorer in new[]{ExplorerKind.Bird,ExplorerKind.Dolphin})
+foreach(float response in new[]{.5f,1f,2f})
+foreach(float distance in new[]{0f,2100f,5500f})
+foreach(float headingError in new[]{-2.9f,0f,2.9f})
+{
+    var pursuit=new FlightModel();pursuit.Configure(explorer);pursuit.Response=response;pursuit.TopSpeed=240;
+    float x=ExplorerWorld.Valley(-distance);
+    pursuit.Position=new System.Numerics.Vector3(x,explorer==ExplorerKind.Bird?ExplorerWorld.Height(x,-distance)+100:ExplorerWorld.Bed(x,-distance)+20,-distance);
+    pursuit.SetWord("cat");pursuit.Yaw+=headingError;pursuit.Pitch=headingError;pursuit.Speed=220;
+    for(int i=0;i<6000 && pursuit.Completed==0;i++)pursuit.Step(.01f,0,0,false,true);
+    Check(pursuit.Completed>0,$"Assisted {explorer} completes after inverted/fast approach, response {response}, chapter {distance}, angle {headingError}");
+}
+
+(float Height,float Range) BreachArc(float speed){
+    var dolphin=new FlightModel();dolphin.Configure(ExplorerKind.Dolphin);dolphin.Position=new(0,-.25f,0);dolphin.Pitch=.8f;dolphin.Speed=speed;
+    bool air=false;float highest=0;var exit=System.Numerics.Vector3.Zero;
+    for(int i=0;i<1000;i++){
+        dolphin.Step(.01f,0,1,false);
+        if(!air && dolphin.Position.Y>0){air=true;exit=dolphin.Position;}
+        highest=Math.Max(highest,dolphin.Position.Y);
+        if(air && dolphin.Position.Y<=0)return(highest,System.Numerics.Vector2.Distance(new(exit.X,exit.Z),new(dolphin.Position.X,dolphin.Position.Z)));
+    }
+    throw new Exception("Dolphin did not complete its breach arc.");
+}
+var cruiseBreach=BreachArc(30);var fastBreach=BreachArc(80);
+Check(fastBreach.Height>cruiseBreach.Height*2 && fastBreach.Range>cruiseBreach.Range*2,"faster dolphin takeoff carries farther and higher before safe water entry");
+
+var prehistoric=new DinosaurModel();prehistoric.SetWord("dino");
+for(int i=0;i<5000&&prehistoric.Course.Completed==0;i++)prehistoric.Step(.02f,0,0,false,true);
+Check(prehistoric.Course.Completed==1 && prehistoric.Course.Score==80,"dinosaur assist collects a full word using shared spelling score");
+Check(prehistoric.Footfalls>0 && Math.Abs(prehistoric.Position.Y-DinosaurWorld.Ground(prehistoric.Position.X,prehistoric.Position.Z))<.001,"dinosaur footfalls follow distance and grounded terrain");
+Check(prehistoric.Roar()&&!prehistoric.Roar(),"dinosaur roar is edge-triggered and cooldown bounded");
+for(int i=0;i<100;i++)prehistoric.Step(.02f,0,-1,false,false);
+Check(prehistoric.Speed<.1f,"dinosaur braking settles to a stop");
+Check((int)PlayMode.Dinosaur==12 && GameCatalog.Legacy.Length==12 && GameCatalog.All.Length==13,"new dinosaur mode appends without changing legacy IDs or picker");
+
+var shyAnimal=new WildlifeMotion(System.Numerics.Vector3.Zero,71);
+var distantObserver=new System.Numerics.Vector3(1000,1000,1000);
+for(int i=0;i<700;i++)shyAnimal.Step(.02f,distantObserver);
+Check(shyAnimal.Position.Length()>1,"wildlife wanders without player interaction");
+var beforeThreat=shyAnimal.Position;var threat=beforeThreat+new System.Numerics.Vector3(0,0,2);
+for(int i=0;i<240;i++)shyAnimal.Step(.02f,threat);
+Check(shyAnimal.Reactions>0 && System.Numerics.Vector3.Distance(shyAnimal.Position,threat)>10,"nearby wildlife flees the player with smooth travel");
+var boundedAnimal=new WildlifeMotion(System.Numerics.Vector3.Zero,19);
+for(int i=0;i<10000;i++)boundedAnimal.Step(.02f,distantObserver,p=>p.X<5 && p.Z<5);
+Check(boundedAnimal.Position.X<5 && boundedAnimal.Position.Z<5 && boundedAnimal.Position.Length()<85,"wildlife respects habitat barriers and remains near its home");
+var startled=new WildlifeMotion(System.Numerics.Vector3.Zero,21);startled.Startle();startled.Step(.02f,new(0,0,40));
+Check(startled.State==WildlifeState.Flee,"roar startles a creature outside normal proximity radius");
+
+var followingCub=new WildlifeMotion(new(0,0,-20),36,speed:2.5f);
+for(int i=0;i<1800;i++){followingCub.Follow(new(0,0,i*.01f));followingCub.Step(.02f,distantObserver);}
+Check(System.Numerics.Vector3.Distance(followingCub.Position,new(0,0,18))<15,"cub follows its mother's moving habitat rather than wandering independently");

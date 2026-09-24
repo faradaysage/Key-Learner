@@ -1,4 +1,4 @@
-param([string]$Installer='', [string]$UpgradeInstaller='', [string]$Output='', [switch]$PreflightOnly, [switch]$BaselineIsMonoGame)
+param([string]$Installer='', [string]$UpgradeInstaller='', [string]$Output='', [switch]$PreflightOnly, [switch]$BaselineIsMonoGame, [switch]$VerifyGameplay)
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 if(!$Output){$Output=Join-Path $root ('artifacts/unity-installer-test/'+(Get-Date -Format 'yyyyMMdd-HHmmss'))}
@@ -75,7 +75,7 @@ function Install-Package([string]$file,[string]$label,[bool]$legacy=$false){
  }
  return $entry.DisplayVersion
 }
-$first='';$second='';$failure='';$uninstalled=$false;$profilesUnchanged=$false;$obsoleteRemoved=0;$customPreserved=$false
+$first='';$second='';$failure='';$gameplayVerified=$false;$uninstalled=$false;$profilesUnchanged=$false;$obsoleteRemoved=0;$customPreserved=$false
 try{
  $first=Install-Package $Installer 'install' $BaselineIsMonoGame
  $customSentinel=Join-Path $destination 'qa-custom-content.txt'
@@ -92,6 +92,14 @@ try{
  $customPreserved=$true
  Remove-Item -LiteralPath $customSentinel
  if(@($keys | Where-Object {Test-Path -LiteralPath $_}).Count -ne 1){throw 'Upgrade created more than one installation registration.'}
+ if($VerifyGameplay){
+  $installedPlayer=Join-Path $destination 'KeyLearner.exe'
+  & (Join-Path $root 'scripts/verify-unity-startup.ps1') -Executable $installedPlayer -Output (Join-Path $Output 'startup')
+  & (Join-Path $root 'scripts/verify-unity.ps1') -Executable $installedPlayer -StaticOnly -Sound -Output (Join-Path $Output 'games')
+  & (Join-Path $root 'scripts/verify-unity-immersion.ps1') -Executable $installedPlayer -Sound -Cases @('dinosaur-camera','dinosaur-motion','breach','pearl-paint','hop-ten') -Output (Join-Path $Output 'keyboard-and-pointer')
+  $gameplayVerified=$true
+  Write-Output 'PASS installed player: splash/version, all thirteen games and bounded native gameplay input. Preview does not certify physical keyboard containment.'
+ }
  Write-Output "PASS install/upgrade $first -> ${second}: one identity, same temporary directory, explicit real-profile Parent Studio shortcut."
 }catch{$failure=$_.Exception.Message;throw}
 finally{
@@ -112,6 +120,6 @@ finally{
   foreach($name in $before.Keys){$path=Join-Path $parentRoot $name;$after=if(Test-Path -LiteralPath $path){(Get-FileHash -LiteralPath $path).Hash}else{''};if($before[$name] -ne $after){throw "Installer test modified parent data: $name"}}
   $profilesUnchanged=$true
  }catch{if(!$failure){$failure=$_.Exception.Message};throw}
- finally{[pscustomobject]@{passed=(!$failure);installVersion=$first;upgradeVersion=$second;uninstalled=$uninstalled;error=$failure;profileFilesUnchanged=$profilesUnchanged;obsoleteFilesRemoved=$obsoleteRemoved;unlistedCustomFilePreserved=$customPreserved;destination=$destination} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $Output 'result.json')}
+ finally{[pscustomobject]@{passed=(!$failure);gameplayRequested=[bool]$VerifyGameplay;gameplayVerified=$gameplayVerified;installVersion=$first;upgradeVersion=$second;uninstalled=$uninstalled;error=$failure;profileFilesUnchanged=$profilesUnchanged;obsoleteFilesRemoved=$obsoleteRemoved;unlistedCustomFilePreserved=$customPreserved;destination=$destination} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $Output 'result.json')}
 }
 Write-Output "PASS temporary installation removed; all five real parent profile files unchanged. Evidence: $Output"

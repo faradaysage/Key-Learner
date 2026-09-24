@@ -1,5 +1,15 @@
 KeyLearner game art credits
 
+NONCOMMERCIAL BUILD CONTENT: WildMesh 3D wolf, CC BY-NC 4.0.
+https://skfb.ly/pMR9W
+https://creativecommons.org/licenses/by-nc/4.0/
+See NONCOMMERCIAL_ASSETS.md before commercial distribution.
+
+Polar Bear by kenchoo, CC BY 4.0, via Sketchfab.
+https://skfb.ly/oRMzK
+https://creativecommons.org/licenses/by/4.0/
+Converted to FBX; original rig, animation and textures retained; Unity materials/pivot/scale adapted.
+
 Bird - Animated by Panther-One, CC BY 3.0, via OpenGameArt.org.
 https://opengameart.org/content/bird-animated
 https://creativecommons.org/licenses/by/3.0/
@@ -11,9 +21,26 @@ https://poly.pizza/u/MiniPoly
 https://creativecommons.org/licenses/by/3.0/
 Original models and embedded atlases retained; Unity materials/pivot/scale/composition adapted.
 
-Nature, Farm Buildings, Animated Fish and Animated Cute Fish: Quaternius, CC0 1.0.
+Pteranodon (Animated) by Chistodrako._., CC BY 4.0.
+https://skfb.ly/o6KXA
+https://creativecommons.org/licenses/by/4.0/
+Original rig/actions/maps retained; FBX, material and scale adaptation; helper omitted.
+
+Animated Sharks Circling Fishing Boat Loop by LasquetiSpice, CC BY 4.0.
+https://skfb.ly/o9nSO
+https://creativecommons.org/licenses/by/4.0/
+Separated boat, waving crew and swimming shark; original rigs/maps retained; helper and cigar omitted.
+
+Free palm treeZ v3 by Yughues / Nobiax, CC0 1.0.
+https://opengameart.org/content/free-palm-treez-v3
+Fern 02 and Coastal Cliff 01 by Rico Cilliers / Rob Tuytel; Mountainside by Dario Barresi / Rico Cilliers, Poly Haven CC0.
+https://polyhaven.com/
+Forest Ground 01 by Rob Tuytel, Poly Haven CC0.
+https://polyhaven.com/a/forrest_ground_01
+
+Nature, Farm Buildings, Animated Dinosaurs, Animated Animals, Animated Fish and Animated Cute Fish: Quaternius, CC0 1.0.
 https://quaternius.com/
-Cars, City Suburban, City Commercial and City Roads: Kenney, CC0 1.0.
+Cars, Pirate Kit, City Suburban, City Commercial and City Roads: Kenney, CC0 1.0.
 https://kenney.nl/
 Seaweed: Mohabins, CC0 1.0, via Poly Pizza.
 https://poly.pizza/m/oYxUdpyc4u

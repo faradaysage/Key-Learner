@@ -55,3 +55,21 @@ The scenery uses licensed original meshes and source animation. Terrain, roads, 
 | Explorer selection | Parent Studio |
 | --- | --- |
 | ![Explorer picker using actual gameplay thumbnails](screenshots/unity/picker.jpg) | ![Readable Parent Studio settings](screenshots/unity/parent-studio.jpg) |
+
+## Immersion update — local Windows verification
+
+These captures are from the current working build, not a published installer. [Capture provenance](screenshots/unity/immersion-sources.json).
+
+### Dinosaur Speller: visible player and prehistoric valley
+
+![Default close chase behind the animated T-rex](screenshots/unity/dinosaur-chase.jpg)
+
+![T-rex exploring Red Rock Valley](screenshots/unity/dinosaur-valley.jpg)
+
+### Visitors and water effects
+
+![A source-animated companion bird flies beside the player](screenshots/unity/sky-companion.jpg)
+
+![A harmless shark crosses the reef after fish scatter](screenshots/unity/ocean-shark-visit.jpg)
+
+![Dolphin re-entry spray and expanding wake, with the source boat on the horizon](screenshots/unity/ocean-reentry.jpg)

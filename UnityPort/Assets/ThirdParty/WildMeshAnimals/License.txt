@@ -1,0 +1,6 @@
+"ULTIMATE ANIMAL PACK |100 ANIMALS | 50% OFF" (https://skfb.ly/pMR9W) by WildMesh 3D is licensed under Creative Commons Attribution-NonCommercial 4.0 International.
+http://creativecommons.org/licenses/by-nc/4.0/
+Source: https://sketchfab.com/3d-models/ultimate-animal-pack-100-animals-50-off-165f755e44fc477fbc4ee41085606dd1
+
+NONCOMMERCIAL USE ONLY unless a separate applicable commercial license is obtained. See NONCOMMERCIAL_ASSETS.md in the repository and distributed notices. User approved this exception on 2026-09-14.
+Imported subset: Wolf, original fast walk loop and T_Wolf diffuse texture. The supplied FBX has a combined static display and one separately rigged wolf, not 100 individually animated animals. Changes: selected only wolf; omitted sales-display geometry; converted with Blender 4.3; source walk retained; Unity material/pivot/scale adaptation.

@@ -8,13 +8,23 @@ namespace KeyLearner.Unity
         GameServices services;
         ParticleSystem bubbles, suspended;
         Material bubbleMaterial;
-        bool gentle;
-        public static void Create(GameServices services, Transform parent, Transform dolphin)
+        bool gentle, above;
+        Vector2 previousPointer;
+        Transform dolphin;
+        Vector3 previousDolphin;
+        float splashCooldown;
+        public WaterSplash LastSplash {get;private set;}
+        public int Exits { get; private set; }
+        public int Entries { get; private set; }
+        readonly ParticleSystem.Particle[] motes = new ParticleSystem.Particle[220];
+        public static OceanAtmosphere Create(GameServices services, Transform parent, Transform dolphin)
         {
             var host = new GameObject("Water atmosphere");
             host.transform.SetParent(parent, false);
             var effect = host.AddComponent<OceanAtmosphere>();
             effect.services = services;
+            effect.dolphin = dolphin;
+            effect.previousDolphin = dolphin.position;
             effect.bubbleMaterial = new Material(Resources.Load<Shader>("Shaders/Bubble"));
             effect.bubbles = effect.Particles("Rising dolphin bubbles", host.transform, 45, 5, .48f, new Color(.72f, .95f, 1, .6f), effect.bubbleMaterial);
             var bubbleShape = effect.bubbles.shape;
@@ -23,7 +33,9 @@ namespace KeyLearner.Unity
             var velocity = effect.bubbles.velocityOverLifetime;
             velocity.enabled = true;
             velocity.space = ParticleSystemSimulationSpace.World;
+            velocity.x = new ParticleSystem.MinMaxCurve(0, 0);
             velocity.y = new ParticleSystem.MinMaxCurve(2, 3.5f);
+            velocity.z = new ParticleSystem.MinMaxCurve(0, 0);
             effect.bubbles.transform.SetParent(dolphin, false);
             effect.bubbles.transform.localPosition = new Vector3(0, 0, -2);
             effect.suspended = effect.Particles("Suspended water light", host.transform, 220, 17, .14f, new Color(.65f, .88f, 1, .24f), Visuals.ParticleMaterial());
@@ -33,6 +45,7 @@ namespace KeyLearner.Unity
             effect.SetMotion();
             effect.PlaceVolume();
             effect.suspended.Emit(100);
+            return effect;
         }
         ParticleSystem Particles(string name, Transform parent, int maximum, float lifetime, float size, Color color, Material material)
         {
@@ -58,6 +71,11 @@ namespace KeyLearner.Unity
             system.Play();
             return system;
         }
+        public void FishWake(Vector3 position)
+        {
+            if(position.y>-.5f || above || services.Settings.GentleMotion)return;
+            bubbles.Emit(new ParticleSystem.EmitParams {position=position,velocity=Vector3.up*2,startSize=.2f,startLifetime=2.5f},1);
+        }
         void SetMotion()
         {
             gentle = services.Settings.GentleMotion;
@@ -72,9 +90,47 @@ namespace KeyLearner.Unity
         }
         void LateUpdate()
         {
+            if(Time.deltaTime<=0)return;
             if (services.Settings.GentleMotion != gentle)
                 SetMotion();
             PlaceVolume();
+            splashCooldown = Mathf.Max(0, splashCooldown - Time.deltaTime);
+            var current = dolphin.position;
+            if ((current.y > 0) != (previousDolphin.y > 0) && splashCooldown <= 0)
+            {
+                float fraction = Mathf.Clamp01(-previousDolphin.y / (current.y - previousDolphin.y));
+                var crossing = Vector3.Lerp(previousDolphin, current, fraction);
+                float speed = Vector3.Distance(previousDolphin, current) / Mathf.Max(.001f, Time.deltaTime);
+                LastSplash=WaterSplash.Create(services, transform, crossing, speed, current.y <= 0);
+                if (current.y > 0) Exits++; else Entries++;
+                splashCooldown = .15f;
+            }
+            previousDolphin = current;
+            bool air = services.Camera.transform.position.y > 0;
+            if (air != above)
+            {
+                above = air;
+                if (air) suspended.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                else suspended.Play();
+            }
+            var bubbleEmission = bubbles.emission;
+            bubbleEmission.enabled = bubbles.transform.position.y < -1;
+            Vector2 pointer = Input.mousePosition, movement = pointer - previousPointer;
+            previousPointer = pointer;
+            if (services.Settings.MousePlay && !air && movement.sqrMagnitude > .01f)
+            {
+                var camera = services.Camera;
+                var point = camera.ScreenPointToRay(pointer).GetPoint(50);
+                Vector3 push = camera.transform.right * movement.x + camera.transform.up * movement.y;
+                push = Vector3.ClampMagnitude(push * (gentle ? .006f : .02f), gentle ? .2f : .6f);
+                int count = suspended.GetParticles(motes);
+                for (int i = 0; i < count; i++)
+                {
+                    float influence = Mathf.Clamp01(1 - Vector3.Distance(motes[i].position, point) / 24);
+                    motes[i].velocity = Vector3.Lerp(motes[i].velocity, push, influence * .2f);
+                }
+                suspended.SetParticles(motes, count);
+            }
         }
         void OnDestroy()
         {

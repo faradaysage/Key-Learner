@@ -14,13 +14,14 @@ namespace KeyLearner.Unity
         Vector3 origin;
         Material cloudMaterial;
         float drift;
-        public static ExplorerCloudLayer Create(Transform parent, Transform follow, bool gentleMotion)
+        public static ExplorerCloudLayer Create(Transform parent, Transform follow, bool gentleMotion, float height = 260)
         {
             var go = new GameObject("Layered drifting clouds");
             go.transform.SetParent(parent, false);
             var layer = go.AddComponent<ExplorerCloudLayer>();
             layer.Follow = follow;
             layer.GentleMotion = gentleMotion;
+            layer.Height = height;
             layer.Initialize();
             return layer;
         }

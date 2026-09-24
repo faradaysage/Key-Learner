@@ -185,8 +185,10 @@ namespace KeyLearner.Unity
         {
             bool hover = enabled && rect.Contains(Pointer);
             Panel(new Rect(rect.x, rect.y + 5, rect.width, rect.height), new Color(0, 0, 0, .3f));
-            Panel(rect, hover ? new Color(.14f, .25f, .39f) : Style.Panel);
-            Label(rect, text, Mathf.RoundToInt(Mathf.Min(32, rect.height * .37f)), enabled ? Color.white : new Color(.5f, .56f, .65f));
+            var face=rect;
+            if(hover && Input.GetMouseButton(0)) face.y+=3;
+            Panel(face, hover ? new Color(.14f, .25f, .39f) : Style.Panel);
+            Label(face, text, Mathf.RoundToInt(Mathf.Min(32, rect.height * .37f)), enabled ? Color.white : new Color(.5f, .56f, .65f));
             bool was = GUI.enabled;
             GUI.enabled = enabled;
             if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
@@ -221,7 +223,17 @@ namespace KeyLearner.Unity
     }
     public static class Visuals
     {
-        static Material particle;
+        static Material particle, dust, wake;
+        public static Material WakeMaterial()
+        {
+            if(!wake)wake=new Material(Resources.Load<Shader>("Shaders/Wake"));
+            return wake;
+        }
+        public static Material DustMaterial()
+        {
+            if (!dust) dust = new Material(Resources.Load<Shader>("Shaders/Dust"));
+            return dust;
+        }
         public static Material ParticleMaterial()
         {
             if (!particle)
@@ -308,6 +320,48 @@ namespace KeyLearner.Unity
             ps.Emit(Mathf.Min(count, 120));
             active.Add(ps);
             Destroy(go, 1.8f);
+        }
+        public void Firework(Vector2 logical, Color color, float phase)
+        {
+            if (active.Count >= 24) return;
+            var go = new GameObject("Counting finale firework");
+            go.transform.position = new Vector3(logical.x, -logical.y, -30);
+            var ps = go.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = ps.main;
+            main.loop = false;
+            main.playOnAwake = false;
+            main.duration = .1f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.4f, 2.1f);
+            main.startSize = new ParticleSystem.MinMaxCurve(3, 6);
+            main.startColor = color;
+            main.gravityModifier = 1.8f;
+            main.maxParticles = 150;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            var emission = ps.emission; emission.enabled = false;
+            var shape = ps.shape; shape.enabled = false;
+            var fade = ps.colorOverLifetime; fade.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0), new GradientColorKey(color, .25f), new GradientColorKey(color, 1) },
+                new[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(1, .45f), new GradientAlphaKey(0, 1) });
+            fade.color = gradient;
+            var trails = ps.trails; trails.enabled = true; trails.ratio = .5f; trails.lifetime = .2f;
+            trails.dieWithParticles = true; trails.inheritParticleColor = true;
+            var renderer = go.GetComponent<ParticleSystemRenderer>();
+            renderer.sharedMaterial = Visuals.ParticleMaterial();
+            renderer.trailMaterial = Visuals.ParticleMaterial();
+            int count = Gentle ? 32 : 64;
+            for (int ring = 0; ring < 2; ring++)
+                for (int i = 0; i < count; i++)
+                {
+                    float angle = phase + i * Mathf.PI * 2 / count;
+                    float speed = (Gentle ? 75 : 125) * (ring == 0 ? 1 : .52f);
+                    ps.Emit(new ParticleSystem.EmitParams { velocity = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * speed,
+                        startColor = ring == 0 ? color : Color.Lerp(color, Color.white, .65f) }, 1);
+                }
+            ps.Play();
+            active.Add(ps);
+            Destroy(go, 2.6f);
         }
         void Update()
         {

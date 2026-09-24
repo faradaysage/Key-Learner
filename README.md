@@ -1,6 +1,6 @@
 # KeyLearner: a little world of discovery
 
-An offline Windows learning playground inspired by Scott Hanselman's Baby Smash, with twelve games, gesture-aware learning, bounded offline speech, and parent settings. The Unity URP implementation lives alongside the preserved MonoGame application. Both share tested C# learning, progression, scoring, movement, and JSON save contracts; no sibling Bepu checkout is required.
+An offline Windows learning playground inspired by Scott Hanselman's Baby Smash, with thirteen Unity games (and twelve preserved MonoGame games), gesture-aware learning, bounded offline speech, and parent settings. The Unity URP implementation lives alongside the preserved MonoGame application. Both share tested C# learning, progression, scoring, movement, and JSON save contracts; no sibling Bepu checkout is required.
 
 See [Unity build, run, and extension instructions](UnityPort/README.md), [migration evidence](docs/unity-migration.md), [gameplay gallery](docs/unity-gallery.md), and [asset credits](THIRD_PARTY_ASSETS.md). Local Unity Windows output is under artifacts/unity-windows/; the commands below still build and run the preserved MonoGame version.
 
@@ -11,6 +11,14 @@ Download the **INSTALL-KeyLearner-Unity-Windows** artifact from the latest succe
 The package updates the existing per-user installation and retains the parent profile; no separate .NET installation is required. The KeyLearner splash and picker show the running version/build. If keys do not respond, use the mouse-accessible **Open diagnostics & close** button and follow [keyboard diagnostic instructions](docs/unity-input-diagnostics.md). The protected-hook delivery correction selects the single legacy Unity input backend; diagnostics report `inputBackend=legacy-only`. Target-device physical-keyboard acceptance remains pending.
 
 [CI setup and artifacts](docs/unity-ci.md) explains Unity Personal activation, tests, caching and installer upgrade checks. [Verification](docs/unity-verification.md) documents remaining acceptance limits. See [installer builds and upgrades](docs/installer.md).
+
+## Explorer worlds
+
+Sky Speller, Letter Racer and Ocean Speller share the letter trail with distinct flying, driving and swimming movement. Wildlife reacts to nearby players; ambient and motion sounds follow the action. Dolphin breaches create entry/exit spray and sound, roadside pickups are forgiving, and occasional visitors give each journey surprises.
+
+Unity's **Dinosaur Speller** adds a grounded T-rex adventure. It starts in a close third-person view. **F1** cycles close, far and first person; arrows steer/walk, Space runs, and Ctrl roars. Gentle Motion reduces step and roar camera effects. The view choice lasts for the current session.
+
+Some scenery uses a noncommercial animal pack with the owner's explicit approval. See [the exact restricted assets and replacement/licensing checklist](NONCOMMERCIAL_ASSETS.md) before considering a commercial release.
 
 ## Visual math
 
@@ -64,14 +72,11 @@ This is a working playground foundation, not a validated developmental assessmen
 
 Speech uses reusable, capped overlapping channels: four for key feedback and two reserved for words by default. New input never cancels audio already playing. Parent Voice settings can adjust the caps. Short queues absorb bursts; sustained overload is bounded.
 
-This checkout also has a project-local **Piper 1.4.2** installation and **LJ Speech** neural model under .local/. Seventy common letters, numbers and words have been prepared as local clips. New profiles automatically discover this installation. Existing profiles can select the executable and model under Voice:
+Both engines now prefer committed Chatterbox recordings for the shipped vocabulary and instructions. These are ordinary mono PCM WAV files; the game and normal builds require no Python, PyTorch, CUDA, Chatterbox installation, or downloaded speech model. Family recordings still take priority. Prepared speech uses a fixed narrator; Parent Studio voice/rate choices control fallback synthesis for new family text.
 
-- Executable: .local/piper/Scripts/piper.exe (use its absolute path)
-- Model: .local/voices/en_US-ljspeech-high.onnx (use its absolute path)
+Speech generation is an explicit developer operation: run `tools/setup-speech.ps1`, generate/review the twenty-line sample reel with `tools/generate-speech.ps1 -Samples`, then generate missing or changed clips with `tools/generate-speech.ps1 -KeepGoing`. See [prepared speech tooling](tools/speech/README.md) for the stable manifest, isolated Python 3.11 environment, CUDA verification, model/license pins, incremental hashes and lossless masters. CI verifies committed speech using the .NET verifier; it never generates speech.
 
-See [voice setup and licensing](docs/voice.md) to reproduce the installation. The 70 common clips ship with the game. The optional full model/runtime stays local and is not included in the installer.
-
-Playback priority: a word's WAV recording → cached offline Piper → bundled common clips → Windows speech. Uncached neural speech is prepared in the background for later use; it never blocks the current announcement. All playback honors the app volume. Windows speech rate affects Windows synthesis; pre-recorded and neural clips retain their natural pace. The Sound option mutes all speech.
+Playback priority: a word's WAV recording → prepared Chatterbox catalog → existing cached/Piper or common clips → Windows speech. The older optional Piper setup remains compatible; see [voice setup and licensing](docs/voice.md). Runtime playback stays bounded, and Unity evicts unused decoded speech clips instead of retaining the entire vocabulary in memory. All playback honors app volume and mute.
 
 For the most familiar voice at zero cost, attach a family recording to each favorite word in Dictionary. You can also customize the spoken phrase.
 
@@ -210,3 +215,12 @@ Difficulty increases only on correct first attempts: 12 successes with 0–3 gro
 `DotPatterns` represents all 512 3×3 masks, including zero. Selection balances quantities, favors the least-seen eligible masks, then less familiar rotation/reflection families, and avoids the immediately previous pattern. This prevents the many five-dot masks from crowding out zero and nine. `SubitizingGame` owns progression and timers, and `DotLayout` shares portrait geometry between rendering and hit testing. Visibility changes restart the current pattern from READY and cancel sound/volley effects without losing earned progression.
 
 Preview scenarios: `dots-visible`, `dots-correct`, `dots-retry`. Use `--preview --mode dots --portrait` for a portrait window. Pure regression tests exercise the full pattern universe, difficulty tiers, retries, timers, zero/nine reward timing, duplicate answer rejection, focus reset and portrait/landscape hit mapping. Native touch hardware and the GPU presentation still require a working graphics session; no antivirus exceptions are needed for this mode.
+
+## Unity immersion updates
+
+Ocean Speller adds poppable bonus bubbles, fleeing small fish, surface breaches, and gentle water-particle response to the mouse. Letter Racer follows curved lane markings, turns its body/front wheels, and offers harmless slowing obstacles and treasure chests that change vehicle or color. Sky Speller adds occasional flocks, ground traffic/animals, and dolphin activity over lakes. The Arctic includes the supplied animated polar bear and a smaller cub.
+
+Explorer ambience and motion sounds respond to movement and vehicle type and become quieter under speech. Counting Stars briefly labels individual fireworks and celebrates 100. Five correct subitizing rounds earn a pearl bonus question worth triple points; visible balls can be recolored without answering. Cannon Hop supports arrows and Enter, including answer 10, and explains its existing practice prerequisite when selected while locked.
+
+
+**Noncommercial art notice:** builds containing the WildMesh wolf are restricted to noncommercial use until it is separately licensed or replaced. The source code remains MIT; third-party art keeps its own licenses. See [the exact restricted-asset register](NONCOMMERCIAL_ASSETS.md) before any commercial release.

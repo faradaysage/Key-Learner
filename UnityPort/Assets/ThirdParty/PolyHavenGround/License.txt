@@ -1,0 +1,4 @@
+Forest Ground 01 by Rob Tuytel, via Poly Haven. CC0 1.0.
+https://polyhaven.com/a/forrest_ground_01
+https://creativecommons.org/publicdomain/zero/1.0/
+Original 2k diffuse and OpenGL normal maps; Unity material scale and tint adapted.
